@@ -12,11 +12,6 @@ public class DrawBlockControl : MonoBehaviour
     public float minDistance = 0.1f;
     public bool isAddPosition;
 
-    //private void Start()
-    //{
-    //    StartCoroutine(AddPositions());
-    //}
-
     private void Update()
     {
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -39,39 +34,4 @@ public class DrawBlockControl : MonoBehaviour
             drawBlock = null;
         }
     }
-
-    //IEnumerator AddPositions()
-    //{
-    //    while(true)
-    //    {
-    //        if(isAddPosition)
-    //        {
-    //            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //            if (rangePositionList.Count > 0)
-    //            {
-    //                float dist = Vector2.Distance(rangePositionList[rangePositionList.Count - 1], pos);
-    //                if (dist > minDistance)
-    //                {
-    //                    rangePositionList.Add(pos);
-    //                    Invoke("RemovePosition", 1f);
-    //                }
-    //            }
-    //            else
-    //            {
-    //                rangePositionList.Add(pos);
-    //                Invoke("RemovePosition", 1f);
-    //            }
-    //        }
-
-    //        yield return null;
-    //    }
-    //}
-
-    //void RemovePosition()
-    //{
-    //    if(rangePositionList.Count > 0)
-    //    {
-    //        rangePositionList.RemoveAt(0);
-    //    }
-    //}
 }
