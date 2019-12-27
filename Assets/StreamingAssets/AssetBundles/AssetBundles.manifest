@@ -1,0 +1,51 @@
+ManifestFileVersion: 0
+CRC: 87070511
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: poolobject/gameobj
+      Dependencies: {}
+    Info_1:
+      Name: poolobject/effect1
+      Dependencies: {}
+    Info_2:
+      Name: poolobject/effect2
+      Dependencies: {}
+    Info_3:
+      Name: sound/se1
+      Dependencies: {}
+    Info_4:
+      Name: sound/se2
+      Dependencies: {}
+    Info_5:
+      Name: sound/bgm
+      Dependencies: {}
+    Info_6:
+      Name: popup_ui/testpopup
+      Dependencies: {}
+    Info_7:
+      Name: manager
+      Dependencies: {}
+    Info_8:
+      Name: testresource
+      Dependencies:
+        Dependency_0: prefabs/eng
+        Dependency_1: prefabs/kr
+    Info_9:
+      Name: fonts
+      Dependencies: {}
+    Info_10:
+      Name: sprites/eng
+      Dependencies: {}
+    Info_11:
+      Name: sprites/kr
+      Dependencies: {}
+    Info_12:
+      Name: prefabs/eng
+      Dependencies: {}
+    Info_13:
+      Name: prefabs/kr
+      Dependencies: {}
+    Info_14:
+      Name: datatables
+      Dependencies: {}

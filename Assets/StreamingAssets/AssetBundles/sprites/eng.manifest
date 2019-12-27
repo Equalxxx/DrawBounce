@@ -1,0 +1,18 @@
+ManifestFileVersion: 0
+CRC: 15166931
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9a4c538f9074bdc14b6cee84c817f47a
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b474380d27eb4bc856799e9c585c4864
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/JoyconFrameWork/Resources/Sprites/ENG/boss_alert.png
+Dependencies: []
