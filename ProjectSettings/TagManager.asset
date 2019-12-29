@@ -7,6 +7,8 @@ TagManager:
   - FxTemporaire
   - Block
   - SemiBlock
+  - Bottom
+  - Side
   layers:
   - Default
   - TransparentFX
@@ -18,8 +20,8 @@ TagManager:
   - 
   - Block
   - Ball
-  - 
-  - 
+  - Item
+  - PostProcessing
   - 
   - 
   - 
