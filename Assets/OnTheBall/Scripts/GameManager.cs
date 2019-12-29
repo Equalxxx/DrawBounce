@@ -86,7 +86,7 @@ public class GameManager : Singleton<GameManager>
 
         while (gameState == GameState.GameOver)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.anyKeyDown)
             {
                 gameState = GameState.GameTitle;
             }
