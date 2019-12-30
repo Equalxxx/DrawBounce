@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 8
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -13,22 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolInfoList:
   - index: 0
-    path: poolobject/gameobj
-    tag: Cube
+    path: PoolObject/Effects
+    tag: Hit_Spark
     preloadCount: 5
   - index: 1
-    path: poolobject/gameobj
-    tag: Sphere
+    path: PoolObject/Effects
+    tag: Hit_Star
     preloadCount: 5
   - index: 2
-    path: poolobject/gameobj
-    tag: CanvasImage
-    preloadCount: 5
+    path: PoolObject/Blocks
+    tag: Block
+    preloadCount: 10
   - index: 3
-    path: poolobject/effect1
-    tag: Particle1
+    path: PoolObject/Blocks
+    tag: MovingBlock
     preloadCount: 10
   - index: 4
-    path: poolobject/effect2
-    tag: Particle2
-    preloadCount: 10
+    path: PoolObject/Effects
+    tag: PointerEffect
+    preloadCount: 3

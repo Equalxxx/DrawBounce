@@ -739,10 +739,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 712ba2fc-2da6-4cc6-941e-dd6fd3f8e6be
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: OnTheStar
+  organizationId: joo-kiyoung
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
