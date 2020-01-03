@@ -30,14 +30,19 @@ public class DrawBlock : MonoBehaviour
     private void OnEnable()
     {
         edgeCol2D = Instantiate(edgeColPrefab, Vector3.zero, Quaternion.identity).GetComponent<EdgeCollider2D>();
+		edgeCol2D.enabled = false;
 
-        isDraw = true;
+		isDraw = true;
         StartCoroutine(AutoDisableDraw());
     }
 
     private void OnDisable()
     {
-        Destroy(edgeCol2D.gameObject);
+		if(edgeCol2D)
+		{
+	        Destroy(edgeCol2D.gameObject);
+			edgeCol2D = null;
+		}
     }
 
     public void AddPosition(Vector2 addPos)
@@ -63,6 +68,9 @@ public class DrawBlock : MonoBehaviour
 
     void SetPoints()
     {
+		if (positionList.Count <= 1)
+			return;
+
         Vector2[] points = new Vector2[positionList.Count];
 
         for (int i = 0; i < points.Length; i++)
@@ -70,7 +78,10 @@ public class DrawBlock : MonoBehaviour
             points[i] = positionList[i];
         }
 
-        edgeCol2D.points = points;
+		if (!edgeCol2D.enabled)
+			edgeCol2D.enabled = true;
+
+		edgeCol2D.points = points;
     }
 
     void RemovePosition()

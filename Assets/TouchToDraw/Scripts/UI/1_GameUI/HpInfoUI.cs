@@ -9,7 +9,7 @@ public class HpInfoUI : BaseGameUI
 
     private void OnEnable()
     {
-        GameManager.GameStartAction += RefreshUI;
+		GameManager.GameStartAction += RefreshUI;
         Player.DamagedAction += RefreshUI;
     }
 

@@ -13,6 +13,10 @@ public class GameManager : Singleton<GameManager>
     public int score;
     public float meter;
 
+	[Header("GameLevel Info")]
+	public int level;
+	public int levelMeterCost = 100;
+
     public static Action AddScoreAction;
     public static Action GameStartAction;
     public static Action GameOverAction;
@@ -23,10 +27,13 @@ public class GameManager : Singleton<GameManager>
 
     public GenerateMap gameMapManager;
 
-    private void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+	private void Awake()
+	{
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+	}
 
+	private void Start()
+    {
         gameState = GameState.GameTitle;
         StartCoroutine(GameLoop());
 
@@ -66,18 +73,23 @@ public class GameManager : Singleton<GameManager>
 
         Debug.Log("Game Start!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
+        GameStartAction?.Invoke();
 
-        while(gameState == GameState.GamePlay)
+		int nextLevel = 0;
+
+		while (gameState == GameState.GamePlay)
         {
             if(Input.GetKeyDown(KeyCode.Escape))
             {
                 gameState = GameState.GameOver;
             }
 
+			nextLevel = (int)player.height / levelMeterCost;
+			if (nextLevel > level)
+				level = nextLevel;
+
             yield return null;
         }
-
-        GameStartAction?.Invoke();
     }
 
     IEnumerator GameOver()

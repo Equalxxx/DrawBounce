@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public float limitVelo = 5f;
 
     public float height;
+	public float offsetHeight;
 
     public string hitSmallTag;
     public string hitBigTag;
@@ -65,7 +66,7 @@ public class Player : MonoBehaviour
         if (velo.y < -limitVelo)
             velo.y = -limitVelo;
 
-        height = myTransform.position.y;
+        height = myTransform.position.y + offsetHeight;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

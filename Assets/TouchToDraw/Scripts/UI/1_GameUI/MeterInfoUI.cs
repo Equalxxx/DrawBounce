@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MeterInfoUI : BaseGameUI
 {
-    public Text meterText;
+    //public Text meterText;
+	public TextMeshProUGUI meterText;
 
     void Update()
     {

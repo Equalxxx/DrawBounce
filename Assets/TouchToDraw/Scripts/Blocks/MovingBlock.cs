@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingBlock : MonoBehaviour
+public class MovingBlock : DefaultBlock
 {
     public float width;
     public float t;
     public float duration = 1f;
 
-    private void FixedUpdate()
+	private void FixedUpdate()
     {
         t += Time.fixedDeltaTime / duration;
 

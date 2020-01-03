@@ -23,10 +23,11 @@ public class GenerateMap : MonoBehaviour
         }
     }
 
-    public void Generate()
+	public void Generate()
     {
         Vector3 pos = Vector3.zero;
         float width = 2.8f;
+
         for (int i = 0; i < blockCount; i++)
         {
             int rnd = Random.Range(0, 2);

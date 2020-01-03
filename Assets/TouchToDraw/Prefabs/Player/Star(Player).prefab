@@ -9636,6 +9636,7 @@ MonoBehaviour:
   checkGroundDist: 0.8
   limitVelo: 5
   height: 0
+  offsetHeight: 4
   hitSmallTag: Hit_Spark
   hitBigTag: Hit_Star
 --- !u!60 &5944016588642942085
