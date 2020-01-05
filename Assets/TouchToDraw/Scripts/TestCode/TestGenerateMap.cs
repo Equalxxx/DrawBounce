@@ -1,22 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using JoyconFramework;
 
 [System.Serializable]
 public class MapPosition
 {
+	public int index;
 	public Vector2 position;
 	public string blockTag;
+	public GameObject blockPrefab;
+	public GameObject blockObject;
+	public float dist;
 }
 
-public class TestGenerateMap : MonoBehaviour
+public class TestGenerateMap : Singleton<TestGenerateMap>
 {
 	public Transform playerTrans;
 	public Vector2 playerPosition;
 	public List<MapPosition> mapPosList;
 	public MapPosition curMapPos;
 	public float spacing = 10f;
-	public GameObject blockPrefab;
+
+	public GameObject[] blockPrefab;
+
+	public float cameraSize = 5f;
 
 	private void OnValidate()
 	{
@@ -25,112 +33,63 @@ public class TestGenerateMap : MonoBehaviour
 		for (int i = 0; i < 3; i++)
 		{
 			MapPosition mapPos = new MapPosition();
+			mapPos.index = i;
 			mapPos.position = new Vector2(0, i * spacing);
-			mapPos.blockTag = string.Format("Pos {0}", i);
+			int rnd = Random.Range(0, blockPrefab.Length);
+			mapPos.blockTag = blockPrefab[rnd].name;
+			mapPos.blockPrefab = blockPrefab[rnd];
 			mapPosList.Add(mapPos);
 		}
 	}
 
-	private void Start()
-	{
-		curMapPos = mapPosList[0];
-	}
-
 	private void Update()
 	{
-		playerPosition = playerTrans.position;
-		if(CheckMapPosition())
+		playerPosition = Camera.main.transform.position;
+
+		CheckMapPos();
+
+		for (int i = 0; i < mapPosList.Count; i++)
 		{
-			Instantiate(blockPrefab, new Vector2(-3f, curMapPos.position.y), Quaternion.identity);
+			Vector2 mapPos = mapPosList[i].position;
+			Vector2 camPos = Camera.main.transform.position;
+			mapPosList[i].dist = camPos.y - mapPos.y;
+
+			if (mapPosList[i].dist < cameraSize * 2f && mapPosList[i].dist > -cameraSize * 2f)
+			{
+				if (!mapPosList[i].blockObject)
+				{
+					mapPosList[i].blockObject = Instantiate(mapPosList[i].blockPrefab, mapPosList[i].position, mapPosList[i].blockPrefab.transform.rotation);
+				}
+			}
+			else
+			{
+				if(mapPosList[i].blockObject)
+					Destroy(mapPosList[i].blockObject);
+			}
 		}
 	}
 
-	bool CheckMapPosition()
+	void CheckMapPos()
 	{
-		if (playerPosition.y < 0)
-			return false;
-
-		if (CheckPosition(curMapPos))
-			return false;
-
-		foreach(MapPosition mapPos in mapPosList)
+		for (int i = 0; i < mapPosList.Count; i++)
 		{
-			if(CheckPosition(mapPos))
+			Vector2 mapPos = mapPosList[i].position;
+			Vector2 camPos = Camera.main.transform.position;
+			mapPosList[i].dist = camPos.y - mapPos.y;
+
+			if (mapPosList[i].dist < cameraSize/2f && mapPosList[i].dist > -(cameraSize/2f))
 			{
-				curMapPos = mapPos;
-				return true;
+				return;
 			}
 		}
 
-		AddMapPosition();
-		return true;
+		MapPosition mapPosInfo = new MapPosition();
+		mapPosInfo.index = mapPosList.Count;
+		mapPosInfo.position = new Vector2(0, mapPosList.Count * spacing);
+		int rnd = Random.Range(0, blockPrefab.Length);
+		mapPosInfo.blockTag = blockPrefab[rnd].name;
+		mapPosInfo.blockPrefab = blockPrefab[rnd];
+
+		mapPosList.Add(mapPosInfo);
 	}
-
-	void AddMapPosition()
-	{
-		MapPosition mapPos = new MapPosition();
-		mapPos.blockTag = string.Format("Pos {0}", mapPosList.Count);
-		mapPos.position = new Vector2(0, mapPosList.Count * spacing);
-		mapPosList.Add(mapPos);
-	}
-
-	bool CheckPosition(MapPosition mapPos)
-	{
-		if (playerTrans.position.y - mapPos.position.y >= 0 &&
-				playerTrans.position.y - mapPos.position.y <= spacing)
-		{
-			return true;
-		}
-		else
-			return false;
-	}
-
-	//void Update()
-	//{
-	//	playerPosition = playerTrans.position;
-	//	CheckMapPosition();
-	//}
-
-	//void CheckMapPosition()
-	//{
-	//	if (CheckPosition(curMapPos))
-	//		return;
-
-	//	int idx = mapPosList.Count / 2;
-
-	//	if(CheckPosition(mapPosList[idx]))
-	//	{
-	//		curMapPos = mapPosList[idx];
-	//		return;
-	//	}
-
-	//	if (playerPosition.y - mapPosList[idx].position.y > 0f)
-	//	{
-	//		CheckMapPosition(idx);
-	//	}
-	//	else
-	//	{
-	//		CheckMapPosition(idx);
-	//	}
-	//}
-
-	//void BinarySearch(int index, int dir)
-	//{
-	//	int idx = (mapPosList.Count - index) / 2;
-	//	if (CheckPosition(mapPosList[idx]))
-	//	{
-	//		curMapPos = mapPosList[idx];
-	//	}
-	//	else
-	//	{
-	//		if (playerPosition.y - mapPosList[idx].position.y > 0f)
-	//		{
-
-	//		}
-	//		else
-	//		{
-
-	//		}
-	//	}
-	//}
 }
