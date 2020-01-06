@@ -8,7 +8,8 @@ public class MapData
     public int index;
     public string tag;
     public int level;
-    public float spacing;
+    public float width;
+    public float height;
 }
 
 public class MapDataTable : ScriptableObject
@@ -29,4 +30,12 @@ public class MapDataTable : ScriptableObject
 
         return dataList;
     }
+
+	public MapData GetRandomMapData(int level)
+	{
+		List<MapData> mapDatas = GetMapDataList(level);
+		int rnd = Random.Range(0, mapDatas.Count);
+
+		return mapDatas[rnd];
+	}
 }

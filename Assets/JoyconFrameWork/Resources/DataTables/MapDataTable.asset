@@ -15,9 +15,11 @@ MonoBehaviour:
   mapDataList:
   - index: 0
     tag: Block
-    level: 1
-    spacing: 10
+    level: 0
+    width: 3
+    height: 10
   - index: 1
     tag: MovingBlock
-    level: 2
-    spacing: 10
+    level: 0
+    width: 0
+    height: 10

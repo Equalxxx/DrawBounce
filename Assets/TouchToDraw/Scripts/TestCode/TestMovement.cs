@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TestMovement : MonoBehaviour
 {
+	public float moveSpeed = 5f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +15,6 @@ public class TestMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * 5f);
+		transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed);
     }
 }

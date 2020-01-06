@@ -3,61 +3,97 @@ using System.Collections.Generic;
 using UnityEngine;
 using JoyconFramework;
 
+[System.Serializable]
+public class MapPos
+{
+	public int index;
+	public Vector2 position;
+	public MapData mapData;
+	public GameObject blockObject;
+
+	public void Show(bool show)
+	{
+		if (mapData == null)
+			return;
+
+		if(show)
+		{
+			if (!blockObject)
+			{
+				blockObject = PoolManager.Instance.Spawn(mapData.tag, position, Quaternion.identity);
+			}
+
+			if (blockObject.activeSelf != show)
+			{
+				blockObject.SetActive(show);
+			}
+		}
+		else
+		{
+			if (blockObject)
+			{
+				if (blockObject.activeSelf != show)
+				{
+					blockObject.SetActive(show);
+				}
+
+				blockObject = null;
+			}
+		}
+	}
+}
 public class GenerateMap : MonoBehaviour
 {
-    public int mapLevel;
+	public Transform target;
+	public Vector3 targetPos;
+	public float spacing = 10f;
+	public List<MapPos> mapPosList;
 
-    public int blockCount = 30;
-    public float blockSpacing = 10f;
+	public MapDataTable mapDataTable;
 
-    public List<GameObject> blockList;
-    public MapDataTable mapDataTable;
+	private void OnValidate()
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			MapPos mapPos = new MapPos();
+			mapPos.index = i;
+			mapPos.position = new Vector2(0f, i * spacing);
+			if (i != 0)
+				mapPos.mapData = mapDataTable.GetRandomMapData(0);
 
-    private void Awake()
-    {
-        mapDataTable = ResourceManager.LoadAsset<MapDataTable>("DataTables", "MapDataTable", ResourceManager.LinkType.Resources);
+			mapPosList.Add(mapPos);
+		}
+	}
 
-        for (int i = 0; i < mapDataTable.mapDataList.Count; i++)
-        {
-            PoolManager.Instance.PrepareAssets(mapDataTable.mapDataList[i].tag);
-        }
-    }
+	private void Update()
+	{
+		targetPos = target.position;
 
-	public void Generate()
-    {
-        Vector3 pos = Vector3.zero;
-        float width = 2.8f;
+		if (targetPos.y <= 0f)
+			return;
 
-        for (int i = 0; i < blockCount; i++)
-        {
-            int rnd = Random.Range(0, 2);
-            if (rnd == 0)
-            {
-                pos.x = -width;
-            }
-            else
-            {
-                pos.x = width;
-            }
+		if (mapPosList.Exists(x => x.position.y - spacing <= targetPos.y && x.position.y >= targetPos.y))
+		{
+			for (int i = 0; i < mapPosList.Count; i++)
+			{
+				if (mapPosList[i].position.y - spacing <= targetPos.y && mapPosList[i].position.y + spacing >= targetPos.y)
+				{
+					mapPosList[i].Show(true);
+				}
+				else
+				{
+					mapPosList[i].Show(false);
+				}
+			}
+		}
+		else
+		{
+			MapPos mapPos = new MapPos();
+			mapPos.index = mapPosList.Count;
+			mapPos.position = new Vector2(0f, mapPosList.Count * spacing);
+			mapPos.mapData = mapDataTable.GetRandomMapData(0);
 
-            int rndProbIndex = Random.Range(0, 2);
-
-            pos.y += mapDataTable.mapDataList[rndProbIndex].spacing;
-
-
-            GameObject newBlock = PoolManager.Instance.Spawn(mapDataTable.mapDataList[rndProbIndex].tag, pos, Quaternion.identity);
-
-            blockList.Add(newBlock);
-        }
-    }
-
-    public void RemoveBlocks()
-    {
-        for (int i = 0; i < blockList.Count; i++)
-        {
-            blockList[i].SetActive(false);
-        }
-
-        blockList.Clear();
-    }
+			mapPosList.Add(mapPos);
+		}
+	}
 }

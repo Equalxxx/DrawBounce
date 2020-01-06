@@ -5881,7 +5881,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.3150291, y: 0, z: -10}
+  m_LocalPosition: {x: -3.3113554, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -5954,7 +5954,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.3150291, y: 0, z: -10}
+  m_LocalPosition: {x: 3.3113554, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -6231,10 +6231,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2615ab1a492644e8bdd4f9af6cb872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapLevel: 0
-  blockCount: 30
-  blockSpacing: 10
-  blockList: []
+  target: {fileID: 1264195763}
+  targetPos: {x: 0, y: 0, z: 0}
+  spacing: 10
+  mapPosList: []
   mapDataTable: {fileID: 11400000, guid: 397d84d2e5a7eb444a05c48fe6898970, type: 2}
 --- !u!1 &954284758
 GameObject:
@@ -6692,6 +6692,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a35eb4e9a08994c4290a04ae7fbb81b0, type: 3}
+--- !u!4 &1264195763 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3558938123014104346, guid: a35eb4e9a08994c4290a04ae7fbb81b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1264195762}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1270603289
 GameObject:
   m_ObjectHideFlags: 0

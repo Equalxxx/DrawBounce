@@ -105,9 +105,10 @@ public class MapDataTableReader : EditorWindow
                         int indexColumn = 0;
                         int tagColumn = 0;
                         int levelColumn = 0;
-                        int spacingColumn = 0;
+                        int widthColumn = 0;
+                        int heightColumn = 0;
 
-                        for (int column = 1; column <= itemDataTable[i].NumberOfColumns; column++)
+						for (int column = 1; column <= itemDataTable[i].NumberOfColumns; column++)
                         {
                             if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Index")
                                 indexColumn = column;
@@ -115,9 +116,11 @@ public class MapDataTableReader : EditorWindow
                                 tagColumn = column;
                             if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Level")
                                 levelColumn = column;
-                            if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Spacing")
-                                spacingColumn = column;
-                        }
+                            if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Width")
+                                widthColumn = column;
+							if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Height")
+								heightColumn = column;
+						}
 
                         for (int row = 2; row <= itemDataTable[i].NumberOfRows; row++)
                         {
@@ -127,15 +130,17 @@ public class MapDataTableReader : EditorWindow
                             int index = Convert.ToInt32(itemDataTable[i].GetValue(row, indexColumn));
                             string tag = Convert.ToString(itemDataTable[i].GetValue(row, tagColumn));
                             int level = Convert.ToInt32(itemDataTable[i].GetValue(row, levelColumn));
-                            float spacing = Convert.ToSingle(itemDataTable[i].GetValue(row, spacingColumn));
+                            float width = Convert.ToSingle(itemDataTable[i].GetValue(row, widthColumn));
+                            float height = Convert.ToSingle(itemDataTable[i].GetValue(row, heightColumn));
 
-                            MapData mapData = new MapData();
+							MapData mapData = new MapData();
                             mapData.index = index;
                             mapData.tag = tag;
                             mapData.level = level;
-                            mapData.spacing = spacing;
+                            mapData.width = width;
+                            mapData.height = height;
 
-                            mapDataTable.mapDataList.Add(mapData);
+							mapDataTable.mapDataList.Add(mapData);
                         }
                     }
                 }

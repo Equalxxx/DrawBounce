@@ -340,81 +340,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a26fe42a6f1490488dbd0a095ea2136, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTrans: {fileID: 211393044}
-  playerPosition: {x: 0, y: 0}
-  mapPosList:
-  - index: 0
-    position: {x: 0, y: 0}
-    blockTag: Block2
-    blockPrefab: {fileID: 2064752273}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 1
-    position: {x: 0, y: 10}
-    blockTag: Block
-    blockPrefab: {fileID: 1300874839}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 2
-    position: {x: 0, y: 20}
-    blockTag: Block
-    blockPrefab: {fileID: 1300874839}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 3
-    position: {x: 0, y: 30}
-    blockTag: Block2
-    blockPrefab: {fileID: 2064752273}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 4
-    position: {x: 0, y: 40}
-    blockTag: Block2
-    blockPrefab: {fileID: 2064752273}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 5
-    position: {x: 0, y: 50}
-    blockTag: Block2
-    blockPrefab: {fileID: 2064752273}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 6
-    position: {x: 0, y: 60}
-    blockTag: Block
-    blockPrefab: {fileID: 1300874839}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 7
-    position: {x: 0, y: 70}
-    blockTag: Block2
-    blockPrefab: {fileID: 2064752273}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 8
-    position: {x: 0, y: 80}
-    blockTag: Block
-    blockPrefab: {fileID: 1300874839}
-    blockObject: {fileID: 0}
-    dist: 0
-  - index: 9
-    position: {x: 0, y: 90}
-    blockTag: Block2
-    blockPrefab: {fileID: 2064752273}
-    blockObject: {fileID: 0}
-    dist: 0
-  curMapPos:
-    index: 0
-    position: {x: 0, y: 0}
-    blockTag: 
-    blockPrefab: {fileID: 0}
-    blockObject: {fileID: 0}
-    dist: 0
-  spacing: 10
-  blockPrefab:
-  - {fileID: 1300874839}
-  - {fileID: 2064752273}
-  cameraSize: 5
+  target: {fileID: 211393044}
+  targetPos: {x: 0, y: 0, z: 0}
+  height: 10
+  posMapList: []
+  testPrefab: {fileID: 1300874839}
 --- !u!4 &671400771
 Transform:
   m_ObjectHideFlags: 0

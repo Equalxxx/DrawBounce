@@ -50,7 +50,7 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator GameTitle()
     {
-        gameMapManager.RemoveBlocks();
+        //gameMapManager.RemoveBlocks();
 
         Debug.Log("Title Menu!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Title);
@@ -69,7 +69,7 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator GamePlay()
     {
-        gameMapManager.Generate();
+        //gameMapManager.Generate();
 
         Debug.Log("Game Start!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
