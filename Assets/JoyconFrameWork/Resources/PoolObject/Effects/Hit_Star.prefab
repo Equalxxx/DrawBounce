@@ -982,9 +982,9 @@ ParticleSystem:
       time: 0
       countCurve:
         serializedVersion: 2
-        minMaxState: 3
-        scalar: 9
-        minScalar: 7
+        minMaxState: 0
+        scalar: 1
+        minScalar: 3
         maxCurve:
           serializedVersion: 2
           m_Curve:

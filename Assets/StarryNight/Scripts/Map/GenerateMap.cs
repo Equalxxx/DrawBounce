@@ -13,7 +13,7 @@ public class MapPos
 
 	public void Show(bool show)
 	{
-		if (mapData == null)
+		if (mapData == null || string.IsNullOrEmpty(mapData.tag))
 			return;
 
 		if(show)
@@ -47,12 +47,20 @@ public class GenerateMap : MonoBehaviour
 	public Transform target;
 	public Vector3 targetPos;
 	public float spacing = 10f;
+
 	public List<MapPos> mapPosList;
+	public int maxMapCount = 10;
+	public int mapCount;
+
+	public Transform endBlockTrans;
+	public Vector2 endBlockOffset;
 
 	public MapDataTable mapDataTable;
 
 	private void OnValidate()
 	{
+		mapPosList.Clear();
+
 		for (int i = 0; i < 3; i++)
 		{
 			MapPos mapPos = new MapPos();
@@ -65,12 +73,23 @@ public class GenerateMap : MonoBehaviour
 		}
 	}
 
+	private void Start()
+	{
+		mapCount = mapPosList.Count;
+	}
+
 	private void Update()
 	{
 		targetPos = target.position;
 
 		if (targetPos.y <= 0f)
 			return;
+
+		if(mapPosList.Count > maxMapCount)
+		{
+			mapPosList.Remove(mapPosList[0]);
+			endBlockTrans.position = mapPosList[0].position + endBlockOffset;
+		}
 
 		if (mapPosList.Exists(x => x.position.y - spacing <= targetPos.y && x.position.y >= targetPos.y))
 		{
@@ -89,11 +108,12 @@ public class GenerateMap : MonoBehaviour
 		else
 		{
 			MapPos mapPos = new MapPos();
-			mapPos.index = mapPosList.Count;
-			mapPos.position = new Vector2(0f, mapPosList.Count * spacing);
+			mapPos.index = mapCount;
+			mapPos.position = new Vector2(0f, mapCount * spacing);
 			mapPos.mapData = mapDataTable.GetRandomMapData(0);
 
 			mapPosList.Add(mapPos);
+			mapCount++;
 		}
 	}
 }

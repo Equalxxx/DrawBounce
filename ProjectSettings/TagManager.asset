@@ -9,6 +9,7 @@ TagManager:
   - SemiBlock
   - Bottom
   - Side
+  - EndBlock
   layers:
   - Default
   - TransparentFX

@@ -84,6 +84,14 @@ public class Player : MonoBehaviour
         {
             PoolManager.Instance.Spawn(hitSmallTag, transform.position, Quaternion.identity);
         }
+		else if(collision.collider.CompareTag("EndBlock"))
+		{
+			PoolManager.Instance.Spawn(hitBigTag, transform.position, Quaternion.identity);
+
+			ShakeCamera.ShakePosOrder();
+
+			Dead();
+		}
         else
         {
             Debug.LogFormat("Hit : {0}", collision.collider.name);

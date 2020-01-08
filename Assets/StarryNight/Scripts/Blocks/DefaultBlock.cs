@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DefaultBlock : MonoBehaviour, IPoolObject
 {
-	public void OnSpawnObject()
+	public virtual void OnSpawnObject()
 	{
 		
 	}
