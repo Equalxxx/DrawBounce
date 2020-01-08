@@ -53,11 +53,17 @@ public class GenerateMap : MonoBehaviour
 	public int mapCount;
 
 	public Transform endBlockTrans;
+	private Vector2 endBlockOriginPos;
 	public Vector2 endBlockOffset;
 
 	public MapDataTable mapDataTable;
 
-	private void OnValidate()
+	private void Start()
+	{
+		endBlockOriginPos = endBlockTrans.position;
+	}
+
+	public void InitMap()
 	{
 		mapPosList.Clear();
 
@@ -65,17 +71,27 @@ public class GenerateMap : MonoBehaviour
 		{
 			MapPos mapPos = new MapPos();
 			mapPos.index = i;
-			mapPos.position = new Vector2(0f, i * spacing);
 			if (i != 0)
+			{
 				mapPos.mapData = mapDataTable.GetRandomMapData(0);
+
+				int rnd = Random.Range(0, 2);
+				if (rnd == 0)
+				{
+					mapPos.position = new Vector2(mapPos.mapData.width, mapCount * spacing);
+				}
+				else
+				{
+					mapPos.position = new Vector2(-mapPos.mapData.width, mapCount * spacing);
+				}
+			}
 
 			mapPosList.Add(mapPos);
 		}
-	}
 
-	private void Start()
-	{
 		mapCount = mapPosList.Count;
+
+		endBlockTrans.position = endBlockOriginPos;
 	}
 
 	private void Update()
@@ -109,8 +125,17 @@ public class GenerateMap : MonoBehaviour
 		{
 			MapPos mapPos = new MapPos();
 			mapPos.index = mapCount;
-			mapPos.position = new Vector2(0f, mapCount * spacing);
 			mapPos.mapData = mapDataTable.GetRandomMapData(0);
+
+			int rnd = Random.Range(0, 2);
+			if (rnd == 0)
+			{
+				mapPos.position = new Vector2(mapPos.mapData.width, mapCount * spacing);
+			}
+			else
+			{
+				mapPos.position = new Vector2(-mapPos.mapData.width, mapCount * spacing);
+			}
 
 			mapPosList.Add(mapPos);
 			mapCount++;

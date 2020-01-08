@@ -449,6 +449,7 @@ RectTransform:
   m_Children:
   - {fileID: 1673342140}
   - {fileID: 1286904382}
+  - {fileID: 1832927256}
   m_Father: {fileID: 501484055}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5882,7 +5883,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.309984, y: 0, z: -10}
+  m_LocalPosition: {x: -3.3084712, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -5955,7 +5956,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.309984, y: 0, z: -10}
+  m_LocalPosition: {x: 3.3084712, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -6235,36 +6236,9 @@ MonoBehaviour:
   target: {fileID: 1264195763}
   targetPos: {x: 0, y: 0, z: 0}
   spacing: 10
-  mapPosList:
-  - index: 0
-    position: {x: 0, y: 0}
-    mapData:
-      index: 0
-      tag: 
-      level: 0
-      width: 0
-      height: 0
-    blockObject: {fileID: 0}
-  - index: 1
-    position: {x: 0, y: 10}
-    mapData:
-      index: 1
-      tag: MovingBlock
-      level: 0
-      width: 0
-      height: 10
-    blockObject: {fileID: 0}
-  - index: 2
-    position: {x: 0, y: 20}
-    mapData:
-      index: 0
-      tag: Block
-      level: 0
-      width: 3
-      height: 10
-    blockObject: {fileID: 0}
+  mapPosList: []
   maxMapCount: 3
-  mapCount: 0
+  mapCount: 3
   endBlockTrans: {fileID: 7576802080144593538}
   endBlockOffset: {x: 0, y: -5}
   mapDataTable: {fileID: 11400000, guid: 397d84d2e5a7eb444a05c48fe6898970, type: 2}
@@ -6720,7 +6694,7 @@ PrefabInstance:
     - target: {fileID: 5153543564957866732, guid: a35eb4e9a08994c4290a04ae7fbb81b0,
         type: 3}
       propertyPath: maxHP
-      value: 1000
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a35eb4e9a08994c4290a04ae7fbb81b0, type: 3}
@@ -6766,7 +6740,8 @@ MonoBehaviour:
   levelMeterCost: 10
   player: {fileID: 0}
   spawnTrans: {fileID: 835403494}
-  gameMapManager: {fileID: 880982800}
+  generateMap: {fileID: 880982800}
+  scrollBG: {fileID: 1176340538}
 --- !u!4 &1270603291
 Transform:
   m_ObjectHideFlags: 0
@@ -7059,7 +7034,6 @@ RectTransform:
   - {fileID: 501484055}
   - {fileID: 569467591}
   - {fileID: 954284759}
-  - {fileID: 1832927256}
   m_Father: {fileID: 861540724}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12564,7 +12538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1832927256
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12572,17 +12546,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832927255}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 475366594}
-  m_Father: {fileID: 1376670650}
-  m_RootOrder: 3
+  m_Father: {fileID: 342071711}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -60, y: -60}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 5, y: 500}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1832927257
@@ -12903,7 +12877,7 @@ PrefabInstance:
     - target: {fileID: 2460849936023005569, guid: fe98ef674db31e94badd078e7e07c0ba,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -30
+      value: -11.04
       objectReference: {fileID: 0}
     - target: {fileID: 2460849936023005569, guid: fe98ef674db31e94badd078e7e07c0ba,
         type: 3}

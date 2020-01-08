@@ -4,9 +4,22 @@ using UnityEngine;
 
 public class DefaultBlock : MonoBehaviour, IPoolObject
 {
-	public virtual void OnSpawnObject()
+
+	void OnEnable()
 	{
-		
+		GameManager.GameOverAction += DisableBlock;
+	}
+
+	void OnDisable()
+	{
+		GameManager.GameOverAction -= DisableBlock;
+	}
+
+	public virtual void OnSpawnObject() { }
+
+	void DisableBlock()
+	{
+		gameObject.SetActive(false);
 	}
 
 	public virtual void ShowBlock(bool show)

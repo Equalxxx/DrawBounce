@@ -162,11 +162,12 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
+    Android: com.MysticLights.StarryNight
     Standalone: com.Company.ProductName
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 19
-  AndroidTargetSdkVersion: 28
+  AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   stripEngineCode: 1
@@ -265,7 +266,7 @@ PlayerSettings:
   AndroidEnableTango: 0
   androidEnableBanner: 1
   androidUseLowAccuracyLocation: 0
-  androidUseCustomKeystore: 1
+  androidUseCustomKeystore: 0
   m_AndroidBanners:
   - width: 320
     height: 180
@@ -741,7 +742,7 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   cloudProjectId: 712ba2fc-2da6-4cc6-941e-dd6fd3f8e6be
   framebufferDepthMemorylessMode: 0
-  projectName: OnTheStar
+  projectName: StarryNight
   organizationId: joo-kiyoung
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0

@@ -26,7 +26,7 @@ public class MapDataTable : ScriptableObject
             {
                 dataList.Add(mapData);
             }
-        }
+		}
 
         return dataList;
     }

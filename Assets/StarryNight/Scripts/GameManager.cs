@@ -25,7 +25,8 @@ public class GameManager : Singleton<GameManager>
     public Player player;
     public Transform spawnTrans;
 
-    public GenerateMap gameMapManager;
+    public GenerateMap generateMap;
+	public ScrollBackground scrollBG;
 
 	private void Awake()
 	{
@@ -54,9 +55,12 @@ public class GameManager : Singleton<GameManager>
 
         Debug.Log("Title Menu!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Title);
-        player.InitPlayer();
 
-        while (gameState == GameState.GameTitle)
+        player.InitPlayer();
+		generateMap.InitMap();
+		scrollBG.InitBG();
+
+		while (gameState == GameState.GameTitle)
         {
             //if(Input.anyKeyDown)
             //{
@@ -69,11 +73,10 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator GamePlay()
     {
-        //gameMapManager.Generate();
-
-        Debug.Log("Game Start!");
+		Debug.Log("Game Start!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
         GameStartAction?.Invoke();
+		scrollBG.isScroll = true;
 
 		int nextLevel = 0;
 
