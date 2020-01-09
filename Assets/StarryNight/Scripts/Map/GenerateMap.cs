@@ -10,6 +10,7 @@ public class MapPos
 	public Vector2 position;
 	public MapData mapData;
 	public GameObject blockObject;
+	public float spacing;
 
 	public void Show(bool show)
 	{
@@ -46,7 +47,8 @@ public class GenerateMap : MonoBehaviour
 {
 	public Transform target;
 	public Vector3 targetPos;
-	public float spacing = 10f;
+	public float minSpacing = 5f;
+	public float maxSpacing = 10f;
 
 	public List<MapPos> mapPosList;
 	public int maxMapCount = 10;
@@ -75,14 +77,16 @@ public class GenerateMap : MonoBehaviour
 			{
 				mapPos.mapData = mapDataTable.GetRandomMapData(0);
 
+				mapPos.spacing = Random.Range(minSpacing, maxSpacing);
 				int rnd = Random.Range(0, 2);
+
 				if (rnd == 0)
 				{
-					mapPos.position = new Vector2(mapPos.mapData.width, mapCount * spacing);
+					mapPos.position = new Vector2(mapPos.mapData.width, i * mapPos.spacing);
 				}
 				else
 				{
-					mapPos.position = new Vector2(-mapPos.mapData.width, mapCount * spacing);
+					mapPos.position = new Vector2(-mapPos.mapData.width, i * mapPos.spacing);
 				}
 			}
 
@@ -104,14 +108,15 @@ public class GenerateMap : MonoBehaviour
 		if(mapPosList.Count > maxMapCount)
 		{
 			mapPosList.Remove(mapPosList[0]);
-			endBlockTrans.position = mapPosList[0].position + endBlockOffset;
+			Vector2 pos = new Vector2(0f, mapPosList[0].position.y + (-mapPosList[0].mapData.height / 2f));
+			endBlockTrans.position = pos;
 		}
 
-		if (mapPosList.Exists(x => x.position.y - spacing <= targetPos.y && x.position.y >= targetPos.y))
+		if (mapPosList.Exists(x => x.position.y - minSpacing <= targetPos.y && x.position.y >= targetPos.y))
 		{
 			for (int i = 0; i < mapPosList.Count; i++)
 			{
-				if (mapPosList[i].position.y - spacing <= targetPos.y && mapPosList[i].position.y + spacing >= targetPos.y)
+				if (mapPosList[i].position.y - minSpacing <= targetPos.y && mapPosList[i].position.y + minSpacing >= targetPos.y)
 				{
 					mapPosList[i].Show(true);
 				}
@@ -127,14 +132,16 @@ public class GenerateMap : MonoBehaviour
 			mapPos.index = mapCount;
 			mapPos.mapData = mapDataTable.GetRandomMapData(0);
 
+			mapPos.spacing = Random.Range(minSpacing, maxSpacing);
 			int rnd = Random.Range(0, 2);
+
 			if (rnd == 0)
 			{
-				mapPos.position = new Vector2(mapPos.mapData.width, mapCount * spacing);
+				mapPos.position = new Vector2(mapPos.mapData.width, mapCount * mapPos.spacing);
 			}
 			else
 			{
-				mapPos.position = new Vector2(-mapPos.mapData.width, mapCount * spacing);
+				mapPos.position = new Vector2(-mapPos.mapData.width, mapCount * mapPos.spacing);
 			}
 
 			mapPosList.Add(mapPos);

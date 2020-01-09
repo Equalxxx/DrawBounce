@@ -62,11 +62,6 @@ public class GameManager : Singleton<GameManager>
 
 		while (gameState == GameState.GameTitle)
         {
-            //if(Input.anyKeyDown)
-            //{
-            //    gameState = GameState.GamePlay;
-            //}
-
             yield return null;
         }
     }
@@ -82,11 +77,6 @@ public class GameManager : Singleton<GameManager>
 
 		while (gameState == GameState.GamePlay)
         {
-            if(Input.GetKeyDown(KeyCode.Escape))
-            {
-                gameState = GameState.GameOver;
-            }
-
 			nextLevel = (int)player.height / levelMeterCost;
 			if (nextLevel > level)
 				level = nextLevel;
@@ -102,11 +92,6 @@ public class GameManager : Singleton<GameManager>
 
         while (gameState == GameState.GameOver)
         {
-            //if (Input.anyKeyDown)
-            //{
-            //    gameState = GameState.GameTitle;
-            //}
-
             yield return null;
         }
 
