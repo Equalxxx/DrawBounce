@@ -18,8 +18,10 @@ public class GameManager : Singleton<GameManager>
 	public int levelMeterCost = 100;
 
     public static Action AddScoreAction;
-    public static Action GameStartAction;
-    public static Action GameOverAction;
+
+    public static Action GameInitAction;
+    public static Action GamePlayAction;
+	public static Action GameOverAction;
 
     [HideInInspector]
     public Player player;
@@ -51,14 +53,10 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator GameTitle()
     {
-        //gameMapManager.RemoveBlocks();
-
         Debug.Log("Title Menu!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Title);
-
-        player.InitPlayer();
-		generateMap.InitMap();
-		scrollBG.InitBG();
+		player.gameObject.SetActive(true);
+		GameInitAction?.Invoke();
 
 		while (gameState == GameState.GameTitle)
         {
@@ -70,8 +68,8 @@ public class GameManager : Singleton<GameManager>
     {
 		Debug.Log("Game Start!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
-        GameStartAction?.Invoke();
-		scrollBG.isScroll = true;
+
+        GamePlayAction?.Invoke();
 
 		int nextLevel = 0;
 
@@ -90,12 +88,12 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Game Over!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Result);
 
+        GameOverAction?.Invoke();
+
         while (gameState == GameState.GameOver)
         {
             yield return null;
         }
-
-        GameOverAction?.Invoke();
     }
 
     public void AddScore(int addScore)

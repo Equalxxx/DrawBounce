@@ -54,18 +54,19 @@ public class GenerateMap : MonoBehaviour
 	public int maxMapCount = 10;
 	public int mapCount;
 
-	public Transform endBlockTrans;
-	private Vector2 endBlockOriginPos;
-	public Vector2 endBlockOffset;
-
 	public MapDataTable mapDataTable;
 
-	private void Start()
+	private void OnEnable()
 	{
-		endBlockOriginPos = endBlockTrans.position;
+		GameManager.GameInitAction += InitMap;
 	}
 
-	public void InitMap()
+	private void OnDisable()
+	{
+		GameManager.GameInitAction -= InitMap;
+	}
+
+	void InitMap()
 	{
 		mapPosList.Clear();
 
@@ -94,8 +95,6 @@ public class GenerateMap : MonoBehaviour
 		}
 
 		mapCount = mapPosList.Count;
-
-		endBlockTrans.position = endBlockOriginPos;
 	}
 
 	private void Update()
@@ -109,7 +108,6 @@ public class GenerateMap : MonoBehaviour
 		{
 			mapPosList.Remove(mapPosList[0]);
 			Vector2 pos = new Vector2(0f, mapPosList[0].position.y + (-mapPosList[0].mapData.height / 2f));
-			endBlockTrans.position = pos;
 		}
 
 		if (mapPosList.Exists(x => x.position.y - minSpacing <= targetPos.y && x.position.y >= targetPos.y))

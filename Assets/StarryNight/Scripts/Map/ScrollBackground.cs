@@ -12,7 +12,19 @@ public class ScrollBackground : MonoBehaviour
 	public float height = 5f;
 	public float size = 10f;
 
-	public void InitBG()
+	private void OnEnable()
+	{
+		GameManager.GameInitAction += InitBG;
+		GameManager.GamePlayAction += StartScroll;
+	}
+
+	private void OnDisable()
+	{
+		GameManager.GameInitAction -= InitBG;
+		GameManager.GamePlayAction -= StartScroll;
+	}
+
+	void InitBG()
 	{
 		isScroll = false;
 
@@ -20,6 +32,12 @@ public class ScrollBackground : MonoBehaviour
 		{
 			bgTrans[i].position = new Vector3(0f, i * 10f, bgTrans[i].position.z);
 		}
+	}
+
+	void StartScroll()
+	{
+		if(!isScroll)
+			isScroll = true;
 	}
 
 	void Update()

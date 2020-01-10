@@ -7,12 +7,12 @@ public class DefaultBlock : MonoBehaviour, IPoolObject
 
 	void OnEnable()
 	{
-		GameManager.GameOverAction += DisableBlock;
+		GameManager.GameInitAction += DisableBlock;
 	}
 
 	void OnDisable()
 	{
-		GameManager.GameOverAction -= DisableBlock;
+		GameManager.GameInitAction -= DisableBlock;
 	}
 
 	public virtual void OnSpawnObject() { }

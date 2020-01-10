@@ -9,13 +9,13 @@ public class HpInfoUI : BaseGameUI
 
     private void OnEnable()
     {
-		GameManager.GameStartAction += RefreshUI;
+		GameManager.GamePlayAction += RefreshUI;
         Player.DamagedAction += RefreshUI;
     }
 
     private void OnDisable()
     {
-        GameManager.GameStartAction -= RefreshUI;
+        GameManager.GamePlayAction -= RefreshUI;
         Player.DamagedAction -= RefreshUI;
     }
 

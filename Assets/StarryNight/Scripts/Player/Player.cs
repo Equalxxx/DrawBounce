@@ -32,15 +32,20 @@ public class Player : MonoBehaviour
     {
         PoolManager.Instance.PrepareAssets(hitSmallTag);
         PoolManager.Instance.PrepareAssets(hitBigTag);
-
-        InitPlayer();
     }
 
-    public void InitPlayer()
-    {
-        if (!gameObject.activeSelf)
-            gameObject.SetActive(true);
+	private void OnEnable()
+	{
+		GameManager.GameInitAction += InitPlayer;
+	}
 
+	private void OnDisable()
+	{
+		GameManager.GameInitAction -= InitPlayer;
+	}
+
+	void InitPlayer()
+    {
         if (myRigidbody2D == null)
             myRigidbody2D = GetComponent<Rigidbody2D>();
         myRigidbody2D.velocity = Vector2.zero;
