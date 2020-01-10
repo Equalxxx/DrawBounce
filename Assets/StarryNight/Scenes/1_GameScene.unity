@@ -5916,7 +5916,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.316, y: 0, z: -20}
+  m_LocalPosition: {x: -7.166667, y: -5, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -10743,7 +10743,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.316, y: 0, z: -20}
+  m_LocalPosition: {x: -6.1666675, y: -5, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -11015,7 +11015,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880982798}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c2615ab1a492644e8bdd4f9af6cb872, type: 3}
   m_Name: 
@@ -11025,8 +11025,8 @@ MonoBehaviour:
   minSpacing: 5
   maxSpacing: 10
   mapPosList: []
-  maxMapCount: 3
-  mapCount: 3
+  maxMapCount: 10
+  mapCount: 0
   mapDataTable: {fileID: 11400000, guid: 397d84d2e5a7eb444a05c48fe6898970, type: 2}
 --- !u!1 &954284758
 GameObject:

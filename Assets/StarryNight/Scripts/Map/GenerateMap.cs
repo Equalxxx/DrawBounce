@@ -83,11 +83,11 @@ public class GenerateMap : MonoBehaviour
 
 				if (rnd == 0)
 				{
-					mapPos.position = new Vector2(mapPos.mapData.width, i * mapPos.spacing);
+					mapPos.position = new Vector2(mapPos.mapData.width, mapPosList[i - 1].position.y + mapPos.spacing);
 				}
 				else
 				{
-					mapPos.position = new Vector2(-mapPos.mapData.width, i * mapPos.spacing);
+					mapPos.position = new Vector2(-mapPos.mapData.width, mapPosList[i - 1].position.y + mapPos.spacing);
 				}
 			}
 
@@ -110,11 +110,11 @@ public class GenerateMap : MonoBehaviour
 			Vector2 pos = new Vector2(0f, mapPosList[0].position.y + (-mapPosList[0].mapData.height / 2f));
 		}
 
-		if (mapPosList.Exists(x => x.position.y - minSpacing <= targetPos.y && x.position.y >= targetPos.y))
+		if (mapPosList.Exists(x => x.position.y - maxSpacing <= targetPos.y && x.position.y >= targetPos.y))
 		{
 			for (int i = 0; i < mapPosList.Count; i++)
 			{
-				if (mapPosList[i].position.y - minSpacing <= targetPos.y && mapPosList[i].position.y + minSpacing >= targetPos.y)
+				if (mapPosList[i].position.y - maxSpacing <= targetPos.y && mapPosList[i].position.y + maxSpacing >= targetPos.y)
 				{
 					mapPosList[i].Show(true);
 				}
@@ -135,11 +135,11 @@ public class GenerateMap : MonoBehaviour
 
 			if (rnd == 0)
 			{
-				mapPos.position = new Vector2(mapPos.mapData.width, mapCount * mapPos.spacing);
+				mapPos.position = new Vector2(mapPos.mapData.width, mapPosList[mapPosList.Count - 1].position.y + mapPos.spacing);
 			}
 			else
 			{
-				mapPos.position = new Vector2(-mapPos.mapData.width, mapCount * mapPos.spacing);
+				mapPos.position = new Vector2(-mapPos.mapData.width, mapPosList[mapPosList.Count - 1].position.y + mapPos.spacing);
 			}
 
 			mapPosList.Add(mapPos);
