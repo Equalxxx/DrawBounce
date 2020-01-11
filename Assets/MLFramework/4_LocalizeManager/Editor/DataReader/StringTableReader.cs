@@ -12,7 +12,7 @@ public class StringTableReader : EditorWindow
 	public UnityEngine.Object ProtoExcelFile = null;
 	private static string lastMsg = string.Empty;
 	private string selectedExcelPath = "Assets/MLFramework/4_LocalizeManager/Table/StringTable.xlsx";
-	private string selectedExportPath = "Assets/MLFramework/Resources/DataTables";
+	private string selectedExportPath = "Assets/Resources/DataTables";
     [MenuItem ("DataReader/StringTable Reader", false, 1)]
 
 	public static void Init(){

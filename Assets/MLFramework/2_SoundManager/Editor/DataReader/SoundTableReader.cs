@@ -12,7 +12,7 @@ public class SoundTableReader : EditorWindow
 	public UnityEngine.Object ProtoExcelFile = null;
 	private static string lastMsg = string.Empty;
 	private string selectedExcelPath = "Assets/MLFramework/2_SoundManager/Table/SoundTable.xlsx";
-	private string selectedExportPath = "Assets/MLFramework/Resources/DataTables";
+	private string selectedExportPath = "Assets/Resources/DataTables";
 	[MenuItem ("DataReader/SoundTable Reader", false, 1)]
 
 	public static void Init(){

@@ -12,7 +12,7 @@ public class BasicDataTableReader : EditorWindow
 	public UnityEngine.Object ProtoExcelFile = null;
 	private static string lastMsg = string.Empty;
 	private string selectedExcelPath = "Assets/MLFramework/1_ExcelDataReader/Editor/Table/BasicDataTable.xlsx";
-	private string selectedExportPath = "Assets/MLFramework/Resources/DataTables";
+	private string selectedExportPath = "Assets/Resources/DataTables";
     [MenuItem ("DataReader/BasicDataTable Reader", false, 1)]
 
     public static void Init()

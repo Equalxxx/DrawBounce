@@ -11,8 +11,8 @@ public class MapDataTableReader : EditorWindow
 {
 	public UnityEngine.Object ProtoExcelFile = null;
 	private static string lastMsg = string.Empty;
-	private string selectedExcelPath = "Assets/StarryNight/Tables/MapDataTable.xlsx";
-	private string selectedExportPath = "Assets/MLFramework/Resources/DataTables";
+	private string selectedExcelPath = "Assets/DrawBounce/Tables/MapDataTable.xlsx";
+	private string selectedExportPath = "Assets/Resources/DataTables";
     [MenuItem ("DataReader/MapDataTable Reader", false, 1)]
 
 	public static void Init(){

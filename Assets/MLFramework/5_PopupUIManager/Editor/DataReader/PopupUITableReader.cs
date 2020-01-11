@@ -12,7 +12,7 @@ public class PopupUITableReader : EditorWindow
 	public UnityEngine.Object ProtoExcelFile = null;
 	private static string lastMsg = string.Empty;
 	private string selectedExcelPath = "Assets/MLFramework/5_PopupUIManager/Table/PopupUITable.xlsx";
-	private string selectedExportPath = "Assets/MLFramework/Resources/DataTables";
+	private string selectedExportPath = "Assets/Resources/DataTables";
     [MenuItem ("DataReader/PopupUITable Reader", false, 1)]
 
 	public static void Init(){

@@ -12,7 +12,7 @@ public class PoolTableReader : EditorWindow
 	public UnityEngine.Object ProtoExcelFile = null;
 	private static string lastMsg = string.Empty;
 	private string selectedExcelPath = "Assets/MLFramework/3_PoolManager/Table/PoolTable.xlsx";
-	private string selectedExportPath = "Assets/MLFramework/Resources/DataTables";
+	private string selectedExportPath = "Assets/Resources/DataTables";
     [MenuItem ("DataReader/PoolTable Reader", false, 1)]
 
 	public static void Init(){
