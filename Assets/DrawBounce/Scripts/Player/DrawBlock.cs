@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MysticLights;
 
-public class DrawBlock : MonoBehaviour
+public class DrawBlock : MonoBehaviour, IPoolObject
 {
     private EdgeCollider2D edgeCol2D;
     public Transform myTransform;
@@ -19,7 +19,31 @@ public class DrawBlock : MonoBehaviour
         myTransform = transform;
     }
 
-    private void Update()
+	private void OnEnable()
+	{
+		GameManager.PauseAction += GamePause;
+
+		edgeCol2D = PoolManager.Instance.Spawn("EdgeCollider", Vector3.zero, Quaternion.identity).GetComponent<EdgeCollider2D>();
+		edgeCol2D.enabled = false;
+
+		isDraw = true;
+		StartCoroutine(AutoDisableDraw());
+	}
+
+	private void OnDisable()
+	{
+		GameManager.PauseAction -= GamePause;
+
+		if (edgeCol2D)
+		{
+			edgeCol2D.gameObject.SetActive(false);
+			edgeCol2D = null;
+		}
+
+		positionList.Clear();
+	}
+
+	private void Update()
     {
         if(edgeCol2D.pointCount != positionList.Count)
         {
@@ -27,25 +51,14 @@ public class DrawBlock : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-		//edgeCol2D = Instantiate(edgeColPrefab, Vector3.zero, Quaternion.identity).GetComponent<EdgeCollider2D>();
-		edgeCol2D = PoolManager.Instance.Spawn("EdgeCollider", Vector3.zero, Quaternion.identity).GetComponent<EdgeCollider2D>();
-		edgeCol2D.enabled = false;
-
-		isDraw = true;
-        StartCoroutine(AutoDisableDraw());
-    }
-
-    private void OnDisable()
-    {
-		if(edgeCol2D)
+	void GamePause(bool pause)
+	{
+		if (pause)
 		{
-			//Destroy(edgeCol2D.gameObject);
-			edgeCol2D.gameObject.SetActive(false);
-			edgeCol2D = null;
+			gameObject.SetActive(false);
+			positionList.Clear();
 		}
-    }
+	}
 
     public void AddPosition(Vector2 addPos)
     {
@@ -98,4 +111,9 @@ public class DrawBlock : MonoBehaviour
 
         isDraw = false;
     }
+
+	public void OnSpawnObject()
+	{
+
+	}
 }

@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class HpInfoUI : BaseGameUI
+public class HpInfoUI : MonoBehaviour
 {
-    public Image hpBar;
+    private Image hpImage;
+	private TextMeshProUGUI hpText;
 
-    private void OnEnable()
+	private void Awake()
+	{
+		hpImage = GetComponentInChildren<Image>();
+		hpText = GetComponentInChildren<TextMeshProUGUI>();
+	}
+
+	private void OnEnable()
     {
 		GameManager.GamePlayAction += RefreshUI;
         Player.DamagedAction += RefreshUI;
@@ -19,11 +27,10 @@ public class HpInfoUI : BaseGameUI
         Player.DamagedAction -= RefreshUI;
     }
 
-    public override void RefreshUI()
+    public void RefreshUI()
     {
         int hp = GameManager.Instance.player.HP;
-        int maxHp = GameManager.Instance.player.maxHP;
 
-        hpBar.fillAmount = (float)hp / (float)maxHp;
-    }
+		hpText.text = string.Format("x {0}",hp);
+	}
 }

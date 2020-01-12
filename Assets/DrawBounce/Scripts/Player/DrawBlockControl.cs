@@ -15,10 +15,13 @@ public class DrawBlockControl : MonoBehaviour
     private void Awake()
     {
         PoolManager.Instance.PrepareAssets("PointerEffect");
-    }
+        PoolManager.Instance.PrepareAssets("EdgeCollider");
+	}
 
     private void Update()
     {
+		if (GameManager.Instance.isPause)
+			return;
         if (GameManager.Instance.gameState != GameState.GamePlay)
             return;
 
@@ -26,8 +29,7 @@ public class DrawBlockControl : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
-            //drawBlock = Instantiate(pointerEffectPrefab, pos, Quaternion.identity).GetComponent<DrawBlock>();
-            drawBlock = PoolManager.Instance.Spawn("PointerEffect", pos, Quaternion.identity).GetComponent<DrawBlock>();
+			drawBlock = PoolManager.Instance.Spawn("PointerEffect", pos, Quaternion.identity).GetComponent<DrawBlock>();
             isAddPosition = true;
         }
 

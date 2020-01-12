@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7296256528534634863}
   - component: {fileID: 1983539975288792413}
-  - component: {fileID: 6085733124382983038}
+  - component: {fileID: -5162242599413555397}
   m_Layer: 8
   m_Name: EdgeCollider
   m_TagString: SemiBlock
@@ -50,7 +50,7 @@ EdgeCollider2D:
   m_Points:
   - {x: -0.5, y: 0}
   - {x: 0.5, y: 0}
---- !u!114 &6085733124382983038
+--- !u!114 &-5162242599413555397
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,6 +59,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5121197021080854708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7274bb117ce8c244cafe344c0db022ea, type: 3}
+  m_Script: {fileID: 11500000, guid: c317f4c4a7561e9489799020cc7738a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 8
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -13,17 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundInfoList:
   - index: 0
-    path: sound/bgm
-    tag: bg1
+    path: Sound/SE
+    tag: Bounce_1
   - index: 1
-    path: sound/se1
-    tag: card_close
+    path: Sound/SE
+    tag: Bounce_2
   - index: 2
-    path: sound/se1
-    tag: cardStart
+    path: Sound/SE
+    tag: Bounce_3
   - index: 3
-    path: sound/se2
-    tag: answer
+    path: Sound/SE
+    tag: Bounce_4
   - index: 4
-    path: sound/se2
-    tag: card_wrong
+    path: Sound/SE
+    tag: Bounce_5
+  - index: 5
+    path: Sound/SE
+    tag: Explosion_Hit
+  - index: 6
+    path: Sound/SE
+    tag: Explosion_Over
+  - index: 7
+    path: Sound/BGM
+    tag: BGM_1
+  - index: 8
+    path: Sound/SE
+    tag: Buy_Heart
+  - index: 9
+    path: Sound/SE
+    tag: Buy_Heart_End
+  - index: 10
+    path: Sound/SE
+    tag: Buy_Heart_Notwork
+  - index: 11
+    path: Sound/SE
+    tag: AddScore

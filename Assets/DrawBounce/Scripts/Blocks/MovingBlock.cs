@@ -4,23 +4,76 @@ using UnityEngine;
 
 public class MovingBlock : DefaultBlock
 {
-    public float width;
-    public float t;
-    public float duration = 1f;
+	public enum MovingBlockType { SideToSide, Repeat }
+	public MovingBlockType movingType;
+	
+	public float moveFactor = 3f;
 
-	private void FixedUpdate()
-    {
-        t += Time.fixedDeltaTime / duration;
+	private Transform myTransform;
+	private Vector3 originPosition;
 
-        Vector2 pos = transform.position;
-        pos.x = Mathf.Lerp(-width, width, t);
+	private void Awake()
+	{
+		myTransform = transform;
+		originPosition = myTransform.localPosition;
+	}
 
-        if(t >=1f)
-        {
-            t = 0f;
-            width = -width;
-        }
+	private void OnEnable()
+	{
+		StartCoroutine(Moving());
+	}
 
-        transform.position = pos;
-    }
+	private void OnDisable()
+	{
+		StopCoroutine(Moving());
+	}
+
+	IEnumerator Moving()
+	{
+		switch (movingType)
+		{
+			case MovingBlockType.SideToSide:
+				Vector3 dir = Vector3.right;
+				bool swap = true;
+				while(true)
+				{
+					if (swap)
+					{
+						if (myTransform.localPosition.x > Mathf.Abs(originPosition.x))
+						{
+							dir.x = -1f;
+							swap = false;
+						}
+					}
+					else
+					{
+						if (myTransform.localPosition.x < -Mathf.Abs(originPosition.x))
+						{
+							dir.x = 1f;
+							swap = true;
+						}
+					}
+
+					myTransform.Translate(dir * moveFactor * Time.deltaTime);
+					yield return null;
+				}
+			case MovingBlockType.Repeat:
+				Vector3 pos = myTransform.localPosition;
+				float t = 0f;
+
+				while(true)
+				{
+					t += Time.deltaTime / moveFactor;
+					
+					if(originPosition.x >= 0f)
+						pos.x = originPosition.x - Mathf.Repeat(t, Mathf.Abs(originPosition.x * 2f));
+					else
+						pos.x = originPosition.x + Mathf.Repeat(t, Mathf.Abs(originPosition.x * 2f));
+
+					myTransform.localPosition = pos;
+
+					yield return null;
+				}
+		}
+	}
 }

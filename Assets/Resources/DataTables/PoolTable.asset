@@ -22,50 +22,138 @@ MonoBehaviour:
     tag: Hit_Block
     preloadCount: 3
   - index: 2
+    path: PoolObject/Effects
+    tag: Explosion_End
+    preloadCount: 1
+  - index: 3
+    path: PoolObject/Effects
+    tag: AddScoreEffect
+    preloadCount: 1
+  - index: 4
     path: PoolObject/Pointer
     tag: PointerEffect
     preloadCount: 3
-  - index: 3
+  - index: 5
     path: PoolObject/Pointer
     tag: EdgeCollider
     preloadCount: 3
-  - index: 4
+  - index: 6
     path: Maps/Level_1
     tag: Map_1_1
     preloadCount: 3
-  - index: 5
+  - index: 7
     path: Maps/Level_1
     tag: Map_1_2
     preloadCount: 3
-  - index: 6
+  - index: 8
     path: Maps/Level_1
     tag: Map_1_3
     preloadCount: 3
-  - index: 7
+  - index: 9
     path: Maps/Level_1
     tag: Map_1_4
     preloadCount: 3
-  - index: 8
+  - index: 10
     path: Maps/Level_2
     tag: Map_2_1
     preloadCount: 3
-  - index: 9
+  - index: 11
     path: Maps/Level_2
     tag: Map_2_2
     preloadCount: 3
-  - index: 10
+  - index: 12
     path: Maps/Level_2
     tag: Map_2_3
     preloadCount: 3
-  - index: 11
+  - index: 13
     path: Maps/Level_2
     tag: Map_2_4
     preloadCount: 3
-  - index: 12
+  - index: 14
     path: Maps/Level_2
     tag: Map_2_5
     preloadCount: 3
-  - index: 13
+  - index: 15
     path: Maps/Level_2
     tag: Map_2_6
+    preloadCount: 3
+  - index: 16
+    path: Maps/Level_3
+    tag: Map_3_1
+    preloadCount: 3
+  - index: 17
+    path: Maps/Level_3
+    tag: Map_3_2
+    preloadCount: 3
+  - index: 18
+    path: Maps/Level_3
+    tag: Map_3_3
+    preloadCount: 3
+  - index: 19
+    path: Maps/Level_3
+    tag: Map_3_4
+    preloadCount: 3
+  - index: 20
+    path: Maps/Level_4
+    tag: Map_4_1
+    preloadCount: 3
+  - index: 21
+    path: Maps/Level_4
+    tag: Map_4_2
+    preloadCount: 3
+  - index: 22
+    path: Maps/Level_4
+    tag: Map_4_3
+    preloadCount: 3
+  - index: 23
+    path: Maps/Level_4
+    tag: Map_4_4
+    preloadCount: 3
+  - index: 24
+    path: Maps/Level_4
+    tag: Map_4_5
+    preloadCount: 3
+  - index: 25
+    path: Maps/Level_4
+    tag: Map_4_6
+    preloadCount: 3
+  - index: 26
+    path: Maps/Level_4
+    tag: Map_4_7
+    preloadCount: 3
+  - index: 27
+    path: Maps/Level_4
+    tag: Map_4_8
+    preloadCount: 3
+  - index: 28
+    path: Maps/Level_4
+    tag: Map_4_9
+    preloadCount: 3
+  - index: 29
+    path: Maps/Level_4
+    tag: Map_4_10
+    preloadCount: 3
+  - index: 30
+    path: Maps/Level_5
+    tag: Map_5_1
+    preloadCount: 3
+  - index: 31
+    path: Maps/Level_5
+    tag: Map_5_2
+    preloadCount: 3
+  - index: 32
+    path: Maps/Level_5
+    tag: Map_5_3
+    preloadCount: 3
+  - index: 33
+    path: Maps/Level_5
+    tag: Map_5_4
+    preloadCount: 3
+  - index: 34
+    path: Maps/Level_5
+    tag: Map_5_5
+    preloadCount: 3
+  - index: 35
+    path: Maps/Level_5
+    tag: Map_5_6
     preloadCount: 3

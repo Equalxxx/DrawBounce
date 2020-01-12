@@ -24,6 +24,11 @@ public class ResultUIGroup : UIGroup
 
 	void RefreshUI()
 	{
-		maxMeterText.text = UIManager.Instance.GetMeterText(GameManager.Instance.player.lastHeight);
+		maxMeterText.text = GetMeterText(GameManager.Instance.player.GetLastHeight());
+	}
+
+	string GetMeterText(float height)
+	{
+		return string.Format("{0:f1}M", height);
 	}
 }

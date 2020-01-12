@@ -29,12 +29,14 @@ public class FollowCamera : MonoBehaviour
 	{
 		GameManager.GameInitAction += Init;
 		GameManager.GamePlayAction += StartFollow;
+		GameManager.SetPlayAction += SetStartMeter;
 	}
 
 	private void OnDisable()
 	{
 		GameManager.GameInitAction -= Init;
 		GameManager.GamePlayAction -= StartFollow;
+		GameManager.SetPlayAction -= SetStartMeter;
 	}
 
 	void Init()
@@ -45,6 +47,11 @@ public class FollowCamera : MonoBehaviour
 		isFollow = false;
 		myTransform.position = originPosition;
 		endEffectTrans.position = new Vector3(0f, -5f, 10f);
+	}
+
+	void SetStartMeter(float meter)
+	{
+		myTransform.position = new Vector3(0f, meter, 0f);
 	}
 
 	void StartFollow()

@@ -6,6 +6,8 @@ public class DefaultBlock : MonoBehaviour, IPoolObject
 {
 	public virtual void OnSpawnObject() { }
 
+	public virtual void InitBlock() { }
+
 	public virtual void ShowBlock(bool show)
 	{
 		if (gameObject.activeSelf != show)

@@ -24,17 +24,24 @@ public class GenerateMap : MonoBehaviour
 
 	public int mapCount;
 
-	public float mapLevRandomPercent = 70f;
+	public float mapLevRandomPercent = 50f;
 
 	public List<MapPos> mapPosList;
 
 	private Player player;
 
-	public List<string> mapTagList_1;
-	public List<string> mapTagList_2;
+	public int maxMapLevel = 5;
+	private Dictionary<int, List<MapData>> mapDataDic;
+	public MapDataTable mapDataTable;
 
 	private void Awake()
 	{
+		mapDataDic = new Dictionary<int, List<MapData>>();
+		for (int i = 1; i <= maxMapLevel; i++)
+		{
+			mapDataDic.Add(i, mapDataTable.GetMapDataList(i));
+		}
+
 		PrepareAssets();
 	}
 
@@ -71,20 +78,17 @@ public class GenerateMap : MonoBehaviour
 
 	void PrepareAssets()
 	{
-		for (int i = 0; i < mapTagList_1.Count; i++)
+		foreach(KeyValuePair<int, List<MapData>> keyPair in mapDataDic)
 		{
-			PoolManager.Instance.PrepareAssets(mapTagList_1[i]);
-		}
-		for (int i = 0; i < mapTagList_2.Count; i++)
-		{
-			PoolManager.Instance.PrepareAssets(mapTagList_2[i]);
+			for(int i = 0; i < keyPair.Value.Count; i++)
+			{
+				PoolManager.Instance.PrepareAssets(keyPair.Value[i].tag);
+			}
 		}
 	}
 
 	private void Update()
 	{
-		//if (player.lastHeight - 5f - Camera.main.orthographicSize < player.lastHeight)
-		//if (lastMapPosition - mapPosList[mapPosList.Count - 1].mapSet.height < player.lastHeight)
 		firstMapPosition = mapPosList[0].mapSet.transform.position.y;
 
 		if (firstMapPosition+ mapPosList[0].mapSet.height < player.lastHeight - 5f - Camera.main.orthographicSize)
@@ -112,30 +116,36 @@ public class GenerateMap : MonoBehaviour
 	MapSet GetRandomMapSet()
 	{
 		int level = GameManager.Instance.level;
-		if (level > 2)
-			level = 2;
+		if (level > maxMapLevel)
+			level = maxMapLevel;
 
-		float rnd = Random.Range(0f, 100f);
-		if(rnd < mapLevRandomPercent)
+		level = GetRandomMapLevel(level);
+
+		List<MapData> mapDataList = mapDataDic[level];
+
+		int rnd = Random.Range(0, mapDataList.Count);
+		//string mapTag = string.Format("Map_{0}_{1}", level, idx + 1);
+
+		return PoolManager.Instance.Spawn(mapDataList[rnd].tag, Vector3.zero, Quaternion.identity).GetComponent<MapSet>();
+	}
+
+	int GetRandomMapLevel(int lev)
+	{
+		float rnd = 0f;
+
+		while (true)
 		{
-			level = Random.Range(1, level);
+			rnd = Random.Range(0f, 100f);
+			if (rnd < mapLevRandomPercent)
+			{
+				return lev;
+			}
+			else
+			{
+				lev--;
+				if (lev <= 1)
+					return 1;
+			}
 		}
-
-		List<string> mapTagList = null;
-
-		switch(level)
-		{
-			case 1:
-				mapTagList = mapTagList_1;
-				break;
-			case 2:
-				mapTagList = mapTagList_2;
-				break;
-		}
-
-		int idx = Random.Range(0, mapTagList.Count);
-		string mapTag = string.Format("Map_{0}_{1}", level, idx + 1);
-
-		return PoolManager.Instance.Spawn(mapTag, Vector3.zero, Quaternion.identity).GetComponent<MapSet>();
 	}
 }

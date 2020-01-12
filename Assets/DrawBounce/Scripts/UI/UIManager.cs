@@ -1,14 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MysticLights;
 
 public class UIManager : Singleton<UIManager>
 {
     public UIGroup[] uiGroups;
     public UIGroup currentUIGroup;
-    
-    public void ShowUIGroup(UIGroupType groupType)
+
+	public float fadeDuration = 1f;
+
+	public GameObject pauseUIObj;
+
+	private void OnValidate()
+	{
+		uiGroups = GetComponentsInChildren<UIGroup>();
+	}
+
+	private void Awake()
+	{
+		ShowPauseUI(false);
+	}
+
+	public void ShowUIGroup(UIGroupType groupType)
     {
         if(currentUIGroup)
             currentUIGroup.ShowUIGroup(false);
@@ -26,8 +41,11 @@ public class UIManager : Singleton<UIManager>
         Debug.LogFormat("Change UI group : {0}", groupType);
     }
 
-	public string GetMeterText(float height)
+	public void ShowPauseUI(bool show)
 	{
-		return string.Format("{0:f1}M", height);
+		if (pauseUIObj.activeSelf != show)
+		{
+			pauseUIObj.SetActive(show);
+		}
 	}
 }

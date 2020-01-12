@@ -4804,7 +4804,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: fc4719bc7e9fec5439cf54733f89a9cb, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -4822,12 +4822,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
-  maxHP: 5
   jumpPower: 8
   curColorType: 0
   currentColor: {r: 1, g: 1, b: 1, a: 1}
-  sprRenderer: {fileID: 0}
-  trailParticle: {fileID: 0}
+  sprRenderer: {fileID: 1329755704298159994}
+  trailParticle: {fileID: 1723631181522557933}
   onGrounded: 0
   groundMask:
     serializedVersion: 2
@@ -4839,6 +4838,7 @@ MonoBehaviour:
   lastHeight: 0
   hitSmallTag: Hit_Spark
   hitBigTag: Hit_Block
+  explosionTag: Explosion_End
 --- !u!1 &6221910375232625587
 GameObject:
   m_ObjectHideFlags: 0
@@ -4910,7 +4910,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d45f8fec6b74f9642824478faa78cf2e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 003f7367b4b241043a26b6e86d795bc1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

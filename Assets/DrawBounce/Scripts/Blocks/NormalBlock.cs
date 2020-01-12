@@ -4,8 +4,4 @@ using UnityEngine;
 
 public class NormalBlock : DefaultBlock
 {
-	public override void OnSpawnObject()
-	{
-		
-	}
 }

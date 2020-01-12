@@ -14,12 +14,92 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapDataList:
   - index: 0
-    tag: Block
-    level: 0
-    width: 3
-    height: 10
-  - index: 1
-    tag: MovingBlock
+    tag: Map_1_1
     level: 1
-    width: 0
-    height: 10
+  - index: 1
+    tag: Map_1_2
+    level: 1
+  - index: 2
+    tag: Map_1_3
+    level: 1
+  - index: 3
+    tag: Map_1_4
+    level: 1
+  - index: 4
+    tag: Map_2_1
+    level: 2
+  - index: 5
+    tag: Map_2_2
+    level: 2
+  - index: 6
+    tag: Map_2_3
+    level: 2
+  - index: 7
+    tag: Map_2_4
+    level: 2
+  - index: 8
+    tag: Map_2_5
+    level: 2
+  - index: 9
+    tag: Map_2_6
+    level: 2
+  - index: 10
+    tag: Map_3_1
+    level: 3
+  - index: 11
+    tag: Map_3_2
+    level: 3
+  - index: 12
+    tag: Map_3_3
+    level: 3
+  - index: 13
+    tag: Map_3_4
+    level: 3
+  - index: 14
+    tag: Map_4_1
+    level: 4
+  - index: 15
+    tag: Map_4_2
+    level: 4
+  - index: 16
+    tag: Map_4_3
+    level: 4
+  - index: 17
+    tag: Map_4_4
+    level: 4
+  - index: 18
+    tag: Map_4_5
+    level: 4
+  - index: 19
+    tag: Map_4_6
+    level: 4
+  - index: 20
+    tag: Map_4_7
+    level: 4
+  - index: 21
+    tag: Map_4_8
+    level: 4
+  - index: 22
+    tag: Map_4_9
+    level: 4
+  - index: 23
+    tag: Map_4_10
+    level: 4
+  - index: 24
+    tag: Map_5_1
+    level: 5
+  - index: 25
+    tag: Map_5_2
+    level: 5
+  - index: 26
+    tag: Map_5_3
+    level: 5
+  - index: 27
+    tag: Map_5_4
+    level: 5
+  - index: 28
+    tag: Map_5_5
+    level: 5
+  - index: 29
+    tag: Map_5_6
+    level: 5

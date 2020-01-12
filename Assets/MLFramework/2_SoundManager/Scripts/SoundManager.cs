@@ -17,6 +17,7 @@ namespace MysticLights
         public float crossFadeTime = 5f;        //fade 시간
 
         private float seVolume = 0f;            //사운드 볼륨
+		public float bgmMaxVolume = 1f;
         private float bgmVolume0 = 0f;          //AudioSource0 번볼륨
         private float bgmVolume1 = 0f;          //AudioSource1 번볼륨
 
@@ -59,11 +60,11 @@ namespace MysticLights
             if (fadeAudio)
             {
                 //주플레이 AudioSource 는 볼륨을 올린다.
-                if (bgmVolume0 < 1f)
+                if (bgmVolume0 < bgmMaxVolume)
                 {
                     bgmVolume0 += Time.deltaTime / crossFadeTime;
-                    if (bgmVolume0 >= 1f)
-                        bgmVolume0 = 1f;
+                    if (bgmVolume0 >= bgmMaxVolume)
+                        bgmVolume0 = bgmMaxVolume;
                 }
 
                 //빠진는 AudioSource 는 볼륨을 내린다.

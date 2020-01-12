@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1611742414929395177}
   - component: {fileID: 1611742414929394710}
   - component: {fileID: 426952941348672414}
-  - component: {fileID: -4847942267261895477}
   m_Layer: 0
   m_Name: PointerEffect
   m_TagString: Untagged
@@ -4768,21 +4767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e811fa65bad72b439b7c50e04fd19b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  edgeColPrefab: {fileID: 5121197021080854708, guid: 145bc44fdb40c7842920fbe0c1d2b473,
-    type: 3}
   myTransform: {fileID: 0}
   positionList: []
   duration: 1
   minDistance: 0.1
---- !u!114 &-4847942267261895477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1611742414929394711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7274bb117ce8c244cafe344c0db022ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

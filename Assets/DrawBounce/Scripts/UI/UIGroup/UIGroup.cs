@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum UIGroupType { Title, Game, Result }
+public enum UIGroupType { Title, Game, Result, Shop }
 public class UIGroup : MonoBehaviour
 {
     public UIGroupType groupType;
-
+	private bool isShow;
     protected CanvasGroup canvasGroup;
-
-    public float fadeDuration = 1f;
 
     private void Awake()
     {
@@ -20,7 +18,8 @@ public class UIGroup : MonoBehaviour
 
     public void ShowUIGroup(bool show)
     {
-        StartCoroutine(FadeUIGroup(show));
+		isShow = show;
+		StartCoroutine(FadeUIGroup(show));
     }
 
     IEnumerator FadeUIGroup(bool show)
@@ -33,7 +32,10 @@ public class UIGroup : MonoBehaviour
 
             while (t < 1f)
             {
-                t += Time.deltaTime / fadeDuration;
+				if (!isShow)
+					yield break;
+
+                t += Time.deltaTime / UIManager.Instance.fadeDuration;
 
                 if (show)
                 {

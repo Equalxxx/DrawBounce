@@ -8,8 +8,6 @@ public class MapData
     public int index;
     public string tag;
     public int level;
-    public float width;
-    public float height;
 }
 
 public class MapDataTable : ScriptableObject
