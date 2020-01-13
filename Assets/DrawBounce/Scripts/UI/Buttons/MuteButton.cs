@@ -9,7 +9,6 @@ public class MuteButton : BasicUIButton
 	private Image myImage;
 	private DOTweenAnimation myButtonAnim;
 
-	public bool isMute;
 	public float animDuration = 1f;
 
 	public Sprite onSoundSprite;
@@ -17,26 +16,34 @@ public class MuteButton : BasicUIButton
 
 	protected override void InitButton()
 	{
-		myImage = GetComponent<Image>();
-		myButtonAnim = GetComponent<DOTweenAnimation>();
+		RefreshUI();
+	}
 
-		myButtonAnim.duration = animDuration;
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+		GameManager.SoundMuteAction += RefreshUI;
+	}
 
-		isMute = GameManager.Instance.isSoundMute;
+	protected override void OnDisable()
+	{
+		base.OnDisable();
+		GameManager.SoundMuteAction -= RefreshUI;
 	}
 
 	protected override void PressedButton()
 	{
-		isMute = !isMute;
-
-		ChangeMuteSprite();
-
-		GameManager.Instance.SetSoundMute(isMute);
+		GameManager.Instance.SetSoundMute(!GameManager.Instance.isSoundMute);
 	}
 
-	void ChangeMuteSprite()
+	void RefreshUI()
 	{
-		if (isMute)
+		if(!myImage)
+			myImage = GetComponent<Image>();
+
+		bool mute = GameManager.Instance.isSoundMute;
+
+		if (mute)
 		{
 			myImage.sprite = offSoundSprite;
 		}
@@ -48,8 +55,14 @@ public class MuteButton : BasicUIButton
 
 	public void ShowButton(bool show)
 	{
-		isMute = GameManager.Instance.isSoundMute;
-		ChangeMuteSprite();
+		if (!myButtonAnim)
+		{
+			myButtonAnim = GetComponent<DOTweenAnimation>();
+			if (!myButtonAnim)
+				return;
+
+			myButtonAnim.duration = animDuration;
+		}
 
 		if (show)
 		{
@@ -59,5 +72,7 @@ public class MuteButton : BasicUIButton
 		{
 			myButtonAnim.DOPlayBackwards();
 		}
+
+		RefreshUI();
 	}
 }

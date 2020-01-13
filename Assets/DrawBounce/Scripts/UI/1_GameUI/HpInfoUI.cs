@@ -18,13 +18,13 @@ public class HpInfoUI : MonoBehaviour
 	private void OnEnable()
     {
 		GameManager.GamePlayAction += RefreshUI;
-        Player.DamagedAction += RefreshUI;
+		PlayableBlock.DamagedAction += RefreshUI;
     }
 
     private void OnDisable()
     {
         GameManager.GamePlayAction -= RefreshUI;
-        Player.DamagedAction -= RefreshUI;
+		PlayableBlock.DamagedAction -= RefreshUI;
     }
 
     public void RefreshUI()

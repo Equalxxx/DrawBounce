@@ -29,6 +29,8 @@ public class GameManager : Singleton<GameManager>
 	public int level;
 	public int levelMeterCost = 100;
 	public float getCoinHeight = 30f;
+	public float limitStartHeight = 100f;
+	public float moveToDuration = 5f;
 
 	[Header("Game Settings")]
 	public bool isPause;
@@ -44,27 +46,31 @@ public class GameManager : Singleton<GameManager>
 	public static Action UseGemAction;
 	public static Action AddCoinAction;
 	public static Action UseCoinAction;
+
 	public static Action AddPlayerHPAction;
-	public static Action<float> SetPlayAction;
+	public static Action AddHeightAction;
+
+	public static Action<float> SetStartHeightAction;
 	public static Action<bool> PauseAction;
-	
+	public static Action SoundMuteAction;
+
 	[Header("GameManager Settings")]
 	public GameSettings gameSettings;
 	public bool testMode;
 	[HideInInspector]
-    public Player player;
+    public PlayableBlock player;
 
 	private void Awake()
 	{
 		if (player == null)
-			player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-
-		//gameSettings = GetComponent<GameSettings>();
-		gameInfo = gameSettings.LoadGameInfo();
+			player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayableBlock>();
 	}
 
 	private void Start()
     {
+		if(!testMode)
+			gameInfo = gameSettings.LoadGameInfo();
+
         gameState = GameState.GameTitle;
 
 		StartCoroutine(GameLoop());
@@ -126,9 +132,8 @@ public class GameManager : Singleton<GameManager>
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
 
 		player.HP = gameInfo.playerHP;
-
-		if(gameInfo.startHeight > 0f)
-			SetPlayAction?.Invoke(gameInfo.startHeight);
+		
+		SetStartHeightAction?.Invoke(gameInfo.startHeight);
 
 		GamePlayAction?.Invoke();
 
@@ -278,6 +283,35 @@ public class GameManager : Singleton<GameManager>
 		Debug.LogFormat("Add player hp : {0}", addHp);
 	}
 
+	public bool IsAddStartHeight(float addHeight)
+	{
+		if (gameInfo.startHeight + addHeight > 3000f)
+		{
+			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
+			return false;
+		}
+		else
+			return true;
+	}
+
+	public void AddStartHeight(float addHeight)
+	{
+		gameInfo.startHeight += addHeight;
+
+		if (gameInfo.startHeight >= 3000f)
+		{
+			SoundManager.Instance.PlaySound2D("Buy_Heart_End");
+		}
+		else
+		{
+			SoundManager.Instance.PlaySound2D("Buy_Heart");
+		}
+
+		AddHeightAction?.Invoke();
+
+		Debug.LogFormat("Add start height : {0}", addHeight);
+	}
+
 	public void SetSoundMute(bool mute)
 	{
 		isSoundMute = mute;
@@ -291,7 +325,8 @@ public class GameManager : Singleton<GameManager>
 			SoundManager.Instance.masterVolume = 0.8f;
 		}
 
-		gameSettings.SaveGameInfo();
+		gameSettings.SaveSoundMute();
+		SoundMuteAction?.Invoke();
 
 		Debug.LogFormat("Sound mute : {0}", isSoundMute);
 	}

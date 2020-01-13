@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class ScrollBackground : MonoBehaviour
 {
-	public Transform[] bgTrans;
-	public Transform cameraTrans;
+	public List<Transform> bgTrans;
 
 	public bool isScroll;
 	
 	public float size = 10f;
+	private PlayableBlock player;
 
 	private void OnEnable()
 	{
@@ -26,10 +26,11 @@ public class ScrollBackground : MonoBehaviour
 	void InitBG()
 	{
 		isScroll = false;
+		player = GameManager.Instance.player;
 
-		for (int i = 0; i < bgTrans.Length; i++)
+		for (int i = 0; i < bgTrans.Count; i++)
 		{
-			bgTrans[i].position = new Vector3(0f, i * 10f, bgTrans[i].position.z);
+			bgTrans[i].position = new Vector3(0f, (i-1) * 10f, bgTrans[i].position.z);
 		}
 	}
 
@@ -39,30 +40,30 @@ public class ScrollBackground : MonoBehaviour
 			isScroll = true;
 	}
 
-	void Update()
+	void FixedUpdate()
     {
 		if (!isScroll)
 			return;
 
-		for (int i = 0; i < bgTrans.Length; i++)
+		if(player.height > bgTrans[0].position.y + size * 2f)
 		{
-			float dist = cameraTrans.position.y - bgTrans[i].position.y;
-
-			if(Mathf.Abs(dist) > size)
-			{
-				Vector3 pos = bgTrans[i].position;
-
-				if(dist > 0)
-				{
-					pos.y = cameraTrans.position.y + size;
-				}
-				else
-				{
-					pos.y = cameraTrans.position.y - size;
-				}
-
-				bgTrans[i].position = pos;
-			}
+			SetBGPosition(1);
+		}
+		else if(player.height < bgTrans[0].position.y - size * 2f)
+		{
+			SetBGPosition(-1);
 		}
     }
+
+	void SetBGPosition(int dir)
+	{
+		Transform bg = bgTrans[0];
+		bgTrans.Remove(bgTrans[0]);
+
+		Vector3 pos = bg.position;
+		pos.y += size * 3f * dir;
+		bg.position = pos;
+
+		bgTrans.Add(bg);
+	}
 }

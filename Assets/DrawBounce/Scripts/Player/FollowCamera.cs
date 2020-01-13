@@ -7,7 +7,6 @@ public class FollowCamera : MonoBehaviour
     private Transform myTransform;
 	private Vector3 originPosition;
     private Transform targetTrans;
-	public Vector3 targetPos;
 
 	public float smoothFactor = 10f;
 	public float limitWidth = 1f;
@@ -15,7 +14,7 @@ public class FollowCamera : MonoBehaviour
 	public float offsetHeight = 5f;
 
 	private bool isFollow;
-	private Player player;
+	private PlayableBlock player;
 
 	public Transform endEffectTrans;
 
@@ -29,14 +28,14 @@ public class FollowCamera : MonoBehaviour
 	{
 		GameManager.GameInitAction += Init;
 		GameManager.GamePlayAction += StartFollow;
-		GameManager.SetPlayAction += SetStartMeter;
+		GameManager.SetStartHeightAction += SetStartHeight;
 	}
 
 	private void OnDisable()
 	{
 		GameManager.GameInitAction -= Init;
 		GameManager.GamePlayAction -= StartFollow;
-		GameManager.SetPlayAction -= SetStartMeter;
+		GameManager.SetStartHeightAction -= SetStartHeight;
 	}
 
 	void Init()
@@ -49,9 +48,31 @@ public class FollowCamera : MonoBehaviour
 		endEffectTrans.position = new Vector3(0f, -5f, 10f);
 	}
 
-	void SetStartMeter(float meter)
+	void SetStartHeight(float height)
 	{
-		myTransform.position = new Vector3(0f, meter, 0f);
+		if (height < GameManager.Instance.limitStartHeight)
+			return;
+
+		Vector3 targetPos = new Vector3(0f, height, 0f);
+		StartCoroutine(MoveToStartHeight(targetPos));
+	}
+
+	IEnumerator MoveToStartHeight(Vector3 targetPos)
+	{
+		isFollow = false;
+		float t = 0f;
+		Vector3 campPos = myTransform.position;
+
+		while (t < 1f)
+		{
+			t += Time.deltaTime / GameManager.Instance.moveToDuration;
+			myTransform.position = Vector3.Lerp(campPos, targetPos, t);
+
+			yield return null;
+		}
+
+		isFollow = true;
+		Debug.Log("Move start height done! : camera");
 	}
 
 	void StartFollow()
@@ -60,7 +81,7 @@ public class FollowCamera : MonoBehaviour
 			isFollow = true;
 	}
 
-    private void FixedUpdate()
+	private void FixedUpdate()
     {
 		if (!isFollow)
 			return;
@@ -82,7 +103,7 @@ public class FollowCamera : MonoBehaviour
 			playerPos.y = player.lastHeight - offsetHeight;
 		}
 
-		targetPos = Vector3.Lerp(myTransform.position, playerPos, Time.fixedDeltaTime * smoothFactor);
+		Vector3 targetPos = Vector3.Lerp(myTransform.position, playerPos, Time.fixedDeltaTime * smoothFactor);
 
 		if (targetPos.x > limitWidth)
 			targetPos.x = limitWidth;

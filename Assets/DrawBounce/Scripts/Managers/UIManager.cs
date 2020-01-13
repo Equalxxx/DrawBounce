@@ -11,7 +11,7 @@ public class UIManager : Singleton<UIManager>
 
 	public float fadeDuration = 1f;
 
-	public GameObject pauseUIObj;
+	public CanvasGroup pauseUI;
 
 	private void OnValidate()
 	{
@@ -43,9 +43,15 @@ public class UIManager : Singleton<UIManager>
 
 	public void ShowPauseUI(bool show)
 	{
-		if (pauseUIObj.activeSelf != show)
+		if(show)
 		{
-			pauseUIObj.SetActive(show);
+			pauseUI.alpha = 1f;
+			pauseUI.blocksRaycasts = true;
+		}
+		else
+		{
+			pauseUI.alpha = 0f;
+			pauseUI.blocksRaycasts = false;
 		}
 	}
 }

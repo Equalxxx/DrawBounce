@@ -17,15 +17,27 @@ public class MeterInfoUI : MonoBehaviour
 
     public void RefreshUI()
     {
-        Player player = GameManager.Instance.player;
+		PlayableBlock player = GameManager.Instance.player;
         if (player == null)
             return;
 
-        meterText.text = GetMeterText(player.height);
+        meterText.text = GetHeightText(player.height);
     }
 
-	string GetMeterText(float height)
+	string GetHeightText(float height)
 	{
-		return string.Format("{0:f1}M", height);
+		string distText = "";
+
+		if(height >= 1000f)
+		{
+			float kilo = height / 1000f;
+			distText = string.Format("{0:f2}KM", kilo);
+		}
+		else
+		{
+			distText = string.Format("{0:f2}M", height);
+		}
+
+		return distText;
 	}
 }

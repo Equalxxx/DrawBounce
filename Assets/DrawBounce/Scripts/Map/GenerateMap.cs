@@ -19,7 +19,8 @@ public class MapPos
 public class GenerateMap : MonoBehaviour
 {
 	public float lastMapHeight;
-	public float lastMapPosition = 10f;
+	public float lastMapPosition = 0f;
+	public float startMapHeight = 5f;
 	public float firstMapPosition;
 
 	public int mapCount;
@@ -28,11 +29,13 @@ public class GenerateMap : MonoBehaviour
 
 	public List<MapPos> mapPosList;
 
-	private Player player;
+	private PlayableBlock player;
 
 	public int maxMapLevel = 5;
 	private Dictionary<int, List<MapData>> mapDataDic;
 	public MapDataTable mapDataTable;
+
+	public bool isGenerate;
 
 	private void Awake()
 	{
@@ -47,12 +50,16 @@ public class GenerateMap : MonoBehaviour
 
 	private void OnEnable()
 	{
-		GameManager.GameInitAction += InitMap;
+		GameManager.GamePlayAction += InitMap;
+		GameManager.GameOverAction += StopGenerate;
+		PlayableBlock.MoveToAction += StartGenerate;
 	}
 
 	private void OnDisable()
 	{
-		GameManager.GameInitAction -= InitMap;
+		GameManager.GamePlayAction -= InitMap;
+		GameManager.GameOverAction -= StopGenerate;
+		PlayableBlock.MoveToAction -= StartGenerate;
 	}
 
 	void InitMap()
@@ -60,7 +67,7 @@ public class GenerateMap : MonoBehaviour
 		player = GameManager.Instance.player;
 		
 		lastMapHeight = 0f;
-		lastMapPosition = 10f;
+
 		mapCount = 0;
 
 		for (int i = 0; i < mapPosList.Count; i++)
@@ -70,10 +77,34 @@ public class GenerateMap : MonoBehaviour
 
 		mapPosList.Clear();
 
-		for (int i = 0; i < 4; i++)
+		if (GameManager.Instance.gameInfo.startHeight > 10f)
 		{
-			AddMapPos();
+			lastMapPosition = GameManager.Instance.gameInfo.startHeight;
+			StopGenerate();
 		}
+		else
+		{
+			lastMapPosition = startMapHeight;
+			StartGenerate();
+		}
+	}
+
+	void StartGenerate()
+	{
+		isGenerate = true;
+
+		if(mapPosList.Count <= 0)
+		{
+			for(int i = 0; i < 4; i++)
+			{
+				AddMapPos();
+			}
+		}
+	}
+
+	void StopGenerate()
+	{
+		isGenerate = false;
 	}
 
 	void PrepareAssets()
@@ -89,6 +120,9 @@ public class GenerateMap : MonoBehaviour
 
 	private void Update()
 	{
+		if (!isGenerate)
+			return;
+
 		firstMapPosition = mapPosList[0].mapSet.transform.position.y;
 
 		if (firstMapPosition+ mapPosList[0].mapSet.height < player.lastHeight - 5f - Camera.main.orthographicSize)
@@ -105,7 +139,7 @@ public class GenerateMap : MonoBehaviour
 		MapPos mapPos = new MapPos();
 		mapPos.index = mapCount;
 		mapPos.mapSet = GetRandomMapSet();
-		mapPos.mapSet.transform.position = new Vector2(0f, lastMapPosition);
+		mapPos.mapSet.transform.position = new Vector2(0f, lastMapPosition + startMapHeight);
 		mapPosList.Add(mapPos);
 
 		lastMapHeight = mapPos.mapSet.height;

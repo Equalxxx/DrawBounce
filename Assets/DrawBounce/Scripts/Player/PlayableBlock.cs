@@ -5,7 +5,7 @@ using UnityEngine;
 using MysticLights;
 
 public enum PlayerColorType { White, Red, Green, Blue }
-public class Player : MonoBehaviour
+public class PlayableBlock : MonoBehaviour
 {
     private Rigidbody2D myRigidbody2D;
     private Transform myTransform;
@@ -22,10 +22,8 @@ public class Player : MonoBehaviour
 	private ParticleSystem.MainModule trailModule;
 
     [Header("PhysicsInfo")]
-    public bool onGrounded;
-    public LayerMask groundMask;
-    public float checkGroundDist;
     public float limitVelo = 5f;
+	public bool isFastMove;
 
     public float height;
 	public float offsetHeight;
@@ -37,8 +35,9 @@ public class Player : MonoBehaviour
     public string explosionTag;
 
 	public static Action DamagedAction;
+	public static Action MoveToAction;
 
-    private void Awake()
+	private void Awake()
     {
         PoolManager.Instance.PrepareAssets(hitSmallTag);
         PoolManager.Instance.PrepareAssets(hitBigTag);
@@ -50,12 +49,12 @@ public class Player : MonoBehaviour
 
 	private void OnEnable()
 	{
-		GameManager.SetPlayAction += SetStartMeter;
+		GameManager.SetStartHeightAction += SetStartHeight;
 	}
 
 	private void OnDisable()
 	{
-		GameManager.SetPlayAction -= SetStartMeter;
+		GameManager.SetStartHeightAction -= SetStartHeight;
 	}
 
 	public void InitPlayer()
@@ -78,24 +77,58 @@ public class Player : MonoBehaviour
 		Debug.Log("Player initialized!");
     }
 
-	void SetStartMeter(float meter)
+	void SetStartHeight(float height)
 	{
-		myTransform.position = new Vector3(0f, meter, 0f);
+		if (height < GameManager.Instance.limitStartHeight)
+			return;
+
+		Vector3 targetPos = new Vector3(0f, height, 0f);
+		lastHeight = height;
+		lastOldHeight = height;
+
+		StartCoroutine(MoveToStartHeight(targetPos));
+	}
+
+	IEnumerator MoveToStartHeight(Vector3 targetPos)
+	{
+		Vector3 playerPos = myTransform.position;
+		float t = 0f;
+
+		//myRigidbody2D.isKinematic = true;
+		isFastMove = true;
+		myRigidbody2D.isKinematic = true;
+		while (t < 1f)
+		{
+			t += Mathf.Sin(Time.deltaTime / GameManager.Instance.moveToDuration);
+
+			myTransform.position = Vector3.Lerp(playerPos, targetPos, t);
+
+			yield return null;
+		}
+
+		myRigidbody2D.isKinematic = false;
+		myRigidbody2D.velocity = Vector2.up * 5f;
+		isFastMove = false;
+
+		MoveToAction?.Invoke();
+		Debug.Log("Move start height done!");
 	}
 
     private void FixedUpdate()
     {
-        Vector2 velo = myRigidbody2D.velocity;
-        if (velo.x > limitVelo)
-            velo.x = limitVelo;
-        if (velo.x < -limitVelo)
-            velo.x = -limitVelo;
-        if (velo.y > limitVelo)
-            velo.y = limitVelo;
-        if (velo.y < -limitVelo)
-            velo.y = -limitVelo;
-
         height = myTransform.position.y + offsetHeight;
+		if (isFastMove)
+			return;
+
+        //Vector2 velo = myRigidbody2D.velocity;
+        //if (velo.x > limitVelo)
+        //    velo.x = limitVelo;
+        //if (velo.x < -limitVelo)
+        //    velo.x = -limitVelo;
+        //if (velo.y > limitVelo)
+        //    velo.y = limitVelo;
+        //if (velo.y < -limitVelo)
+        //    velo.y = -limitVelo;
 
 		if (GameManager.Instance.gameState != GameState.GamePlay)
 			return;

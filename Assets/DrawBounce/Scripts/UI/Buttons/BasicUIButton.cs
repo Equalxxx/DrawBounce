@@ -17,7 +17,10 @@ public abstract class BasicUIButton : MonoBehaviour
 	{
 		if(myButton == null)
 			myButton = GetComponent<Button>();
+	}
 
+	private void Start()
+	{
 		InitButton();
 	}
 
