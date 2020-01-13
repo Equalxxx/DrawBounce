@@ -9,6 +9,9 @@ public class MuteButton : BasicUIButton
 	private Image myImage;
 	private DOTweenAnimation myButtonAnim;
 
+	public SoundType soundType;
+	public bool isMute;
+
 	public float animDuration = 1f;
 
 	public Sprite onSoundSprite;
@@ -16,24 +19,43 @@ public class MuteButton : BasicUIButton
 
 	protected override void InitButton()
 	{
-		RefreshUI();
 	}
 
 	protected override void OnEnable()
 	{
 		base.OnEnable();
-		GameManager.SoundMuteAction += RefreshUI;
+		GameManager.GameSettingAction += SetMute;
+		GameManager.SoundMuteAction += SetMute;
 	}
 
 	protected override void OnDisable()
 	{
 		base.OnDisable();
-		GameManager.SoundMuteAction -= RefreshUI;
+		GameManager.GameSettingAction -= SetMute;
+		GameManager.SoundMuteAction -= SetMute;
 	}
 
 	protected override void PressedButton()
 	{
-		GameManager.Instance.SetSoundMute(!GameManager.Instance.isSoundMute);
+		isMute = !isMute;
+		GameManager.Instance.SetSoundMute(soundType, isMute);
+		GameManager.Instance.gameSettings.SaveSoundMute();
+		RefreshUI();
+	}
+
+	void SetMute()
+	{
+		switch(soundType)
+		{
+			case SoundType.BGM:
+				isMute = GameManager.Instance.isMuteBGM;
+				break;
+			case SoundType.SE:
+				isMute = GameManager.Instance.isMuteSE;
+				break;
+		}
+
+		RefreshUI();
 	}
 
 	void RefreshUI()
@@ -41,9 +63,7 @@ public class MuteButton : BasicUIButton
 		if(!myImage)
 			myImage = GetComponent<Image>();
 
-		bool mute = GameManager.Instance.isSoundMute;
-
-		if (mute)
+		if (isMute)
 		{
 			myImage.sprite = offSoundSprite;
 		}

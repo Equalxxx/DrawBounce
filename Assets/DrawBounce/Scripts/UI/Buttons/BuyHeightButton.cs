@@ -5,13 +5,14 @@ using TMPro;
 
 public class BuyHeightButton : BasicUIButton
 {
-	private TextMeshProUGUI heightText;
-	public int useCoin = 0;
+	public TextMeshProUGUI heightText;
+	public TextMeshProUGUI priceText;
+	public int price = 100;
 	public float addHeight = 100f;
 
 	protected override void InitButton()
 	{
-		heightText = GetComponentInChildren<TextMeshProUGUI>();
+
 	}
 
 	protected override void OnEnable()
@@ -28,15 +29,18 @@ public class BuyHeightButton : BasicUIButton
 
 	void RefreshUI()
 	{
-		heightText.text = GetHeightText(GameManager.Instance.gameInfo.startHeight);
+		heightText.text = UnitCalculation.GetHeightText(GameManager.Instance.gameInfo.startHeight);
+		priceText.text = UnitCalculation.GetCoinText(GetPrice());
 	}
 
 	protected override void PressedButton()
 	{
-		if (GameManager.Instance.IsUseCoin(useCoin) && GameManager.Instance.IsAddStartHeight(addHeight))
+		int useCoin = GetPrice();
+
+		if (GameManager.Instance.IsUseCoin(useCoin) && GameManager.Instance.IsAddHeight(addHeight))
 		{
 			GameManager.Instance.UseCoin(useCoin);
-			GameManager.Instance.AddStartHeight(addHeight);
+			GameManager.Instance.AddHeight(addHeight);
 
 			GameManager.Instance.gameSettings.SaveGameInfo();
 
@@ -44,21 +48,12 @@ public class BuyHeightButton : BasicUIButton
 		}
 	}
 
-	string GetHeightText(float height)
+	int GetPrice()
 	{
-		string distText = "";
+		int height = (int)(GameManager.Instance.gameInfo.startHeight / addHeight) + 1;
+		if (height <= 0)
+			height = 1;
 
-		if (height >= 1000f)
-		{
-			float kilo = height / 1000f;
-			distText = string.Format("{0:f1}KM", kilo);
-		}
-		else
-		{
-			int meter = (int)height;
-			distText = string.Format("{0}M", meter);
-		}
-
-		return distText;
+		return price * height;
 	}
 }

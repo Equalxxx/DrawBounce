@@ -30,22 +30,31 @@ public class GenerateMap : MonoBehaviour
 	public List<MapPos> mapPosList;
 
 	private PlayableBlock player;
-
-	public int maxMapLevel = 5;
+	
 	private Dictionary<int, List<MapData>> mapDataDic;
-	public MapDataTable mapDataTable;
 
 	public bool isGenerate;
 
-	private void Awake()
+	private void Start()
 	{
 		mapDataDic = new Dictionary<int, List<MapData>>();
-		for (int i = 1; i <= maxMapLevel; i++)
+		for (int i = 1; i <= GameManager.Instance.maxLevel; i++)
 		{
-			mapDataDic.Add(i, mapDataTable.GetMapDataList(i));
+			mapDataDic.Add(i, GameManager.Instance.mapDataTable.GetMapDataList(i));
 		}
 
 		PrepareAssets();
+	}
+
+	void PrepareAssets()
+	{
+		foreach (KeyValuePair<int, List<MapData>> keyPair in mapDataDic)
+		{
+			for (int i = 0; i < keyPair.Value.Count; i++)
+			{
+				PoolManager.Instance.PrepareAssets(keyPair.Value[i].tag);
+			}
+		}
 	}
 
 	private void OnEnable()
@@ -65,9 +74,18 @@ public class GenerateMap : MonoBehaviour
 	void InitMap()
 	{
 		player = GameManager.Instance.player;
-		
-		lastMapHeight = 0f;
 
+		if (GameManager.Instance.gameInfo.startHeight >= 100f)
+		{
+			lastMapPosition = GameManager.Instance.gameInfo.startHeight;
+			StopGenerate();
+		}
+		else
+		{
+			lastMapPosition = startMapHeight;
+		}
+
+		lastMapHeight = 0f;
 		mapCount = 0;
 
 		for (int i = 0; i < mapPosList.Count; i++)
@@ -77,45 +95,23 @@ public class GenerateMap : MonoBehaviour
 
 		mapPosList.Clear();
 
-		if (GameManager.Instance.gameInfo.startHeight > 10f)
+		if (mapPosList.Count <= 0)
 		{
-			lastMapPosition = GameManager.Instance.gameInfo.startHeight;
-			StopGenerate();
-		}
-		else
-		{
-			lastMapPosition = startMapHeight;
-			StartGenerate();
-		}
-	}
-
-	void StartGenerate()
-	{
-		isGenerate = true;
-
-		if(mapPosList.Count <= 0)
-		{
-			for(int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				AddMapPos();
 			}
 		}
 	}
 
+	void StartGenerate()
+	{
+		isGenerate = true;
+	}
+
 	void StopGenerate()
 	{
 		isGenerate = false;
-	}
-
-	void PrepareAssets()
-	{
-		foreach(KeyValuePair<int, List<MapData>> keyPair in mapDataDic)
-		{
-			for(int i = 0; i < keyPair.Value.Count; i++)
-			{
-				PoolManager.Instance.PrepareAssets(keyPair.Value[i].tag);
-			}
-		}
 	}
 
 	private void Update()
@@ -149,9 +145,9 @@ public class GenerateMap : MonoBehaviour
 
 	MapSet GetRandomMapSet()
 	{
-		int level = GameManager.Instance.level;
-		if (level > maxMapLevel)
-			level = maxMapLevel;
+		int level = GameManager.Instance.curGameLevel.level;
+		if (level > GameManager.Instance.maxLevel)
+			level = GameManager.Instance.maxLevel;
 
 		level = GetRandomMapLevel(level);
 

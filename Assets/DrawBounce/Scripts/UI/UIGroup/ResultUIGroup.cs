@@ -24,23 +24,6 @@ public class ResultUIGroup : UIGroup
 
 	void RefreshUI()
 	{
-		maxMeterText.text = GetHeightText(GameManager.Instance.player.GetLastHeight());
-	}
-
-	string GetHeightText(float height)
-	{
-		string distText = "";
-
-		if (height >= 1000f)
-		{
-			float kilo = height / 1000f;
-			distText = string.Format("{0:f2}KM", kilo);
-		}
-		else
-		{
-			distText = string.Format("{0:f2}M", height);
-		}
-
-		return distText;
+		maxMeterText.text = UnitCalculation.GetHeightText(GameManager.Instance.player.GetLastHeight(), true);
 	}
 }

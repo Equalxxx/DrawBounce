@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MysticLights;
 
-public enum PlayerColorType { White, Red, Green, Blue }
+public enum PlayableBlockType { Circle, Rectangle, Triangle, Star, Male, Female }
 public class PlayableBlock : MonoBehaviour
 {
     private Rigidbody2D myRigidbody2D;
@@ -15,8 +15,7 @@ public class PlayableBlock : MonoBehaviour
     public float jumpPower = 6f;
 
 	[Header("PlayerGraphic")]
-	public PlayerColorType curColorType;
-	public Color currentColor = Color.white;
+	public PlayableBlockType blockType;
 	public SpriteRenderer sprRenderer;
 	public ParticleSystem trailParticle;
 	private ParticleSystem.MainModule trailModule;
@@ -80,7 +79,10 @@ public class PlayableBlock : MonoBehaviour
 	void SetStartHeight(float height)
 	{
 		if (height < GameManager.Instance.limitStartHeight)
+		{
+			MoveToAction?.Invoke();
 			return;
+		}
 
 		Vector3 targetPos = new Vector3(0f, height, 0f);
 		lastHeight = height;
@@ -93,10 +95,10 @@ public class PlayableBlock : MonoBehaviour
 	{
 		Vector3 playerPos = myTransform.position;
 		float t = 0f;
-
-		//myRigidbody2D.isKinematic = true;
+		
 		isFastMove = true;
 		myRigidbody2D.isKinematic = true;
+
 		while (t < 1f)
 		{
 			t += Mathf.Sin(Time.deltaTime / GameManager.Instance.moveToDuration);
@@ -120,16 +122,6 @@ public class PlayableBlock : MonoBehaviour
 		if (isFastMove)
 			return;
 
-        //Vector2 velo = myRigidbody2D.velocity;
-        //if (velo.x > limitVelo)
-        //    velo.x = limitVelo;
-        //if (velo.x < -limitVelo)
-        //    velo.x = -limitVelo;
-        //if (velo.y > limitVelo)
-        //    velo.y = limitVelo;
-        //if (velo.y < -limitVelo)
-        //    velo.y = -limitVelo;
-
 		if (GameManager.Instance.gameState != GameState.GamePlay)
 			return;
 
@@ -139,27 +131,12 @@ public class PlayableBlock : MonoBehaviour
 
 			if (lastHeight + offsetHeight > lastOldHeight + GameManager.Instance.getCoinHeight)
 			{
-				GameManager.Instance.AddCoin(10);
+				GameManager.Instance.AddCoin(GameManager.Instance.GetHeightCoinValue());
 				PoolManager.Instance.Spawn("AddCoinEffect", myTransform.position, Quaternion.identity);
 				SoundManager.Instance.PlaySound2D("AddCoin");
 				lastOldHeight = GetLastHeight();
 			}
 		}
-
-		//if (Input.GetKeyDown(KeyCode.Alpha1))
-		//{
-		//	ChangeColor(PlayerColorType.Red);
-		//}
-
-		//if (Input.GetKeyDown(KeyCode.Alpha2))
-		//{
-		//	ChangeColor(PlayerColorType.Green);
-		//}
-
-		//if (Input.GetKeyDown(KeyCode.Alpha3))
-		//{
-		//	ChangeColor(PlayerColorType.Blue);
-		//}
 	}
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -209,34 +186,7 @@ public class PlayableBlock : MonoBehaviour
 
 		PlayRandomBounceSound();
 	}
-
-	//void ChangeColor(PlayerColorType colorType)
-	//{
-	//	if (curColorType == colorType)
-	//		return;
-
-	//	curColorType = colorType;
-
-	//	Color playerColor = Color.white;
-
-	//	switch(colorType)
-	//	{
-	//		case PlayerColorType.Red:
-	//			playerColor = Color.red;
-	//			break;
-	//		case PlayerColorType.Green:
-	//			playerColor = Color.green;
-	//			break;
-	//		case PlayerColorType.Blue:
-	//			playerColor = Color.blue;
-	//			break;
-	//	}
-
-	//	sprRenderer.color = playerColor;
-	//	playerColor.a = 0.3f;
-	//	trailModule.startColor = playerColor;
-	//}
-
+	
     void Dead()
     {
         Debug.Log("Player Dead!");

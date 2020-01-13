@@ -9,19 +9,26 @@ namespace MysticLights
         public ResourceManager.LinkType resLinkType = ResourceManager.LinkType.Resources;
         private Dictionary<string, AudioClip> soundDic;
 
-        private AudioSource seAudio;
-        private AudioSource bgmAudio0;          //주플레이 AudioSource
-        private AudioSource bgmAudio1;          //빠지는 플레이 AudioSource
+		public static bool IsMuteBGM;
+		public static bool IsMuteSE;
 
-        public float masterVolume = 1f;         //마스터 볼륨
-        public float crossFadeTime = 5f;        //fade 시간
+		private AudioSource seAudio;		//사운드 이펙트 AudioSource
+        private AudioSource bgmAudio0;		//주플레이 AudioSource
+        private AudioSource bgmAudio1;		//빠지는 플레이 AudioSource
 
-        private float seVolume = 0f;            //사운드 볼륨
-		public float bgmMaxVolume = 1f;
-        private float bgmVolume0 = 0f;          //AudioSource0 번볼륨
-        private float bgmVolume1 = 0f;          //AudioSource1 번볼륨
+        public float masterVolume = 1f;		//마스터 볼륨
+        public float crossFadeTime = 5f;	//fade 시간
 
-        private bool fadeAudio;
+		private float seVolume = 1f;		//사운드 이펙트 볼륨
+		public float seCustomVolume = 1f;	//사운드 이펙트 조절 볼륨
+		public float seMaxVolume = 1f;      //사운드 이펙트 최대 볼륨
+
+		private float bgmVolume0 = 0f;      //BGM AudioSource 0번 볼륨
+		private float bgmVolume1 = 0f;		//BGM AudioSource 1번 볼륨
+		public float bgmCustomVolume = 1f;	//BGM 조절 볼륨
+		public float bgmMaxVolume = 1f;     //BGM 최대 볼륨
+
+		private bool fadeAudio;
 
         //Sound Data
         [SerializeField]
@@ -80,9 +87,9 @@ namespace MysticLights
                 }
             }
 
-            seAudio.volume = seVolume * masterVolume;
-            bgmAudio0.volume = bgmVolume0 * masterVolume;
-            bgmAudio1.volume = bgmVolume1 * masterVolume;
+            seAudio.volume = seVolume * seCustomVolume * masterVolume;
+			bgmAudio0.volume = bgmVolume0 * bgmCustomVolume * masterVolume;
+            bgmAudio1.volume = bgmVolume1 * bgmCustomVolume * masterVolume;
         }
 
         private void OnDestroy()
@@ -117,7 +124,7 @@ namespace MysticLights
                 return;
             }
 
-            seVolume = volume;
+			seVolume = volume;
             seAudio.PlayOneShot(soundClip, volumeScale);
         }
 

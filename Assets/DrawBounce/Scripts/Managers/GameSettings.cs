@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MysticLights;
 
+public enum SoundType { BGM, SE }
 public class GameSettings : MonoBehaviour
 {
 	private void Awake()
@@ -41,19 +42,24 @@ public class GameSettings : MonoBehaviour
 		if (gameInfo.playerMaxHP < 5)
 			gameInfo.playerMaxHP = 5;
 
-		gameInfo.startHeight = PlayerPrefs.GetFloat("StartHeight", 10f);
-		if (gameInfo.startHeight < 10f)
-			gameInfo.startHeight = 10f;
+		gameInfo.startHeight = PlayerPrefs.GetFloat("StartHeight", 0f);
+		if (gameInfo.startHeight < 0f)
+			gameInfo.startHeight = 0f;
 
 		gameInfo.lastHeight = PlayerPrefs.GetFloat("LastHeight", 0f);
 		if (gameInfo.lastHeight < 0f)
 			gameInfo.lastHeight = 0f;
 
-		// Game Settings
-		string getString = PlayerPrefs.GetString("SoundMute", "False");
-		bool mute = bool.Parse(getString);
+		// Sound Settings
+		string strMuteBGM = PlayerPrefs.GetString("MuteBGM", "False");
+		bool muteBGM = bool.Parse(strMuteBGM);
 
-		GameManager.Instance.SetSoundMute(mute);
+		GameManager.Instance.SetSoundMute(SoundType.BGM, muteBGM);
+
+		string strMuteSE = PlayerPrefs.GetString("MuteSE", "False");
+		bool muteSE = bool.Parse(strMuteSE);
+
+		GameManager.Instance.SetSoundMute(SoundType.SE, muteSE);
 	}
 
 	void LoadServerInfo(GameInfo gameInfo)
@@ -89,7 +95,8 @@ public class GameSettings : MonoBehaviour
 
 	public void SaveSoundMute()
 	{
-		PlayerPrefs.SetString("SoundMute", GameManager.Instance.isSoundMute.ToString());
+		PlayerPrefs.SetString("MuteBGM", GameManager.Instance.isMuteBGM.ToString());
+		PlayerPrefs.SetString("MuteSE", GameManager.Instance.isMuteSE.ToString());
 	}
 
 	void SaveServerInfo(GameInfo gameInfo)

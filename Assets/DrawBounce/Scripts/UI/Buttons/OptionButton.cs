@@ -9,7 +9,8 @@ public class OptionButton : BasicUIButton
 	private bool isShow;
 	private DOTweenAnimation buttonAnim;
 
-	public MuteButton muteButton;
+	public MuteButton muteBGMButton;
+	public MuteButton muteSEButton;
 
 	protected override void InitButton()
 	{
@@ -23,12 +24,14 @@ public class OptionButton : BasicUIButton
 		if (isShow)
 		{
 			buttonAnim.DOPlayForward();
-			muteButton.ShowButton(true);
+			muteBGMButton.ShowButton(true);
+			muteSEButton.ShowButton(true);
 		}
 		else
 		{
 			buttonAnim.DOPlayBackwards();
-			muteButton.ShowButton(false);
+			muteBGMButton.ShowButton(false);
+			muteSEButton.ShowButton(false);
 		}
 	}
 }

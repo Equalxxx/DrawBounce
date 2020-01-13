@@ -26,15 +26,17 @@ public class GameManager : Singleton<GameManager>
 	public GameInfo gameInfo;
 
 	[Header("GameLevel Info")]
-	public int level;
-	public int levelMeterCost = 100;
+	public GameLevel curGameLevel;
+	public int maxLevel;
+
 	public float getCoinHeight = 30f;
 	public float limitStartHeight = 100f;
 	public float moveToDuration = 5f;
 
 	[Header("Game Settings")]
 	public bool isPause;
-	public bool isSoundMute;
+	public bool isMuteBGM;
+	public bool isMuteSE;
 
 	// Game State Actions
 	public static Action GameInitAction;
@@ -52,13 +54,19 @@ public class GameManager : Singleton<GameManager>
 
 	public static Action<float> SetStartHeightAction;
 	public static Action<bool> PauseAction;
+
 	public static Action SoundMuteAction;
+	public static Action GameSettingAction;
 
 	[Header("GameManager Settings")]
 	public GameSettings gameSettings;
 	public bool testMode;
 	[HideInInspector]
     public PlayableBlock player;
+
+	[Header("DataTables")]
+	public GameDataTable gameDataTable;
+	public MapDataTable mapDataTable;
 
 	private void Awake()
 	{
@@ -69,7 +77,10 @@ public class GameManager : Singleton<GameManager>
 	private void Start()
     {
 		if(!testMode)
+		{
 			gameInfo = gameSettings.LoadGameInfo();
+			GameSettingAction?.Invoke();
+		}
 
         gameState = GameState.GameTitle;
 
@@ -113,7 +124,8 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Title menu!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Title);
 
-		level = 1;
+		curGameLevel = gameDataTable.GetGameLevelInfo(1);
+
 		player.InitPlayer();
 
 		GameInitAction?.Invoke();
@@ -135,15 +147,17 @@ public class GameManager : Singleton<GameManager>
 		
 		SetStartHeightAction?.Invoke(gameInfo.startHeight);
 
+		SetLevel(gameInfo.startHeight);
+
 		GamePlayAction?.Invoke();
 
-		int nextLevel = 0;
 
 		while (gameState == GameState.GamePlay)
         {
-			nextLevel = (int)player.height / levelMeterCost + 1;
-			if (nextLevel > level)
-				level = nextLevel;
+			if(!player.isFastMove)
+			{
+				SetLevel(player.height);
+			}
 
             yield return null;
         }
@@ -157,6 +171,8 @@ public class GameManager : Singleton<GameManager>
         UIManager.Instance.ShowUIGroup(UIGroupType.Result);
 
 		gameInfo.playerHP = 1;
+		gameInfo.startHeight = 0f;
+
 		gameSettings.SaveGameInfo();
 
 		GameOverAction?.Invoke();
@@ -181,6 +197,23 @@ public class GameManager : Singleton<GameManager>
 		}
 
 		Debug.Log("Shop is done!");
+	}
+
+	void SetLevel(float height)
+	{
+		if (height >= curGameLevel.targetHeight)
+		{
+			int nextLevel = curGameLevel.level + 1;
+			if (nextLevel > maxLevel)
+				return;
+
+			curGameLevel = gameDataTable.GetGameLevelInfo(nextLevel);
+		}
+	}
+
+	public int GetHeightCoinValue()
+	{
+		return 10 * curGameLevel.level;
 	}
 
     public bool AddCoin(int addCoin)
@@ -254,7 +287,7 @@ public class GameManager : Singleton<GameManager>
 		Debug.LogFormat("Used gem : {0}", useGem);
 	}
 
-	public bool IsAddPlayerHP(int addHp)
+	public bool IsAddHP(int addHp)
 	{
 		if (gameInfo.playerHP + addHp > gameInfo.playerMaxHP)
 		{
@@ -265,7 +298,7 @@ public class GameManager : Singleton<GameManager>
 			return true;
 	}
 
-	public void AddPlayerHP(int addHp)
+	public void AddHP(int addHp)
 	{
 		gameInfo.playerHP += addHp;
 
@@ -283,9 +316,9 @@ public class GameManager : Singleton<GameManager>
 		Debug.LogFormat("Add player hp : {0}", addHp);
 	}
 
-	public bool IsAddStartHeight(float addHeight)
+	public bool IsAddHeight(float addHeight)
 	{
-		if (gameInfo.startHeight + addHeight > 3000f)
+		if (gameInfo.startHeight + addHeight > gameInfo.lastHeight)
 		{
 			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
 			return false;
@@ -294,11 +327,11 @@ public class GameManager : Singleton<GameManager>
 			return true;
 	}
 
-	public void AddStartHeight(float addHeight)
+	public void AddHeight(float addHeight)
 	{
 		gameInfo.startHeight += addHeight;
 
-		if (gameInfo.startHeight >= 3000f)
+		if (gameInfo.startHeight >= gameInfo.lastHeight)
 		{
 			SoundManager.Instance.PlaySound2D("Buy_Heart_End");
 		}
@@ -312,23 +345,37 @@ public class GameManager : Singleton<GameManager>
 		Debug.LogFormat("Add start height : {0}", addHeight);
 	}
 
-	public void SetSoundMute(bool mute)
+	public void SetSoundMute(SoundType soundType, bool mute)
 	{
-		isSoundMute = mute;
-
-		if (isSoundMute)
+		switch(soundType)
 		{
-			SoundManager.Instance.masterVolume = 0f;
-		}
-		else
-		{
-			SoundManager.Instance.masterVolume = 0.8f;
+			case SoundType.BGM:
+				Debug.LogFormat("Sound mute BGM : {0}", mute);
+				isMuteBGM = mute;
+				if (isMuteBGM)
+				{
+					SoundManager.Instance.bgmCustomVolume = 0f;
+				}
+				else
+				{
+					SoundManager.Instance.bgmCustomVolume = 1f;
+				}
+				break;
+			case SoundType.SE:
+				Debug.LogFormat("Sound mute SE : {0}", mute);
+				isMuteSE = mute;
+				if (isMuteSE)
+				{
+					SoundManager.Instance.seCustomVolume = 0f;
+				}
+				else
+				{
+					SoundManager.Instance.seCustomVolume = 1f;
+				}
+				break;
 		}
 
-		gameSettings.SaveSoundMute();
 		SoundMuteAction?.Invoke();
-
-		Debug.LogFormat("Sound mute : {0}", isSoundMute);
 	}
 
 	public void SetPause(bool pause)

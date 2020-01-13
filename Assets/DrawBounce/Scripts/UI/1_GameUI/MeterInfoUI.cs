@@ -21,23 +21,6 @@ public class MeterInfoUI : MonoBehaviour
         if (player == null)
             return;
 
-        meterText.text = GetHeightText(player.height);
+        meterText.text = UnitCalculation.GetHeightText(player.height, true);
     }
-
-	string GetHeightText(float height)
-	{
-		string distText = "";
-
-		if(height >= 1000f)
-		{
-			float kilo = height / 1000f;
-			distText = string.Format("{0:f2}KM", kilo);
-		}
-		else
-		{
-			distText = string.Format("{0:f2}M", height);
-		}
-
-		return distText;
-	}
 }

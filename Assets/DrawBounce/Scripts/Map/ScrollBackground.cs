@@ -14,13 +14,15 @@ public class ScrollBackground : MonoBehaviour
 	private void OnEnable()
 	{
 		GameManager.GameInitAction += InitBG;
-		GameManager.GamePlayAction += StartScroll;
+		GameManager.SetStartHeightAction += SetStartPosition;
+		PlayableBlock.MoveToAction += StartScroll;
 	}
 
 	private void OnDisable()
 	{
 		GameManager.GameInitAction -= InitBG;
-		GameManager.GamePlayAction -= StartScroll;
+		GameManager.SetStartHeightAction -= SetStartPosition;
+		PlayableBlock.MoveToAction -= StartScroll;
 	}
 
 	void InitBG()
@@ -38,6 +40,16 @@ public class ScrollBackground : MonoBehaviour
 	{
 		if(!isScroll)
 			isScroll = true;
+	}
+
+	void SetStartPosition(float height)
+	{
+		for (int i = 0; i < bgTrans.Count; i++)
+		{
+			Vector3 pos = bgTrans[i].position;
+			pos.y += height;
+			bgTrans[i].position = pos;
+		}
 	}
 
 	void FixedUpdate()

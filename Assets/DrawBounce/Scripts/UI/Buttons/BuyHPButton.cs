@@ -6,13 +6,13 @@ using TMPro;
 
 public class BuyHPButton : BasicUIButton
 {
-	private TextMeshProUGUI hpText;
-	public int useCoin = 30;
+	public TextMeshProUGUI hpText;
+	public TextMeshProUGUI priceText;
+	public int price = 30;
 	public int addHp = 1;
 
 	protected override void InitButton()
 	{
-		hpText = GetComponentInChildren<TextMeshProUGUI>();
 	}
 
 	protected override void OnEnable()
@@ -29,19 +29,27 @@ public class BuyHPButton : BasicUIButton
 
 	void RefreshUI()
 	{
-		hpText.text = string.Format("x {0}", GameManager.Instance.gameInfo.playerHP);
+		hpText.text = GameManager.Instance.gameInfo.playerHP.ToString();
+		priceText.text = UnitCalculation.GetCoinText(GetPrice());
 	}
 
 	protected override void PressedButton()
 	{
-		if(GameManager.Instance.IsUseCoin(useCoin) && GameManager.Instance.IsAddPlayerHP(addHp))
+		int useCoin = GetPrice();
+
+		if (GameManager.Instance.IsUseCoin(useCoin) && GameManager.Instance.IsAddHP(addHp))
 		{
 			GameManager.Instance.UseCoin(useCoin);
-			GameManager.Instance.AddPlayerHP(addHp);
+			GameManager.Instance.AddHP(addHp);
 
 			GameManager.Instance.gameSettings.SaveGameInfo();
 
 			RefreshUI();
 		}
+	}
+
+	int GetPrice()
+	{
+		return price * GameManager.Instance.gameInfo.playerHP;
 	}
 }
