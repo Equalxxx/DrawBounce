@@ -27,7 +27,7 @@ MonoBehaviour:
     preloadCount: 1
   - index: 3
     path: PoolObject/Effects
-    tag: AddScoreEffect
+    tag: AddCoinEffect
     preloadCount: 1
   - index: 4
     path: PoolObject/Pointer

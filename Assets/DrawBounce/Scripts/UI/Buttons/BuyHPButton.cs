@@ -4,28 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class BuyHPButton : MonoBehaviour
+public class BuyHPButton : BasicUIButton
 {
-	private Button myButton;
 	private TextMeshProUGUI hpText;
-	public int useScore = 30;
+	public int useCoin = 30;
 	public int addHp = 1;
 
-	private void Awake()
+	protected override void InitButton()
 	{
-		myButton = GetComponent<Button>();
 		hpText = GetComponentInChildren<TextMeshProUGUI>();
 	}
 
-	private void OnEnable()
+	protected override void OnEnable()
 	{
-		myButton.onClick.AddListener(PressedButton);
+		base.OnEnable();
 		GameManager.GameInitAction += RefreshUI;
 	}
 
-	private void OnDisable()
+	protected override void OnDisable()
 	{
-		myButton.onClick.RemoveListener(PressedButton);
+		base.OnDisable();
 		GameManager.GameInitAction -= RefreshUI;
 	}
 
@@ -34,11 +32,11 @@ public class BuyHPButton : MonoBehaviour
 		hpText.text = string.Format("x {0}", GameManager.Instance.gameInfo.playerHP);
 	}
 
-	void PressedButton()
+	protected override void PressedButton()
 	{
-		if(GameManager.Instance.IsUseScore(useScore) && GameManager.Instance.IsAddPlayerHP(addHp))
+		if(GameManager.Instance.IsUseCoin(useCoin) && GameManager.Instance.IsAddPlayerHP(addHp))
 		{
-			GameManager.Instance.UseScore(useScore);
+			GameManager.Instance.UseCoin(useCoin);
 			GameManager.Instance.AddPlayerHP(addHp);
 
 			GameManager.Instance.gameSettings.SaveGameInfo();

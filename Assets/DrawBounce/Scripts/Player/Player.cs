@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
         PoolManager.Instance.PrepareAssets(hitSmallTag);
         PoolManager.Instance.PrepareAssets(hitBigTag);
         PoolManager.Instance.PrepareAssets(explosionTag);
-		PoolManager.Instance.PrepareAssets("AddScoreEffect");
+		PoolManager.Instance.PrepareAssets("AddCoinEffect");
 
 		trailModule = trailParticle.main;
     }
@@ -104,11 +104,11 @@ public class Player : MonoBehaviour
 		{
 			lastHeight = myTransform.position.y;
 
-			if (lastHeight + offsetHeight > lastOldHeight + GameManager.Instance.getScoreHeight)
+			if (lastHeight + offsetHeight > lastOldHeight + GameManager.Instance.getCoinHeight)
 			{
-				GameManager.Instance.AddScore();
-				PoolManager.Instance.Spawn("AddScoreEffect", myTransform.position, Quaternion.identity);
-				SoundManager.Instance.PlaySound2D("AddScore");
+				GameManager.Instance.AddCoin(10);
+				PoolManager.Instance.Spawn("AddCoinEffect", myTransform.position, Quaternion.identity);
+				SoundManager.Instance.PlaySound2D("AddCoin");
 				lastOldHeight = GetLastHeight();
 			}
 		}

@@ -4,35 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class OptionButton : MonoBehaviour
+public class OptionButton : BasicUIButton
 {
-	private Button button;
 	private bool isShow;
 	private DOTweenAnimation buttonAnim;
 
 	public MuteButton muteButton;
 
-	private void Awake()
+	protected override void InitButton()
 	{
-		button = GetComponent<Button>();
 		buttonAnim = GetComponent<DOTweenAnimation>();
 	}
 
-	private void OnEnable()
-	{
-		button.onClick.AddListener(PressedButton);
-	}
-
-	private void OnDisable()
-	{
-		button.onClick.RemoveListener(PressedButton);
-	}
-
-	void PressedButton()
+	protected override void PressedButton()
 	{
 		isShow = !isShow;
 
-		if(isShow)
+		if (isShow)
 		{
 			buttonAnim.DOPlayForward();
 			muteButton.ShowButton(true);

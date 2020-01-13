@@ -5,29 +5,11 @@ using MysticLights;
 
 public class GameSettings : MonoBehaviour
 {
-	public bool isSoundMute;
-	private float originVolume;
+	private float originVolume = 0.8f;
 
 	private void Awake()
 	{
-		SoundManager.Instance.masterVolume = 0.8f;
 		SoundManager.Instance.bgmMaxVolume = 0.2f;
-
-		originVolume = SoundManager.Instance.masterVolume;
-	}
-
-	public void SetSoundMute(bool mute)
-	{
-		isSoundMute = mute;
-
-		if(isSoundMute)
-		{
-			SoundManager.Instance.masterVolume = 0f;
-		}
-		else
-		{
-			SoundManager.Instance.masterVolume = originVolume;
-		}
 	}
 
 	public GameInfo LoadGameInfo()
@@ -44,14 +26,21 @@ public class GameSettings : MonoBehaviour
 
 	void LoadLocalInfo()
 	{
-		GameManager.Instance.isSoundMute = bool.Parse(PlayerPrefs.GetString("SoundMute", "false"));
+		string getString = PlayerPrefs.GetString("SoundMute", "False");
+		bool mute = bool.Parse(getString);
+
+		GameManager.Instance.SetSoundMute(mute);
 	}
 
 	void LoadServerInfo(GameInfo gameInfo)
 	{
-		gameInfo.score = PlayerPrefs.GetInt("Score", 0);
-		if (gameInfo.score < 0)
-			gameInfo.score = 0;
+		gameInfo.coin = PlayerPrefs.GetInt("Coin", 0);
+		if (gameInfo.coin < 0)
+			gameInfo.coin = 0;
+
+		gameInfo.gem = PlayerPrefs.GetInt("Gem", 0);
+		if (gameInfo.gem < 0)
+			gameInfo.gem = 0;
 
 		gameInfo.playerHP = PlayerPrefs.GetInt("PlayerHP", 1);
 		if (gameInfo.playerHP < 1)
@@ -60,6 +49,10 @@ public class GameSettings : MonoBehaviour
 		gameInfo.playerMaxHP = PlayerPrefs.GetInt("PlayerMaxHP", 5);
 		if (gameInfo.playerMaxHP < 5)
 			gameInfo.playerMaxHP = 5;
+
+		gameInfo.startHeight = PlayerPrefs.GetFloat("StartHeight", 0f);
+		if (gameInfo.startHeight < 0f)
+			gameInfo.startHeight = 0f;
 
 		gameInfo.lastHeight = PlayerPrefs.GetFloat("LastHeight", 0f);
 		if (gameInfo.lastHeight < 0f)
@@ -83,9 +76,11 @@ public class GameSettings : MonoBehaviour
 
 	void SaveServerInfo(GameInfo gameInfo)
 	{
-		PlayerPrefs.SetInt("Score", gameInfo.score);
+		PlayerPrefs.SetInt("Coin", gameInfo.coin);
+		PlayerPrefs.SetInt("Gem", gameInfo.gem);
 		PlayerPrefs.SetInt("PlayerHP", gameInfo.playerHP);
 		PlayerPrefs.SetInt("PlayerMaxHP", gameInfo.playerMaxHP);
+		PlayerPrefs.SetFloat("StartHeight", gameInfo.startHeight);
 		PlayerPrefs.SetFloat("LastHeight", gameInfo.lastHeight);
 	}
 }

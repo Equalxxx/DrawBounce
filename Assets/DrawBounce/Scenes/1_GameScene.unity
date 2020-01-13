@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 109565670}
   - component: {fileID: 109565671}
   m_Layer: 5
-  m_Name: ScoreInfoUI
+  m_Name: CoinInfoUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -647,7 +647,7 @@ GameObject:
   - component: {fileID: 222478078}
   - component: {fileID: 222478077}
   m_Layer: 5
-  m_Name: ScoreImage
+  m_Name: CoinImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5693,7 +5693,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: da9c4b0a774127042806445443bffd07, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8523b14cbf9741248bb908a91185dde1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5824,7 +5824,7 @@ GameObject:
   - component: {fileID: 413860198}
   - component: {fileID: 413860197}
   m_Layer: 5
-  m_Name: ScoreImage
+  m_Name: CoinImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6151,7 +6151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 807517f635dd5704c9b909cb0e4ec5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useScore: 30
+  useCoin: 30
   addHp: 1
 --- !u!1 &519420028
 GameObject:
@@ -11440,7 +11440,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.316, y: 2.5760005, z: -20}
+  m_LocalPosition: {x: -3.316, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -16340,7 +16340,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.7639999, y: 2.5760005, z: -20}
+  m_LocalPosition: {x: 3.316, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -17024,7 +17024,7 @@ GameObject:
   - component: {fileID: 987961341}
   - component: {fileID: 987961340}
   m_Layer: 5
-  m_Name: ScoreText
+  m_Name: CoinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17715,7 +17715,7 @@ GameObject:
   - component: {fileID: 1151914580}
   - component: {fileID: 1151914581}
   m_Layer: 5
-  m_Name: ScoreInfoUI
+  m_Name: CoinInfoUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17875,15 +17875,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: 0
   gameInfo:
-    score: 0
+    coin: 0
+    gem: 0
     playerHP: 1
     playerMaxHP: 5
-    startMeter: 0
+    startHeight: 0
     lastHeight: 0
   level: 0
   levelMeterCost: 50
-  getScoreHeight: 30
-  addScoreValue: 10
+  getCoinHeight: 30
+  addCoinValue: 10
   isPause: 0
   isSoundMute: 0
   gameSettings: {fileID: 1270603292}
@@ -25152,7 +25153,7 @@ GameObject:
   - component: {fileID: 1979033097}
   - component: {fileID: 1979033096}
   m_Layer: 5
-  m_Name: ScoreText
+  m_Name: CoinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

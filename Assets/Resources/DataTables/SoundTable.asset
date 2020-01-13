@@ -48,4 +48,4 @@ MonoBehaviour:
     tag: Buy_Heart_Notwork
   - index: 11
     path: Sound/SE
-    tag: AddScore
+    tag: AddCoin

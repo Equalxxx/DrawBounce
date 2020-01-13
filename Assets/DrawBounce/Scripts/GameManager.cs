@@ -9,10 +9,13 @@ public enum GameState { GameTitle, GamePlay, GameOver, EnterShop }
 [System.Serializable]
 public class GameInfo
 {
-	public int score;
+	public int coin;
+	public int gem;
+
 	public int playerHP;
 	public int playerMaxHP;
-	public float startMeter;
+
+	public float startHeight;
 	public float lastHeight;
 }
 
@@ -25,8 +28,7 @@ public class GameManager : Singleton<GameManager>
 	[Header("GameLevel Info")]
 	public int level;
 	public int levelMeterCost = 100;
-	public float getScoreHeight = 30f;
-	public int addScoreValue = 10;
+	public float getCoinHeight = 30f;
 
 	[Header("Game Settings")]
 	public bool isPause;
@@ -38,8 +40,10 @@ public class GameManager : Singleton<GameManager>
 	public static Action GameOverAction;
 
 	// Game Play Actions
-	public static Action AddScoreAction;
-	public static Action UseScoreAction;
+	public static Action AddGemAction;
+	public static Action UseGemAction;
+	public static Action AddCoinAction;
+	public static Action UseCoinAction;
 	public static Action AddPlayerHPAction;
 	public static Action<float> SetPlayAction;
 	public static Action<bool> PauseAction;
@@ -123,8 +127,8 @@ public class GameManager : Singleton<GameManager>
 
 		player.HP = gameInfo.playerHP;
 
-		if(gameInfo.startMeter > 0f)
-			SetPlayAction?.Invoke(gameInfo.startMeter);
+		if(gameInfo.startHeight > 0f)
+			SetPlayAction?.Invoke(gameInfo.startHeight);
 
 		GamePlayAction?.Invoke();
 
@@ -174,24 +178,25 @@ public class GameManager : Singleton<GameManager>
 		Debug.Log("Shop is done!");
 	}
 
-    public void AddScore()
+    public bool AddCoin(int addCoin)
     {
-		if (gameInfo.score + addScoreValue > int.MaxValue)
+		if (gameInfo.coin + addCoin > int.MaxValue)
 		{
-			Debug.LogError("Score integer value max!");
-			return;
+			Debug.LogError("Coin value max!");
+			return false;
 		}
 
-		gameInfo.score += addScoreValue;
+		gameInfo.coin += addCoin;
 
-        AddScoreAction?.Invoke();
+        AddCoinAction?.Invoke();
 
-		Debug.LogFormat("Add score : {0}", addScoreValue);
+		Debug.LogFormat("Add coin : {0}", addCoin);
+		return true;
     }
 
-	public bool IsUseScore(int useScore)
+	public bool IsUseCoin(int useCoin)
 	{
-		if (gameInfo.score < useScore)
+		if (gameInfo.coin < useCoin)
 		{
 			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
 			return false;
@@ -200,13 +205,48 @@ public class GameManager : Singleton<GameManager>
 			return true;
 	}
 
-	public void UseScore(int useScore)
+	public void UseCoin(int useCoin)
 	{
-		gameInfo.score -= useScore;
+		gameInfo.coin -= useCoin;
 
-		UseScoreAction?.Invoke();
+		UseCoinAction?.Invoke();
 
-		Debug.LogFormat("Used score : {0}", useScore);
+		Debug.LogFormat("Used coin : {0}", useCoin);
+	}
+
+	public bool AddGem(int addGem)
+	{
+		if(gameInfo.gem + addGem > int.MaxValue)
+		{
+			Debug.LogError("Gem value max!");
+			return false;
+		}
+
+		gameInfo.gem += addGem;
+		AddGemAction?.Invoke();
+
+		Debug.LogFormat("Add gem : {0}", addGem);
+		return true;
+	}
+
+	public bool IsUseGem(int useGem)
+	{
+		if (gameInfo.gem < useGem)
+		{
+			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
+			return false;
+		}
+		else
+			return true;
+	}
+
+	public void UseGem(int useGem)
+	{
+		gameInfo.gem -= useGem;
+
+		UseGemAction?.Invoke();
+
+		Debug.LogFormat("Used gem : {0}", useGem);
 	}
 
 	public bool IsAddPlayerHP(int addHp)
@@ -236,6 +276,24 @@ public class GameManager : Singleton<GameManager>
 		AddPlayerHPAction?.Invoke();
 
 		Debug.LogFormat("Add player hp : {0}", addHp);
+	}
+
+	public void SetSoundMute(bool mute)
+	{
+		isSoundMute = mute;
+
+		if (isSoundMute)
+		{
+			SoundManager.Instance.masterVolume = 0f;
+		}
+		else
+		{
+			SoundManager.Instance.masterVolume = 0.8f;
+		}
+
+		gameSettings.SaveGameInfo();
+
+		Debug.LogFormat("Sound mute : {0}", isSoundMute);
 	}
 
 	public void SetPause(bool pause)

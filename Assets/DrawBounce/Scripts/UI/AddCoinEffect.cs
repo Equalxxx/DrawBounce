@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class AddScoreEffect : MonoBehaviour, IPoolObject
+public class AddCoinEffect : MonoBehaviour, IPoolObject
 {
 	public float duration = 1f;
 	private DOTweenAnimation tweenAnim;
