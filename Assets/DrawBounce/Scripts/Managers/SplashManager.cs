@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MysticLights;
 
-public class SplashScene : MonoBehaviour
+public class SplashManager : MonoBehaviour
 {
     public float duration = 2f;
     public string nextSceneName;
