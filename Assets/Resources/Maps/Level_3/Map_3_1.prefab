@@ -149,6 +149,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8539545460504446301}
     m_Modifications:
+    - target: {fileID: 5561915497811056560, guid: 370f3690e40068045840f671288a04c5,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561915497811056560, guid: 370f3690e40068045840f671288a04c5,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5561915497811056561, guid: 370f3690e40068045840f671288a04c5,
         type: 3}
       propertyPath: duration
@@ -228,6 +238,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MovingBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561915497811056575, guid: 370f3690e40068045840f671288a04c5,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 3.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 370f3690e40068045840f671288a04c5, type: 3}

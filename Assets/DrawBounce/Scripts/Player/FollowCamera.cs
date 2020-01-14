@@ -7,6 +7,7 @@ public class FollowCamera : MonoBehaviour
     private Transform myTransform;
 	private Vector3 originPosition;
     private Transform targetTrans;
+	private Camera myCamera;
 
 	public float smoothFactor = 10f;
 	public float limitWidth = 1f;
@@ -20,6 +21,7 @@ public class FollowCamera : MonoBehaviour
 
     private void Awake()
     {
+		myCamera = GetComponentInChildren<Camera>();
         myTransform = transform;
 		originPosition = myTransform.position;
     }
@@ -61,12 +63,27 @@ public class FollowCamera : MonoBehaviour
 	{
 		isFollow = false;
 		float t = 0f;
+
 		Vector3 campPos = myTransform.position;
+		float originCamSize = myCamera.orthographicSize;
+		float t2 = 0f;
+		float t3 = 0f;
 
 		while (t < 1f)
 		{
 			t += Time.deltaTime / GameManager.Instance.moveToDuration;
 			myTransform.position = Vector3.Lerp(campPos, targetPos, t);
+
+			if (t < 0.7f)
+			{
+				t2 += Time.deltaTime / GameManager.Instance.moveToDuration / 0.7f;
+				myCamera.orthographicSize = Mathf.Lerp(originCamSize, 2f, t2);
+			}
+			else
+			{
+				t3 += Time.deltaTime / GameManager.Instance.moveToDuration / 0.3f;
+				myCamera.orthographicSize = Mathf.Lerp(2f, originCamSize, t3);
+			}
 
 			yield return null;
 		}

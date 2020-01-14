@@ -18,9 +18,12 @@ public class PlayableBlock : MonoBehaviour
 	public PlayableBlockType blockType;
 	public SpriteRenderer sprRenderer;
 	public ParticleSystem trailParticle;
-	private ParticleSystem.MainModule trailModule;
+	public ParticleSystem boostTrail;
 
-    [Header("PhysicsInfo")]
+	private ParticleSystem.MainModule trailModule;
+	private ParticleSystem.MainModule boostModule;
+
+	[Header("PhysicsInfo")]
     public float limitVelo = 5f;
 	public bool isFastMove;
 
@@ -44,6 +47,7 @@ public class PlayableBlock : MonoBehaviour
 		PoolManager.Instance.PrepareAssets("AddCoinEffect");
 
 		trailModule = trailParticle.main;
+		boostModule = boostTrail.main;
     }
 
 	private void OnEnable()
@@ -98,6 +102,8 @@ public class PlayableBlock : MonoBehaviour
 		
 		isFastMove = true;
 		myRigidbody2D.isKinematic = true;
+		boostModule.duration = GameManager.Instance.moveToDuration;
+		boostTrail.Play();
 
 		while (t < 1f)
 		{
