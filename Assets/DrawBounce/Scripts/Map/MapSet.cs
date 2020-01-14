@@ -11,14 +11,13 @@ public class MapSet : MonoBehaviour, IPoolObject
 
 	private void OnValidate()
 	{
-		InitMapSet();
+		if (areaRenderer)
+			height = areaRenderer.size.y;
 	}
 
 	public void InitMapSet()
 	{
-		if(areaRenderer)
-			height = areaRenderer.size.y;
-		if (defaultBlocks == null)
+		if (defaultBlocks == null || defaultBlocks.Length == 0)
 			defaultBlocks = GetComponentsInChildren<DefaultBlock>();
 
 		for (int i = 0; i < defaultBlocks.Length; i++)
@@ -37,5 +36,7 @@ public class MapSet : MonoBehaviour, IPoolObject
 	{
 		Show(true);
 		InitMapSet();
+
+		Debug.LogFormat("Spawn map set : {0}", name);
 	}
 }

@@ -4822,23 +4822,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
-  maxHP: 5
   jumpPower: 8
-  curColorType: 0
-  currentColor: {r: 1, g: 1, b: 1, a: 1}
+  blockType: 5
   sprRenderer: {fileID: 0}
   trailParticle: {fileID: 0}
-  onGrounded: 0
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 256
-  checkGroundDist: 0.8
+  boostTrail: {fileID: 0}
   limitVelo: 5
+  isFastMove: 0
   height: 0
   offsetHeight: 4
   lastHeight: 0
+  lastOldHeight: 0
   hitSmallTag: Hit_Spark
   hitBigTag: Hit_Block
+  explosionTag: 
 --- !u!1 &6221910375232625587
 GameObject:
   m_ObjectHideFlags: 0

@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   height: 8
   areaRenderer: {fileID: 4086717012254129903}
+  defaultBlocks: []
 --- !u!1 &2331054084316032798
 GameObject:
   m_ObjectHideFlags: 0

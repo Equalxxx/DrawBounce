@@ -39,13 +39,16 @@ MonoBehaviour:
     tag: BGM_1
   - index: 8
     path: Sound/SE
-    tag: Buy_Heart
+    tag: Buy_Item
   - index: 9
     path: Sound/SE
-    tag: Buy_Heart_End
+    tag: Buy_Item_End
   - index: 10
     path: Sound/SE
-    tag: Buy_Heart_Notwork
+    tag: Buy_Item_Notwork
   - index: 11
     path: Sound/SE
     tag: AddCoin
+  - index: 12
+    path: Sound/SE
+    tag: Boost

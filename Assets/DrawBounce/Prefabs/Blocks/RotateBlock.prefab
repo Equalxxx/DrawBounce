@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3291198032084984486}
   - component: {fileID: 4185898259956255699}
   - component: {fileID: 475323305572762229}
-  - component: {fileID: 6919053064897451291}
+  - component: {fileID: 1831059687305980637}
+  - component: {fileID: 779546075242838412}
   m_Layer: 8
   m_Name: RotateBlock
   m_TagString: Block
@@ -109,7 +110,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6919053064897451291
+--- !u!114 &1831059687305980637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,7 +119,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 3031442703907766884}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8c7f8418cdcfdc49a9cdca817186398, type: 3}
+  m_Script: {fileID: 11500000, guid: 54ca97c0806c33a4bb7d880159078844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &779546075242838412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3031442703907766884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc83c14fefc73746afaa9a9e817c771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotateAngle: 10

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8658647533892312868}
   - component: {fileID: 8658647533892312867}
   m_Layer: 8
-  m_Name: SaveBlock
+  m_Name: SafeBlock
   m_TagString: SemiBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

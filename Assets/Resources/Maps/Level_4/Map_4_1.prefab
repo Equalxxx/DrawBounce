@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8539545460504446301}
   - component: {fileID: 6491850621020608908}
   m_Layer: 0
-  m_Name: Map_2_7
+  m_Name: Map_4_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   height: 10
   areaRenderer: {fileID: 4086717012254129903}
+  defaultBlocks: []
 --- !u!1 &2331054084316032798
 GameObject:
   m_ObjectHideFlags: 0

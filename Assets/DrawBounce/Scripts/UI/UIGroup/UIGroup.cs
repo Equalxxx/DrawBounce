@@ -14,11 +14,20 @@ public class UIGroup : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
+
+		InitUI();
     }
+
+	protected virtual void InitUI() { }
+	public virtual void RefreshUI() { }
 
     public void ShowUIGroup(bool show)
     {
 		isShow = show;
+
+		if (show)
+			RefreshUI();
+
 		StartCoroutine(FadeUIGroup(show));
     }
 

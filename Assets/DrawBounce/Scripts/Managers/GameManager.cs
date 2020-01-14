@@ -236,7 +236,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (gameInfo.coin < useCoin)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
+			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -263,6 +263,8 @@ public class GameManager : Singleton<GameManager>
 		gameInfo.gem += addGem;
 		AddGemAction?.Invoke();
 
+		SoundManager.Instance.PlaySound2D("Buy_Item");
+
 		Debug.LogFormat("Add gem : {0}", addGem);
 		return true;
 	}
@@ -271,7 +273,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (gameInfo.gem < useGem)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
+			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -283,7 +285,7 @@ public class GameManager : Singleton<GameManager>
 		gameInfo.gem -= useGem;
 
 		UseGemAction?.Invoke();
-
+		SoundManager.Instance.PlaySound2D("Buy_Item");
 		Debug.LogFormat("Used gem : {0}", useGem);
 	}
 
@@ -291,7 +293,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (gameInfo.playerHP + addHp > gameInfo.playerMaxHP)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
+			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -304,11 +306,11 @@ public class GameManager : Singleton<GameManager>
 
 		if (gameInfo.playerHP == gameInfo.playerMaxHP)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart_End");
+			SoundManager.Instance.PlaySound2D("Buy_Item_End");
 		}
 		else
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart");
+			SoundManager.Instance.PlaySound2D("Buy_Item");
 		}
 
 		AddPlayerHPAction?.Invoke();
@@ -320,7 +322,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (gameInfo.startHeight + addHeight > gameInfo.lastHeight)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart_Notwork");
+			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -333,11 +335,11 @@ public class GameManager : Singleton<GameManager>
 
 		if (gameInfo.startHeight >= gameInfo.lastHeight)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart_End");
+			SoundManager.Instance.PlaySound2D("Buy_Item_End");
 		}
 		else
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Heart");
+			SoundManager.Instance.PlaySound2D("Buy_Item");
 		}
 
 		AddHeightAction?.Invoke();

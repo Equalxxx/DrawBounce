@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MysticLights;
 
-public enum PlayableBlockType { Circle, Rectangle, Triangle, Star, Male, Female }
+public enum PlayableBlockType { Circle, Rectangle, Triangle, Star, Male, Female, Heart }
 public class PlayableBlock : MonoBehaviour
 {
     private Rigidbody2D myRigidbody2D;
@@ -91,7 +91,7 @@ public class PlayableBlock : MonoBehaviour
 		Vector3 targetPos = new Vector3(0f, height, 0f);
 		lastHeight = height;
 		lastOldHeight = height;
-
+		SoundManager.Instance.PlaySound2D("Boost");
 		StartCoroutine(MoveToStartHeight(targetPos));
 	}
 
