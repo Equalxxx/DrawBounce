@@ -8,4 +8,14 @@ public class TitleUIGroup : UIGroup
 	{
 		groupType = UIGroupType.Title;
 	}
+
+	protected override void InitUI()
+	{
+
+	}
+
+	public override void RefreshUI()
+	{
+
+	}
 }

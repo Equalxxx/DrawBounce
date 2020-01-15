@@ -33,7 +33,12 @@ public class GameDataTable : ScriptableObject
 	{
 		return gameLevelList.Find(x => x.level == level);
 	}
-	
+
+	public GameLevel GetGameLevelInfo(float height)
+	{
+		return gameLevelList.Find(x => x.targetHeight >= height);
+	}
+
 	public ShopInfo GetShopInfo(ShopItemType itemType)
 	{
 		return shopInfoList.Find(x => x.itemType == itemType);

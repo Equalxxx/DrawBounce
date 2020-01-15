@@ -20,6 +20,7 @@ public class ShopUIGroup : UIGroup
 
 	protected override void InitUI()
 	{
+
 	}
 
 	public override void RefreshUI()

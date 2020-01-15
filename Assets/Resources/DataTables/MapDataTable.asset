@@ -103,3 +103,33 @@ MonoBehaviour:
   - index: 29
     tag: Map_5_6
     level: 5
+  - index: 30
+    tag: Map_6_1
+    level: 6
+  - index: 31
+    tag: Map_6_2
+    level: 6
+  - index: 32
+    tag: Map_6_3
+    level: 6
+  - index: 33
+    tag: Map_6_4
+    level: 6
+  - index: 34
+    tag: Map_6_5
+    level: 6
+  - index: 35
+    tag: Map_6_6
+    level: 6
+  - index: 36
+    tag: Map_7_1
+    level: 7
+  - index: 37
+    tag: Map_7_2
+    level: 7
+  - index: 38
+    tag: Map_7_3
+    level: 7
+  - index: 39
+    tag: Map_7_4
+    level: 7

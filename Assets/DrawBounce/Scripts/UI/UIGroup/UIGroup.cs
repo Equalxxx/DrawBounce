@@ -3,67 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum UIGroupType { Title, Game, Result, Shop }
-public class UIGroup : MonoBehaviour
+public abstract class UIGroup : MonoBehaviour
 {
     public UIGroupType groupType;
 	private bool isShow;
-    protected CanvasGroup canvasGroup;
+    public CanvasGroup canvasGroup;
 
-    private void Awake()
-    {
-        canvasGroup = GetComponent<CanvasGroup>();
-        canvasGroup.alpha = 0f;
-        canvasGroup.blocksRaycasts = false;
+	protected abstract void InitUI();
 
-		InitUI();
-    }
-
-	protected virtual void InitUI() { }
-	public virtual void RefreshUI() { }
+	public abstract void RefreshUI();
 
     public void ShowUIGroup(bool show)
     {
 		isShow = show;
 
-		if (show)
-			RefreshUI();
+		if (gameObject.activeSelf != show)
+			gameObject.SetActive(show);
 
-		StartCoroutine(FadeUIGroup(show));
+		canvasGroup.blocksRaycasts = false;
+
+		if (show)
+		{
+			RefreshUI();
+			StartCoroutine(FadeUIGroup());
+		}
+
     }
 
-    IEnumerator FadeUIGroup(bool show)
+    IEnumerator FadeUIGroup()
     {
+        canvasGroup.alpha = 0f;
+
         float t = 0f;
 
-        if (show)
+        while (t < 1f)
         {
-            canvasGroup.alpha = 0f;
+			if (!isShow)
+				yield break;
 
-            while (t < 1f)
-            {
-				if (!isShow)
-					yield break;
+            t += Time.deltaTime / UIManager.Instance.fadeDuration;
+			
+            canvasGroup.alpha = Mathf.Lerp(0f, 1f, t);
 
-                t += Time.deltaTime / UIManager.Instance.fadeDuration;
-
-                if (show)
-                {
-                    canvasGroup.alpha = Mathf.Lerp(0f, 1f, t);
-                }
-                else
-                {
-                    canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
-                }
-
-                yield return null;
-            }
-
-            canvasGroup.blocksRaycasts = true;
+            yield return null;
         }
-        else
-        {
-            canvasGroup.alpha = 0f;
-            canvasGroup.blocksRaycasts = false;
-        }
+
+        canvasGroup.blocksRaycasts = true;
     }
 }

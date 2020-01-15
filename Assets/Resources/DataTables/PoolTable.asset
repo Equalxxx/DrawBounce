@@ -157,3 +157,43 @@ MonoBehaviour:
     path: Maps/Level_5
     tag: Map_5_6
     preloadCount: 3
+  - index: 36
+    path: Maps/Level_6
+    tag: Map_6_1
+    preloadCount: 3
+  - index: 37
+    path: Maps/Level_6
+    tag: Map_6_2
+    preloadCount: 3
+  - index: 38
+    path: Maps/Level_6
+    tag: Map_6_3
+    preloadCount: 3
+  - index: 39
+    path: Maps/Level_6
+    tag: Map_6_4
+    preloadCount: 3
+  - index: 40
+    path: Maps/Level_6
+    tag: Map_6_5
+    preloadCount: 3
+  - index: 41
+    path: Maps/Level_6
+    tag: Map_6_6
+    preloadCount: 3
+  - index: 42
+    path: Maps/Level_7
+    tag: Map_7_1
+    preloadCount: 3
+  - index: 43
+    path: Maps/Level_7
+    tag: Map_7_2
+    preloadCount: 3
+  - index: 44
+    path: Maps/Level_7
+    tag: Map_7_3
+    preloadCount: 3
+  - index: 45
+    path: Maps/Level_7
+    tag: Map_7_4
+    preloadCount: 3

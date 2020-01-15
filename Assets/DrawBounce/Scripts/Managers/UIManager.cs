@@ -13,11 +13,6 @@ public class UIManager : Singleton<UIManager>
 
 	public CanvasGroup pauseUI;
 
-	private void OnValidate()
-	{
-		uiGroups = GetComponentsInChildren<UIGroup>();
-	}
-
 	private void Awake()
 	{
 		ShowPauseUI(false);
@@ -32,9 +27,13 @@ public class UIManager : Singleton<UIManager>
         {
             if(groupType == uiGroups[i].groupType)
             {
+				uiGroups[i].ShowUIGroup(true);
                 currentUIGroup = uiGroups[i];
-                break;
-            }
+			}
+			else
+			{
+				uiGroups[i].ShowUIGroup(false);
+			}
         }
 
         currentUIGroup.ShowUIGroup(true);

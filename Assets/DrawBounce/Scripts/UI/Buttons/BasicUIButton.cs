@@ -13,24 +13,21 @@ public abstract class BasicUIButton : MonoBehaviour
 			myButton = GetComponent<Button>();
 	}
 
-	private void Awake()
-	{
-		if(myButton == null)
-			myButton = GetComponent<Button>();
-	}
-
-	private void Start()
-	{
-		InitButton();
-	}
-
 	protected virtual void OnEnable()
 	{
+		if (myButton == null)
+			myButton = GetComponent<Button>();
+
 		myButton.onClick.AddListener(PressedButton);
+
+		InitButton();
 	}
 
 	protected virtual void OnDisable()
 	{
+		if (myButton == null)
+			myButton = GetComponent<Button>();
+
 		myButton.onClick.RemoveListener(PressedButton);
 	}
 

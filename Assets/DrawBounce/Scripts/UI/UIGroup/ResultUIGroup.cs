@@ -22,7 +22,11 @@ public class ResultUIGroup : UIGroup
 		GameManager.GameOverAction -= RefreshUI;
 	}
 
-	void RefreshUI()
+	protected override void InitUI()
+	{
+	}
+
+	public override void RefreshUI()
 	{
 		maxMeterText.text = UnitCalculation.GetHeightText(GameManager.Instance.player.GetLastHeight(), true);
 	}

@@ -145,9 +145,9 @@ public class GameManager : Singleton<GameManager>
 
 		player.HP = gameInfo.playerHP;
 		
-		SetStartHeightAction?.Invoke(gameInfo.startHeight);
+		curGameLevel = gameDataTable.GetGameLevelInfo(gameInfo.startHeight);
 
-		SetLevel(gameInfo.startHeight);
+		SetStartHeightAction?.Invoke(gameInfo.startHeight);
 
 		GamePlayAction?.Invoke();
 
