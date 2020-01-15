@@ -178,8 +178,9 @@ public class PlayableBlock : MonoBehaviour
 
             HP -= 1;
             DamagedAction?.Invoke();
+			Handheld.Vibrate();
 
-            if (HP <= 0)
+			if (HP <= 0)
             {
 				SoundManager.Instance.PlaySound2D("Explosion_Over");
 				Dead();

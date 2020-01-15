@@ -27,10 +27,8 @@ public class BuyCoinButton : BasicUIButton
 	{
 		int useGem = price;
 
-		if (GameManager.Instance.IsUseGem(useGem) && GameManager.Instance.AddCoin(addCoin))
+		if (GameManager.Instance.AddCoin(addCoin))
 		{
-			GameManager.Instance.UseGem(useGem);
-
 			GameManager.Instance.gameSettings.SaveGameInfo();
 
 			RefreshUI();
