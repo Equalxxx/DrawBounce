@@ -156,19 +156,15 @@ public class GenerateMap : MonoBehaviour
 
 		List<GameLevelInfo> gameLevelInfo = GameManager.Instance.gameDataTable.GetGameLevelInfo(lev);
 
-		while (true)
+		for (int i = 0; i < gameLevelInfo.Count; i++)
 		{
 			rnd = Random.Range(0f, 100f);
 			if (rnd < mapLevRandomPercent)
 			{
-				return lev;
-			}
-			else
-			{
-				lev--;
-				if (lev <= 1)
-					return 1;
+				return gameLevelInfo[i].mapNumber;
 			}
 		}
+
+		return gameLevelInfo[gameLevelInfo.Count - 1].mapNumber;
 	}
 }
