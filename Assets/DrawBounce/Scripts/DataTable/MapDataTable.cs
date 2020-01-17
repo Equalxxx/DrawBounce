@@ -7,26 +7,34 @@ public class MapData
 {
     public int index;
     public string tag;
-    public int level;
+    public int mapNumber;
 }
 
 public class MapDataTable : ScriptableObject
 {
     public List<MapData> mapDataList = new List<MapData>();
+	public Dictionary<int, List<MapData>> mapDataDic = new Dictionary<int, List<MapData>>();
 
-    public List<MapData> GetMapDataList(int level)
+	public List<MapData> GetMapDataList(int mapNumber)
     {
-        List<MapData> dataList = new List<MapData>();
-
-        foreach(MapData mapData in mapDataList)
-        {
-            if(mapData.level == level)
-            {
-                dataList.Add(mapData);
-            }
+		if (mapDataDic.ContainsKey(mapNumber))
+		{
+			return mapDataDic[mapNumber];
 		}
+		else
+		{
+			List<MapData> dataList = new List<MapData>();
+			foreach (MapData mapData in mapDataList)
+			{
+				if (mapData.mapNumber == mapNumber)
+				{
+					dataList.Add(mapData);
+				}
+			}
 
-        return dataList;
+			mapDataDic.Add(mapNumber, dataList);
+			return mapDataDic[mapNumber];
+		}
     }
 
 	public MapData GetRandomMapData(int level)

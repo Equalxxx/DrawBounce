@@ -15,121 +15,121 @@ MonoBehaviour:
   mapDataList:
   - index: 0
     tag: Map_1_1
-    level: 1
+    mapNumber: 1
   - index: 1
     tag: Map_1_2
-    level: 1
+    mapNumber: 1
   - index: 2
     tag: Map_1_3
-    level: 1
+    mapNumber: 1
   - index: 3
     tag: Map_1_4
-    level: 1
+    mapNumber: 1
   - index: 4
     tag: Map_2_1
-    level: 2
+    mapNumber: 2
   - index: 5
     tag: Map_2_2
-    level: 2
+    mapNumber: 2
   - index: 6
     tag: Map_2_3
-    level: 2
+    mapNumber: 2
   - index: 7
     tag: Map_2_4
-    level: 2
+    mapNumber: 2
   - index: 8
     tag: Map_2_5
-    level: 2
+    mapNumber: 2
   - index: 9
     tag: Map_2_6
-    level: 2
+    mapNumber: 2
   - index: 10
     tag: Map_3_1
-    level: 3
+    mapNumber: 3
   - index: 11
     tag: Map_3_2
-    level: 3
+    mapNumber: 3
   - index: 12
     tag: Map_3_3
-    level: 3
+    mapNumber: 3
   - index: 13
     tag: Map_3_4
-    level: 3
+    mapNumber: 3
   - index: 14
     tag: Map_4_1
-    level: 4
+    mapNumber: 4
   - index: 15
     tag: Map_4_2
-    level: 4
+    mapNumber: 4
   - index: 16
     tag: Map_4_3
-    level: 4
+    mapNumber: 4
   - index: 17
     tag: Map_4_4
-    level: 4
+    mapNumber: 4
   - index: 18
     tag: Map_4_5
-    level: 4
+    mapNumber: 4
   - index: 19
     tag: Map_4_6
-    level: 4
+    mapNumber: 4
   - index: 20
     tag: Map_4_7
-    level: 4
+    mapNumber: 4
   - index: 21
     tag: Map_4_8
-    level: 4
+    mapNumber: 4
   - index: 22
     tag: Map_4_9
-    level: 4
+    mapNumber: 4
   - index: 23
     tag: Map_4_10
-    level: 4
+    mapNumber: 4
   - index: 24
     tag: Map_5_1
-    level: 5
+    mapNumber: 5
   - index: 25
     tag: Map_5_2
-    level: 5
+    mapNumber: 5
   - index: 26
     tag: Map_5_3
-    level: 5
+    mapNumber: 5
   - index: 27
     tag: Map_5_4
-    level: 5
+    mapNumber: 5
   - index: 28
     tag: Map_5_5
-    level: 5
+    mapNumber: 5
   - index: 29
     tag: Map_5_6
-    level: 5
+    mapNumber: 5
   - index: 30
     tag: Map_6_1
-    level: 6
+    mapNumber: 6
   - index: 31
     tag: Map_6_2
-    level: 6
+    mapNumber: 6
   - index: 32
     tag: Map_6_3
-    level: 6
+    mapNumber: 6
   - index: 33
     tag: Map_6_4
-    level: 6
+    mapNumber: 6
   - index: 34
     tag: Map_6_5
-    level: 6
+    mapNumber: 6
   - index: 35
     tag: Map_6_6
-    level: 6
+    mapNumber: 6
   - index: 36
     tag: Map_7_1
-    level: 7
+    mapNumber: 7
   - index: 37
     tag: Map_7_2
-    level: 7
+    mapNumber: 7
   - index: 38
     tag: Map_7_3
-    level: 7
+    mapNumber: 7
   - index: 39
     tag: Map_7_4
-    level: 7
+    mapNumber: 7

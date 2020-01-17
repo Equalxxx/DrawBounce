@@ -26,10 +26,11 @@ public class GameManager : Singleton<GameManager>
 	public GameInfo gameInfo;
 
 	[Header("GameLevel Info")]
-	public GameLevel curGameLevel;
+	public TargetHeightInfo curTargetHeight;
 	public int maxLevel;
 
 	public float getCoinHeight = 30f;
+	public float maxStartHeight = 1000f;
 	public float limitStartHeight = 100f;
 	public float moveToDuration = 5f;
 
@@ -124,7 +125,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Title menu!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Title);
 
-		curGameLevel = gameDataTable.GetGameLevelInfo(1);
+		curTargetHeight = gameDataTable.GetTargetHeightInfo(1);
 
 		player.InitPlayer();
 
@@ -144,8 +145,8 @@ public class GameManager : Singleton<GameManager>
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
 
 		player.HP = gameInfo.playerHP;
-		
-		curGameLevel = gameDataTable.GetGameLevelInfo(gameInfo.startHeight);
+
+		curTargetHeight = gameDataTable.GetTargetHeightInfo(gameInfo.startHeight);
 
 		SetStartHeightAction?.Invoke(gameInfo.startHeight);
 
@@ -201,19 +202,19 @@ public class GameManager : Singleton<GameManager>
 
 	void SetLevel(float height)
 	{
-		if (height >= curGameLevel.targetHeight)
+		if (height >= curTargetHeight.targetHeight)
 		{
-			int nextLevel = curGameLevel.level + 1;
+			int nextLevel = curTargetHeight.level + 1;
 			if (nextLevel > maxLevel)
 				return;
 
-			curGameLevel = gameDataTable.GetGameLevelInfo(nextLevel);
+			curTargetHeight = gameDataTable.GetTargetHeightInfo(nextLevel);
 		}
 	}
 
 	public int GetHeightCoinValue()
 	{
-		return 10 * curGameLevel.level;
+		return 10 * curTargetHeight.level;
 	}
 
     public bool AddCoin(int addCoin)
@@ -320,7 +321,7 @@ public class GameManager : Singleton<GameManager>
 
 	public bool IsAddHeight(float addHeight)
 	{
-		if (gameInfo.startHeight + addHeight > gameInfo.lastHeight)
+		if (gameInfo.startHeight + addHeight > maxStartHeight && gameInfo.startHeight + addHeight > gameInfo.lastHeight)
 		{
 			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
@@ -333,7 +334,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		gameInfo.startHeight += addHeight;
 
-		if (gameInfo.startHeight >= gameInfo.lastHeight)
+		if (gameInfo.startHeight >= gameInfo.lastHeight || gameInfo.startHeight >= maxStartHeight)
 		{
 			SoundManager.Instance.PlaySound2D("Buy_Item_End");
 		}

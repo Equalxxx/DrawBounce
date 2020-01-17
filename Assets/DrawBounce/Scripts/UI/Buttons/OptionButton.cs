@@ -6,11 +6,21 @@ using DG.Tweening;
 
 public class OptionButton : BasicUIButton
 {
-	private bool isShow;
+	public bool isShow;
 	private DOTweenAnimation buttonAnim;
 
 	public MuteButton muteBGMButton;
 	public MuteButton muteSEButton;
+
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+
+		isShow = false;
+		buttonAnim.DOPlayBackwards();
+		muteBGMButton.ShowButton(false);
+		muteSEButton.ShowButton(false);
+	}
 
 	protected override void InitButton()
 	{

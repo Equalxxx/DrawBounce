@@ -104,7 +104,7 @@ public class MapDataTableReader : EditorWindow
                     {
                         int indexColumn = 0;
                         int tagColumn = 0;
-                        int levelColumn = 0;
+                        int mapNumberColumn = 0;
 
 						for (int column = 1; column <= itemDataTable[i].NumberOfColumns; column++)
                         {
@@ -112,8 +112,8 @@ public class MapDataTableReader : EditorWindow
                                 indexColumn = column;
                             if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Tag")
                                 tagColumn = column;
-                            if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Level")
-                                levelColumn = column;
+                            if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "MapNumber")
+								mapNumberColumn = column;
 						}
 
                         for (int row = 2; row <= itemDataTable[i].NumberOfRows; row++)
@@ -125,12 +125,12 @@ public class MapDataTableReader : EditorWindow
 
 							int index = Convert.ToInt32(itemDataTable[i].GetValue(row, indexColumn));
                             string tag = Convert.ToString(itemDataTable[i].GetValue(row, tagColumn));
-                            int level = Convert.ToInt32(itemDataTable[i].GetValue(row, levelColumn));
+                            int mapNumber = Convert.ToInt32(itemDataTable[i].GetValue(row, mapNumberColumn));
 
 							MapData mapData = new MapData();
                             mapData.index = index;
                             mapData.tag = tag;
-                            mapData.level = level;
+                            mapData.mapNumber = mapNumber;
 
 							mapDataTable.mapDataList.Add(mapData);
                         }

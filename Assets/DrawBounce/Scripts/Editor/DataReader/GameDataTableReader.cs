@@ -94,49 +94,85 @@ public class GameDataTableReader : EditorWindow
 
             GameDataTable gameDataTable = (GameDataTable)mapTableSO;
 
-            gameDataTable.gameLevelList.Clear();
-            gameDataTable.shopInfoList.Clear();
+            gameDataTable.gameLevelInfoList.Clear();
+            gameDataTable.targetHeightList.Clear();
+			gameDataTable.shopInfoList.Clear();
 
 			if (itemDataTable.Count > 0)
             {
                 for (int i = 0; i < itemDataTable.Count; i++)
                 {
                     if (itemDataTable[i].TableName == "GameLevel")
-                    {
-                        int indexColumn = 0;
-                        int levelColumn = 0;
-                        int heightColumn = 0;
+					{
+						int indexColumn = 0;
+						int levelColumn = 0;
+						int mapNumberColumn = 0;
 
 						for (int column = 1; column <= itemDataTable[i].NumberOfColumns; column++)
-                        {
-                            if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Index")
-                                indexColumn = column;
-                            if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Level")
-                                levelColumn = column;
-                            if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "TargetHeight")
-								heightColumn = column;
+						{
+							if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Index")
+								indexColumn = column;
+							if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Level")
+								levelColumn = column;
+							if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "MapNumber")
+								mapNumberColumn = column;
 						}
 
-                        for (int row = 2; row <= itemDataTable[i].NumberOfRows; row++)
-                        {
-                            if (Convert.ToString(itemDataTable[i].GetValue(row, indexColumn)).Equals(""))
-                                continue;
+						for (int row = 2; row <= itemDataTable[i].NumberOfRows; row++)
+						{
+							if (Convert.ToString(itemDataTable[i].GetValue(row, indexColumn)).Equals(""))
+								continue;
 							if (Convert.ToString(itemDataTable[i].GetValue(row, levelColumn)).Equals(""))
 								continue;
 
 							int index = Convert.ToInt32(itemDataTable[i].GetValue(row, indexColumn));
-                            int level = Convert.ToInt32(itemDataTable[i].GetValue(row, levelColumn));
-                            float targetHeight = Convert.ToSingle(itemDataTable[i].GetValue(row, heightColumn));
+							int level = Convert.ToInt32(itemDataTable[i].GetValue(row, levelColumn));
+							int mapNumber = Convert.ToInt32(itemDataTable[i].GetValue(row, mapNumberColumn));
 
-							GameLevel gameLevel = new GameLevel();
-							gameLevel.index = index;
-							gameLevel.level = level;
-							gameLevel.targetHeight = targetHeight;
+							GameLevelInfo gameLevelInfo = new GameLevelInfo();
+							gameLevelInfo.index = index;
+							gameLevelInfo.level = level;
+							gameLevelInfo.mapNumber = mapNumber;
 
-							gameDataTable.gameLevelList.Add(gameLevel);
-                        }
+							gameDataTable.gameLevelInfoList.Add(gameLevelInfo);
+						}
+					}
+                    else if (itemDataTable[i].TableName == "TargetHeight")
+					{
+						int indexColumn = 0;
+						int levelColumn = 0;
+						int heightColumn = 0;
+
+						for (int column = 1; column <= itemDataTable[i].NumberOfColumns; column++)
+						{
+							if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Index")
+								indexColumn = column;
+							if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "Level")
+								levelColumn = column;
+							if (Convert.ToString(itemDataTable[i].GetValue(1, column)) == "TargetHeight")
+								heightColumn = column;
+						}
+
+						for (int row = 2; row <= itemDataTable[i].NumberOfRows; row++)
+						{
+							if (Convert.ToString(itemDataTable[i].GetValue(row, indexColumn)).Equals(""))
+								continue;
+							if (Convert.ToString(itemDataTable[i].GetValue(row, levelColumn)).Equals(""))
+								continue;
+
+							int index = Convert.ToInt32(itemDataTable[i].GetValue(row, indexColumn));
+							int level = Convert.ToInt32(itemDataTable[i].GetValue(row, levelColumn));
+							float targetHeight = Convert.ToSingle(itemDataTable[i].GetValue(row, heightColumn));
+
+							TargetHeightInfo targetHeightInfo = new TargetHeightInfo();
+							targetHeightInfo.index = index;
+							targetHeightInfo.level = level;
+							targetHeightInfo.targetHeight = targetHeight;
+
+							gameDataTable.targetHeightList.Add(targetHeightInfo);
+						}
                     }
-					else if (itemDataTable[i].TableName == "ShopInfo")
+					else if (itemDataTable[i].TableName == "Shop")
 					{
 						int indexColumn = 0;
 						int itemTypeColumn = 0;

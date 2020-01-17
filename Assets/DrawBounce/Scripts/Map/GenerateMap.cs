@@ -30,25 +30,17 @@ public class GenerateMap : MonoBehaviour
 	public List<MapPos> mapPosList;
 
 	private PlayableBlock player;
-	
-	private Dictionary<int, List<MapData>> mapDataDic;
 
 	public bool isGenerate;
 
 	private void Start()
 	{
-		mapDataDic = new Dictionary<int, List<MapData>>();
-		for (int i = 1; i <= GameManager.Instance.maxLevel; i++)
-		{
-			mapDataDic.Add(i, GameManager.Instance.mapDataTable.GetMapDataList(i));
-		}
-
 		PrepareAssets();
 	}
 
 	void PrepareAssets()
 	{
-		foreach (KeyValuePair<int, List<MapData>> keyPair in mapDataDic)
+		foreach (KeyValuePair<int, List<MapData>> keyPair in GameManager.Instance.mapDataTable.mapDataDic)
 		{
 			for (int i = 0; i < keyPair.Value.Count; i++)
 			{
@@ -145,23 +137,24 @@ public class GenerateMap : MonoBehaviour
 
 	MapSet GetRandomMapSet()
 	{
-		int level = GameManager.Instance.curGameLevel.level;
+		int level = GameManager.Instance.curTargetHeight.level;
 		if (level > GameManager.Instance.maxLevel)
 			level = GameManager.Instance.maxLevel;
 
-		level = GetRandomMapLevel(level);
+		int mapNumber = GetRandomMapNumber(level);
 
-		List<MapData> mapDataList = mapDataDic[level];
+		List<MapData> mapDataList = GameManager.Instance.mapDataTable.GetMapDataList(mapNumber);
 
 		int rnd = Random.Range(0, mapDataList.Count);
-		//string mapTag = string.Format("Map_{0}_{1}", level, idx + 1);
 
 		return PoolManager.Instance.Spawn(mapDataList[rnd].tag, Vector3.zero, Quaternion.identity).GetComponent<MapSet>();
 	}
 
-	int GetRandomMapLevel(int lev)
+	int GetRandomMapNumber(int lev)
 	{
 		float rnd = 0f;
+
+		List<GameLevelInfo> gameLevelInfo = GameManager.Instance.gameDataTable.GetGameLevelInfo(lev);
 
 		while (true)
 		{
