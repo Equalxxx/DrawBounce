@@ -94,8 +94,13 @@ public class GameManager : Singleton<GameManager>
 
 	private void OnApplicationPause(bool pause)
 	{
+		if (gameState != GameState.GamePlay)
+			return;
+
 		if(pause)
+		{
 			SetPause(pause);
+		}
 	}
 
 	IEnumerator GameLoop()

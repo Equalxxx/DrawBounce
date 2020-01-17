@@ -8883,6 +8883,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myButton: {fileID: 349162577}
+  appId: 
+  unitId: 
+  isTest: 1
+  deviceId: 
 --- !u!114 &349162581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16161,7 +16165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.3130672, y: 0, z: -20}
+  m_LocalPosition: {x: -3.3102188, y: 0.38321197, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -21603,7 +21607,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.3130672, y: 0, z: -20}
+  m_LocalPosition: {x: 6.6861315, y: 0.38321197, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -26386,6 +26390,8 @@ GameObject:
   - component: {fileID: 1270603291}
   - component: {fileID: 1270603290}
   - component: {fileID: 1270603292}
+  - component: {fileID: 1270603293}
+  - component: {fileID: 1270603294}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -26413,7 +26419,7 @@ MonoBehaviour:
     playerMaxHP: 5
     startHeight: 0
     lastHeight: 10000
-  curGameLevel:
+  curTargetHeight:
     index: 0
     level: 0
     targetHeight: 0
@@ -26454,6 +26460,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 773bc222e6e8a004385bd1644d81f2a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1270603293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270603289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8a8252320c1004192e384a040e0337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1270603294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270603289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690f22750515ace47a93dc07006b9481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1275037198
@@ -27678,7 +27708,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1438419299
 MonoBehaviour:
   m_ObjectHideFlags: 0
