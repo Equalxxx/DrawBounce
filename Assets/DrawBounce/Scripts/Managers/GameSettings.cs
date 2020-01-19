@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using MysticLights;
 
@@ -12,45 +15,79 @@ public class GameSettings : MonoBehaviour
 		SoundManager.Instance.crossFadeTime = 2f;
 	}
 
-	public GameInfo LoadGameInfo()
+	private void OnEnable()
 	{
-		if (GameManager.Instance.testMode)
-			return null;
-
-		GameInfo gameInfo = new GameInfo();
-
-		LoadLocalInfo(gameInfo);
-		LoadServerInfo(gameInfo);
-
-		Debug.Log("Load GameSetting");
-
-		return gameInfo;
+		GooglePlayManager.OnSavedCloudAction += SetSaveInfo;
+		GooglePlayManager.OnLoadedCloudAction += SetLoadInfo;
 	}
 
-	void LoadLocalInfo(GameInfo gameInfo)
+	private void OnDisable()
 	{
-		// Game Info
-		gameInfo.coin = PlayerPrefs.GetInt("Coin", 0);
-		if (gameInfo.coin < 0)
-			gameInfo.coin = 0;
+		GooglePlayManager.OnSavedCloudAction -= SetSaveInfo;
+		GooglePlayManager.OnLoadedCloudAction -= SetLoadInfo;
+	}
 
-		gameInfo.playerHP = PlayerPrefs.GetInt("PlayerHP", 1);
-		if (gameInfo.playerHP < 1)
-			gameInfo.playerHP = 1;
+	public void SaveGameInfo()
+	{
+		if (GameManager.Instance.testMode)
+			return;
+		if (!GooglePlayManager.IsConnected)
+			return;
 
-		gameInfo.playerMaxHP = PlayerPrefs.GetInt("PlayerMaxHP", 5);
-		if (gameInfo.playerMaxHP < 5)
-			gameInfo.playerMaxHP = 5;
+		GameInfo gameInfo = GameManager.Instance.gameInfo;
+		PlayerPrefs.SetInt("Coin", gameInfo.coin);
+		PlayerPrefs.SetInt("PlayerHP", gameInfo.playerHP);
+		PlayerPrefs.SetInt("PlayerMaxHP", gameInfo.playerMaxHP);
+		PlayerPrefs.SetFloat("StartHeight", gameInfo.startHeight);
+		PlayerPrefs.SetFloat("LastHeight", gameInfo.lastHeight);
 
-		gameInfo.startHeight = PlayerPrefs.GetFloat("StartHeight", 0f);
-		if (gameInfo.startHeight < 0f)
-			gameInfo.startHeight = 0f;
+		SaveDeviceOptions();
+		SaveInfoToServer(gameInfo);
 
-		gameInfo.lastHeight = PlayerPrefs.GetFloat("LastHeight", 0f);
-		if (gameInfo.lastHeight < 0f)
-			gameInfo.lastHeight = 0f;
+		Debug.Log("Save GameSetting");
+	}
 
-		// Sound Settings
+	public void SaveDeviceOptions()
+	{
+		PlayerPrefs.SetString("MuteBGM", GameManager.Instance.isMuteBGM.ToString());
+		PlayerPrefs.SetString("MuteSE", GameManager.Instance.isMuteSE.ToString());
+		PlayerPrefs.SetString("Viberate", GameManager.Instance.isVibe.ToString());
+		PlayerPrefs.SetString("BlockType", GameManager.Instance.curBlockType.ToString());
+	}
+
+	void SaveInfoToServer(GameInfo gameInfo)
+	{
+		byte[] bytes = ObjectToByteArraySerialize(gameInfo);
+
+		GooglePlayManager.Instance.SaveToCloud(bytes);
+	}
+
+	void SetSaveInfo(bool success)
+	{
+		if (success)
+		{
+			Debug.Log("Save game info to server");
+		}
+		else
+		{
+			Debug.LogWarning("Save game info to local");
+		}
+	}
+
+
+	public void LoadGameInfo()
+	{
+		if (GameManager.Instance.testMode)
+			return;
+
+		LoadDeviceOptions();
+		LoadInfoForServer();
+
+		Debug.Log("Load GameSetting");
+	}
+
+	public void LoadDeviceOptions()
+	{
 		string strMuteBGM = PlayerPrefs.GetString("MuteBGM", "False");
 		bool muteBGM = bool.Parse(strMuteBGM);
 
@@ -60,47 +97,108 @@ public class GameSettings : MonoBehaviour
 		bool muteSE = bool.Parse(strMuteSE);
 
 		GameManager.Instance.SetSoundMute(SoundType.SE, muteSE);
+
+		string strVibe = PlayerPrefs.GetString("Viberate", "True");
+		bool vibe = bool.Parse(strVibe);
+
+		GameManager.Instance.SetViberate(vibe);
+
+		string strBlockType = PlayerPrefs.GetString("BlockType", "Circle");
+		PlayableBlockType blockType = ParseEnum<PlayableBlockType>(strBlockType, PlayableBlockType.Circle);
+
+		GameManager.Instance.SetPlayableBlockType(blockType);
 	}
 
-	void LoadServerInfo(GameInfo gameInfo)
+	void LoadInfoForServer()
 	{
-		gameInfo.gem = PlayerPrefs.GetInt("Gem", 0);
-		if (gameInfo.gem < 0)
-			gameInfo.gem = 0;
+		GooglePlayManager.Instance.LoadFromCloud();
 	}
 
-	public void SaveGameInfo()
+	void SetLoadInfo(bool success)
 	{
-		if (GameManager.Instance.testMode)
-			return;
+		if(success)
+		{
+			GameInfo gameInfo = GameManager.Instance.gameInfo;
+			byte[] bytes = GooglePlayManager.Instance.savedBytes;
 
-		GameInfo gameInfo = GameManager.Instance.gameInfo;
+			gameInfo = Deserialize<GameInfo>(bytes);
 
-		SaveLocalInfo(gameInfo);
-		SaveServerInfo(gameInfo);
+			CheckDefaultGameInfo(gameInfo);
 
-		Debug.Log("Save GameSetting");
+			Debug.Log("Load game info for server");
+		}
+		else
+		{
+			GameInfo gameInfo = GameManager.Instance.gameInfo;
+
+			gameInfo.coin = PlayerPrefs.GetInt("Coin", 0);
+			gameInfo.playerHP = PlayerPrefs.GetInt("PlayerHP", 1);
+			gameInfo.playerMaxHP = PlayerPrefs.GetInt("PlayerMaxHP", 5);
+			gameInfo.startHeight = PlayerPrefs.GetFloat("StartHeight", 0f);
+			gameInfo.lastHeight = PlayerPrefs.GetFloat("LastHeight", 0f);
+
+			CheckDefaultGameInfo(gameInfo);
+
+			Debug.LogWarning("Load game info for local");
+		}
 	}
 
-	void SaveLocalInfo(GameInfo gameInfo)
+	void CheckDefaultGameInfo(GameInfo gameInfo)
 	{
-		PlayerPrefs.SetInt("Coin", gameInfo.coin);
-		PlayerPrefs.SetInt("PlayerHP", gameInfo.playerHP);
-		PlayerPrefs.SetInt("PlayerMaxHP", gameInfo.playerMaxHP);
-		PlayerPrefs.SetFloat("StartHeight", gameInfo.startHeight);
-		PlayerPrefs.SetFloat("LastHeight", gameInfo.lastHeight);
+		if (gameInfo.coin < 0)
+			gameInfo.coin = 0;
 
-		SaveSoundMute();
+		if (gameInfo.playerHP < 1)
+			gameInfo.playerHP = 1;
+
+		if (gameInfo.playerMaxHP < 5)
+			gameInfo.playerMaxHP = 5;
+
+		if (gameInfo.startHeight < 0f)
+			gameInfo.startHeight = 0f;
+
+		if (gameInfo.lastHeight < 0f)
+			gameInfo.lastHeight = 0f;
 	}
 
-	public void SaveSoundMute()
+	byte[] ObjectToByteArraySerialize(object obj)
 	{
-		PlayerPrefs.SetString("MuteBGM", GameManager.Instance.isMuteBGM.ToString());
-		PlayerPrefs.SetString("MuteSE", GameManager.Instance.isMuteSE.ToString());
+		using (var stream = new MemoryStream())
+		{
+			BinaryFormatter bf = new BinaryFormatter();
+			bf.Serialize(stream, obj);
+			stream.Flush();
+			stream.Position = 0;
+
+			return stream.ToArray();
+		}
 	}
 
-	void SaveServerInfo(GameInfo gameInfo)
+	T Deserialize<T>(byte[] byteData)
 	{
-		PlayerPrefs.SetInt("Gem", gameInfo.gem);
+		using (var stream = new MemoryStream(byteData))
+		{
+			BinaryFormatter bf = new BinaryFormatter();
+			stream.Seek(0, SeekOrigin.Begin);
+
+			return (T)bf.Deserialize(stream);
+		}
+	}
+
+	T ParseEnum<T>(string value, T defaultValue) where T : struct
+	{
+		try
+		{
+			T enumValue;
+			if (!Enum.TryParse(value, true, out enumValue))
+			{
+				return defaultValue;
+			}
+			return enumValue;
+		}
+		catch (Exception)
+		{
+			return defaultValue;
+		}
 	}
 }

@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using MysticLights;
 
 public class BuyHeightButton : BasicUIButton
 {
 	public TextMeshProUGUI heightText;
 	public TextMeshProUGUI priceText;
+
 	public int price = 100;
 	public float addHeight = 100f;
+
+	public Color onColor = Color.white;
+	public Color offColor = Color.white;
 
 	protected override void InitButton()
 	{
@@ -31,6 +36,15 @@ public class BuyHeightButton : BasicUIButton
 	{
 		heightText.text = UnitCalculation.GetHeightText(GameManager.Instance.gameInfo.startHeight);
 		priceText.text = UnitCalculation.GetCoinText(GetPrice());
+
+		if (GameManager.Instance.IsAddHeight(100f))
+		{
+			priceText.color = onColor;
+		}
+		else
+		{
+			priceText.color = offColor;
+		}
 	}
 
 	protected override void PressedButton()
@@ -45,6 +59,10 @@ public class BuyHeightButton : BasicUIButton
 			GameManager.Instance.gameSettings.SaveGameInfo();
 
 			RefreshUI();
+		}
+		else
+		{
+			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 		}
 	}
 

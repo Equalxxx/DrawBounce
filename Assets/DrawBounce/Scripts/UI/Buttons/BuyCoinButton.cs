@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using DG.Tweening;
+using MysticLights;
 
 public class BuyCoinButton : BasicUIButton
 {
 	public TextMeshProUGUI coinValueText;
 	public TextMeshProUGUI gemValueText;
+
+	public string targetProductId;
 	public int price = 100;
 	public int addCoin = 1000;
-	public DOTweenAnimation buttonAnim;
 
 	protected override void InitButton()
 	{
@@ -25,15 +26,58 @@ public class BuyCoinButton : BasicUIButton
 
 	protected override void PressedButton()
 	{
-		int useGem = price;
+		//int useGem = price;
 
-		if (GameManager.Instance.AddCoin(addCoin))
+		//if (GameManager.Instance.AddCoin(addCoin))
+		//{
+		//	GameManager.Instance.gameSettings.SaveGameInfo();
+
+		//	RefreshUI();
+		//}
+
+		if (targetProductId == IAPManager.ProductSkin)
 		{
-			GameManager.Instance.gameSettings.SaveGameInfo();
-
-			RefreshUI();
+			if (IAPManager.Instance.HadPurchased(targetProductId))
+			{
+				Debug.LogFormat("Had product : {0}", targetProductId);
+				return;
+			}
 		}
 
-		buttonAnim.DORestart();
+		if (GameManager.Instance.IsAddCoin(addCoin))
+		{
+			if(GooglePlayManager.IsConnected)
+			{
+				IAPManager.Instance.Purchase(targetProductId, PurchaseComplete);
+				SoundManager.Instance.PlaySound2D("Buy_Item");
+			}
+			else
+			{
+				if(GameManager.Instance.testMode)
+				{
+					GameManager.Instance.AddCoin(addCoin);
+					GameManager.Instance.gameSettings.SaveGameInfo();
+					SoundManager.Instance.PlaySound2D("Buy_Item");
+				}
+				else
+				{
+					UIManager.Instance.notConnectedUI.Show();
+					SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
+				}
+			}
+		}
+		else
+		{
+			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
+		}
+	}
+
+	void PurchaseComplete(bool success)
+	{
+		if(success)
+		{
+			GameManager.Instance.AddCoin(addCoin);
+			GameManager.Instance.gameSettings.SaveGameInfo();
+		}
 	}
 }

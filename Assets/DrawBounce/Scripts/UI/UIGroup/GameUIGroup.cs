@@ -9,7 +9,7 @@ public class GameUIGroup : UIGroup
 		groupType = UIGroupType.Game;
 	}
 
-	protected override void InitUI()
+	public override void InitUI()
 	{
 	}
 

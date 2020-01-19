@@ -18,7 +18,7 @@ public class ShopUIGroup : UIGroup
 		groupType = UIGroupType.Shop;
 	}
 
-	protected override void InitUI()
+	public override void InitUI()
 	{
 
 	}

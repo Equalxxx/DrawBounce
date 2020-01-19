@@ -35,7 +35,7 @@ public class GenerateMap : MonoBehaviour
 
 	private void Start()
 	{
-		PrepareAssets();
+		//PrepareAssets();
 	}
 
 	void PrepareAssets()
@@ -147,7 +147,7 @@ public class GenerateMap : MonoBehaviour
 
 		int rnd = Random.Range(0, mapDataList.Count);
 
-		return PoolManager.Instance.Spawn(mapDataList[rnd].tag, Vector3.zero, Quaternion.identity).GetComponent<MapSet>();
+		return PoolManager.Instance.Spawn(mapDataList[rnd].tag, Vector3.zero, Quaternion.identity, transform).GetComponent<MapSet>();
 	}
 
 	int GetRandomMapNumber(int lev)

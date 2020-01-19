@@ -38,162 +38,190 @@ MonoBehaviour:
     tag: EdgeCollider
     preloadCount: 3
   - index: 6
+    path: PlayableBlock
+    tag: Circle
+    preloadCount: 1
+  - index: 7
+    path: PlayableBlock
+    tag: Rectangle
+    preloadCount: 1
+  - index: 8
+    path: PlayableBlock
+    tag: Triangle
+    preloadCount: 1
+  - index: 9
+    path: PlayableBlock
+    tag: Star
+    preloadCount: 1
+  - index: 10
+    path: PlayableBlock
+    tag: Heart
+    preloadCount: 1
+  - index: 11
+    path: PlayableBlock
+    tag: Male
+    preloadCount: 1
+  - index: 12
+    path: PlayableBlock
+    tag: Female
+    preloadCount: 1
+  - index: 13
     path: Maps/Map_1
     tag: Map_1_1
     preloadCount: 3
-  - index: 7
+  - index: 14
     path: Maps/Map_1
     tag: Map_1_2
     preloadCount: 3
-  - index: 8
+  - index: 15
     path: Maps/Map_1
     tag: Map_1_3
     preloadCount: 3
-  - index: 9
+  - index: 16
     path: Maps/Map_1
     tag: Map_1_4
     preloadCount: 3
-  - index: 10
+  - index: 17
     path: Maps/Map_2
     tag: Map_2_1
     preloadCount: 3
-  - index: 11
+  - index: 18
     path: Maps/Map_2
     tag: Map_2_2
     preloadCount: 3
-  - index: 12
+  - index: 19
     path: Maps/Map_2
     tag: Map_2_3
     preloadCount: 3
-  - index: 13
+  - index: 20
     path: Maps/Map_2
     tag: Map_2_4
     preloadCount: 3
-  - index: 14
+  - index: 21
     path: Maps/Map_2
     tag: Map_2_5
     preloadCount: 3
-  - index: 15
+  - index: 22
     path: Maps/Map_2
     tag: Map_2_6
     preloadCount: 3
-  - index: 16
+  - index: 23
     path: Maps/Map_3
     tag: Map_3_1
     preloadCount: 3
-  - index: 17
+  - index: 24
     path: Maps/Map_3
     tag: Map_3_2
     preloadCount: 3
-  - index: 18
+  - index: 25
     path: Maps/Map_3
     tag: Map_3_3
     preloadCount: 3
-  - index: 19
+  - index: 26
     path: Maps/Map_3
     tag: Map_3_4
     preloadCount: 3
-  - index: 20
+  - index: 27
     path: Maps/Map_4
     tag: Map_4_1
     preloadCount: 3
-  - index: 21
+  - index: 28
     path: Maps/Map_4
     tag: Map_4_2
     preloadCount: 3
-  - index: 22
+  - index: 29
     path: Maps/Map_4
     tag: Map_4_3
     preloadCount: 3
-  - index: 23
+  - index: 30
     path: Maps/Map_4
     tag: Map_4_4
     preloadCount: 3
-  - index: 24
+  - index: 31
     path: Maps/Map_4
     tag: Map_4_5
     preloadCount: 3
-  - index: 25
+  - index: 32
     path: Maps/Map_4
     tag: Map_4_6
     preloadCount: 3
-  - index: 26
+  - index: 33
     path: Maps/Map_4
     tag: Map_4_7
     preloadCount: 3
-  - index: 27
+  - index: 34
     path: Maps/Map_4
     tag: Map_4_8
     preloadCount: 3
-  - index: 28
+  - index: 35
     path: Maps/Map_4
     tag: Map_4_9
     preloadCount: 3
-  - index: 29
+  - index: 36
     path: Maps/Map_4
     tag: Map_4_10
     preloadCount: 3
-  - index: 30
+  - index: 37
     path: Maps/Map_5
     tag: Map_5_1
     preloadCount: 3
-  - index: 31
+  - index: 38
     path: Maps/Map_5
     tag: Map_5_2
     preloadCount: 3
-  - index: 32
+  - index: 39
     path: Maps/Map_5
     tag: Map_5_3
     preloadCount: 3
-  - index: 33
+  - index: 40
     path: Maps/Map_5
     tag: Map_5_4
     preloadCount: 3
-  - index: 34
+  - index: 41
     path: Maps/Map_5
     tag: Map_5_5
     preloadCount: 3
-  - index: 35
+  - index: 42
     path: Maps/Map_5
     tag: Map_5_6
     preloadCount: 3
-  - index: 36
+  - index: 43
     path: Maps/Map_6
     tag: Map_6_1
     preloadCount: 3
-  - index: 37
+  - index: 44
     path: Maps/Map_6
     tag: Map_6_2
     preloadCount: 3
-  - index: 38
+  - index: 45
     path: Maps/Map_6
     tag: Map_6_3
     preloadCount: 3
-  - index: 39
+  - index: 46
     path: Maps/Map_6
     tag: Map_6_4
     preloadCount: 3
-  - index: 40
+  - index: 47
     path: Maps/Map_6
     tag: Map_6_5
     preloadCount: 3
-  - index: 41
+  - index: 48
     path: Maps/Map_6
     tag: Map_6_6
     preloadCount: 3
-  - index: 42
+  - index: 49
     path: Maps/Map_7
     tag: Map_7_1
     preloadCount: 3
-  - index: 43
+  - index: 50
     path: Maps/Map_7
     tag: Map_7_2
     preloadCount: 3
-  - index: 44
+  - index: 51
     path: Maps/Map_7
     tag: Map_7_3
     preloadCount: 3
-  - index: 45
+  - index: 52
     path: Maps/Map_7
     tag: Map_7_4
     preloadCount: 3

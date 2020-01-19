@@ -7,23 +7,18 @@ public class ThemaEffect : MonoBehaviour
 	public Sprite[] sprites;
 	public Material myMaterial;
 
-	private void Update()
+	private void OnEnable()
 	{
-		if(Input.GetKeyDown(KeyCode.Space))
-		{
-			RefreshUI();
-		}
+		GameManager.SetPlayableBlockAction += ChangeTexture;
 	}
 
-	void RefreshUI()
+	private void OnDisable()
 	{
-		ChangeTexture();
+		GameManager.SetPlayableBlockAction -= ChangeTexture;
 	}
-	
-	void ChangeTexture()
-	{
-		PlayableBlockType blockType = GameManager.Instance.player.blockType;
 
+	void ChangeTexture(PlayableBlockType blockType)
+	{
 		switch (blockType)
 		{
 			case PlayableBlockType.Circle:
@@ -43,6 +38,9 @@ public class ThemaEffect : MonoBehaviour
 				break;
 			case PlayableBlockType.Female:
 				myMaterial.mainTexture = sprites[5].texture;
+				break;
+			case PlayableBlockType.Heart:
+				myMaterial.mainTexture = sprites[6].texture;
 				break;
 		}
 	}

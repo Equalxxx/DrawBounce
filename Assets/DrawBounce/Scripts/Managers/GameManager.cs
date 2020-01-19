@@ -34,10 +34,13 @@ public class GameManager : Singleton<GameManager>
 	public float limitStartHeight = 100f;
 	public float moveToDuration = 5f;
 
+	public PlayableBlockType curBlockType;
+
 	[Header("Game Settings")]
 	public bool isPause;
 	public bool isMuteBGM;
 	public bool isMuteSE;
+	public bool isVibe;
 
 	// Game State Actions
 	public static Action GameInitAction;
@@ -57,7 +60,10 @@ public class GameManager : Singleton<GameManager>
 	public static Action<bool> PauseAction;
 
 	public static Action SoundMuteAction;
+	public static Action ViberateAction;
 	public static Action GameSettingAction;
+
+	public static Action<PlayableBlockType> SetPlayableBlockAction;
 
 	[Header("GameManager Settings")]
 	public GameSettings gameSettings;
@@ -69,18 +75,16 @@ public class GameManager : Singleton<GameManager>
 	public GameDataTable gameDataTable;
 	public MapDataTable mapDataTable;
 
-	private void Awake()
-	{
-		if (player == null)
-			player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayableBlock>();
-	}
-
 	private void Start()
     {
 		if(!testMode)
 		{
-			gameInfo = gameSettings.LoadGameInfo();
+			gameSettings.LoadGameInfo();
 			GameSettingAction?.Invoke();
+		}
+		else
+		{
+			SetPlayableBlockType(PlayableBlockType.Circle);
 		}
 
         gameState = GameState.GameTitle;
@@ -181,6 +185,9 @@ public class GameManager : Singleton<GameManager>
 
 		gameSettings.SaveGameInfo();
 
+		GooglePlayManager.Instance.ReportScore((int)gameInfo.lastHeight);
+		UnlockAchievement((int)gameInfo.lastHeight);
+
 		GameOverAction?.Invoke();
 
         while (gameState == GameState.GameOver)
@@ -205,6 +212,38 @@ public class GameManager : Singleton<GameManager>
 		Debug.Log("Shop is done!");
 	}
 
+	void UnlockAchievement(int height)
+	{
+		if (height >= 2000)
+		{
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_2000);
+		}
+		else if (height >= 1000)
+		{
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_1000);
+		}
+		else if (height >= 900)
+		{
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_900);
+		}
+		else if (height >= 700)
+		{
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_700);
+		}
+		else if (height >= 500)
+		{
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_500);
+		}
+		else if (height >= 300)
+		{
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_300);
+		}
+		else if (height >= 100)
+		{
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_100);
+		}
+	}
+
 	void SetLevel(float height)
 	{
 		if (height >= curTargetHeight.targetHeight)
@@ -222,27 +261,30 @@ public class GameManager : Singleton<GameManager>
 		return 10 * curTargetHeight.level;
 	}
 
-    public bool AddCoin(int addCoin)
-    {
+	public bool IsAddCoin(int addCoin)
+	{
 		if (gameInfo.coin + addCoin > int.MaxValue)
 		{
-			Debug.LogError("Coin value max!");
+			Debug.LogWarningFormat("Coin value max : {0}", addCoin);
 			return false;
 		}
 
+		return true;
+	}
+
+	public void AddCoin(int addCoin)
+    {
 		gameInfo.coin += addCoin;
 
         AddCoinAction?.Invoke();
 
 		Debug.LogFormat("Add coin : {0}", addCoin);
-		return true;
     }
 
 	public bool IsUseCoin(int useCoin)
 	{
 		if (gameInfo.coin < useCoin)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -279,7 +321,6 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (gameInfo.gem < useGem)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -299,7 +340,6 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (gameInfo.playerHP + addHp > gameInfo.playerMaxHP)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -326,9 +366,8 @@ public class GameManager : Singleton<GameManager>
 
 	public bool IsAddHeight(float addHeight)
 	{
-		if (gameInfo.startHeight + addHeight > maxStartHeight && gameInfo.startHeight + addHeight > gameInfo.lastHeight)
+		if (gameInfo.startHeight + addHeight > maxStartHeight || gameInfo.startHeight + addHeight > gameInfo.lastHeight)
 		{
-			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			return false;
 		}
 		else
@@ -338,8 +377,9 @@ public class GameManager : Singleton<GameManager>
 	public void AddHeight(float addHeight)
 	{
 		gameInfo.startHeight += addHeight;
+		int target = (int)(gameInfo.lastHeight / 100f) * 100;
 
-		if (gameInfo.startHeight >= gameInfo.lastHeight || gameInfo.startHeight >= maxStartHeight)
+		if (gameInfo.startHeight >= target || gameInfo.startHeight >= maxStartHeight)
 		{
 			SoundManager.Instance.PlaySound2D("Buy_Item_End");
 		}
@@ -386,6 +426,15 @@ public class GameManager : Singleton<GameManager>
 		SoundMuteAction?.Invoke();
 	}
 
+	public void SetViberate(bool vibe)
+	{
+		Debug.LogFormat("Viberate : {0}", vibe);
+
+		isVibe = vibe;
+
+		ViberateAction?.Invoke();
+	}
+
 	public void SetPause(bool pause)
 	{
 		isPause = pause;
@@ -403,7 +452,46 @@ public class GameManager : Singleton<GameManager>
 		UIManager.Instance.ShowPauseUI(isPause);
 	}
 
-    public void SetGameState(GameState state)
+	public void SetPlayableBlockType(PlayableBlockType blockType)
+	{
+		curBlockType = blockType;
+		GameObject newBlock = null;
+
+		switch (curBlockType)
+		{
+			case PlayableBlockType.Circle:
+				newBlock = PoolManager.Instance.Spawn("Circle", Vector3.zero, Quaternion.identity);
+				break;
+			case PlayableBlockType.Rectangle:
+				newBlock = PoolManager.Instance.Spawn("Rectangle", Vector3.zero, Quaternion.identity);
+				break;
+			case PlayableBlockType.Triangle:
+				newBlock = PoolManager.Instance.Spawn("Triangle", Vector3.zero, Quaternion.identity);
+				break;
+			case PlayableBlockType.Star:
+				newBlock = PoolManager.Instance.Spawn("Star", Vector3.zero, Quaternion.identity);
+				break;
+			case PlayableBlockType.Heart:
+				newBlock = PoolManager.Instance.Spawn("Heart", Vector3.zero, Quaternion.identity);
+				break;
+			case PlayableBlockType.Male:
+				newBlock = PoolManager.Instance.Spawn("Male", Vector3.zero, Quaternion.identity);
+				break;
+			case PlayableBlockType.Female:
+				newBlock = PoolManager.Instance.Spawn("Female", Vector3.zero, Quaternion.identity);
+				break;
+		}
+
+		player = newBlock.GetComponent<PlayableBlock>();
+		player.InitPlayer();
+
+		if (gameState == GameState.EnterShop)
+			player.Show(false);
+
+		SetPlayableBlockAction?.Invoke(curBlockType);
+	}
+
+	public void SetGameState(GameState state)
     {
         gameState = state;
     }

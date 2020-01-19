@@ -11,11 +11,23 @@ public class UIManager : Singleton<UIManager>
 
 	public float fadeDuration = 1f;
 
-	public CanvasGroup pauseUI;
+	public GameObject pauseUI;
+	public GameObject practiceObj;
+	public NotConnectedUI notConnectedUI;
 
 	private void Awake()
 	{
 		ShowPauseUI(false);
+	}
+
+	private void OnEnable()
+	{
+		GooglePlayManager.SignInAction += ShowPracticeUI;
+	}
+
+	private void OnDisable()
+	{
+		GooglePlayManager.SignInAction -= ShowPracticeUI;
 	}
 
 	public void ShowUIGroup(UIGroupType groupType)
@@ -27,7 +39,6 @@ public class UIManager : Singleton<UIManager>
         {
             if(groupType == uiGroups[i].groupType)
             {
-				uiGroups[i].ShowUIGroup(true);
                 currentUIGroup = uiGroups[i];
 			}
 			else
@@ -36,21 +47,21 @@ public class UIManager : Singleton<UIManager>
 			}
         }
 
-        currentUIGroup.ShowUIGroup(true);
+		currentUIGroup.InitUI();
+		currentUIGroup.ShowUIGroup(true);
+
         Debug.LogFormat("Change UI group : {0}", groupType);
     }
 
 	public void ShowPauseUI(bool show)
 	{
-		if(show)
-		{
-			pauseUI.alpha = 1f;
-			pauseUI.blocksRaycasts = true;
-		}
-		else
-		{
-			pauseUI.alpha = 0f;
-			pauseUI.blocksRaycasts = false;
-		}
+		if (pauseUI.activeSelf != show)
+			pauseUI.SetActive(show);
+	}
+
+	void ShowPracticeUI(bool success)
+	{
+		if(practiceObj.activeSelf == success)
+			practiceObj.SetActive(!success);
 	}
 }

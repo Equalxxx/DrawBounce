@@ -5,7 +5,7 @@ using UnityEngine;
 using MysticLights;
 
 public enum PlayableBlockType { Circle, Rectangle, Triangle, Star, Male, Female, Heart }
-public class PlayableBlock : MonoBehaviour
+public class PlayableBlock : MonoBehaviour, IPoolObject
 {
     private Rigidbody2D myRigidbody2D;
     private Transform myTransform;
@@ -16,15 +16,14 @@ public class PlayableBlock : MonoBehaviour
 
 	[Header("PlayerGraphic")]
 	public PlayableBlockType blockType;
-	public SpriteRenderer sprRenderer;
-	public ParticleSystem trailParticle;
-	public ParticleSystem boostTrail;
+	//public SpriteRenderer sprRenderer;
+	//public ParticleSystem trailParticle;
+	//private ParticleSystem.MainModule trailModule;
 
-	private ParticleSystem.MainModule trailModule;
+	public ParticleSystem boostTrail;
 	private ParticleSystem.MainModule boostModule;
 
 	[Header("PhysicsInfo")]
-    public float limitVelo = 5f;
 	public bool isFastMove;
 
     public float height;
@@ -46,7 +45,7 @@ public class PlayableBlock : MonoBehaviour
         PoolManager.Instance.PrepareAssets(explosionTag);
 		PoolManager.Instance.PrepareAssets("AddCoinEffect");
 
-		trailModule = trailParticle.main;
+		//trailModule = trailParticle.main;
 		boostModule = boostTrail.main;
     }
 
@@ -137,9 +136,13 @@ public class PlayableBlock : MonoBehaviour
 
 			if (lastHeight + offsetHeight > lastOldHeight + GameManager.Instance.getCoinHeight)
 			{
-				GameManager.Instance.AddCoin(GameManager.Instance.GetHeightCoinValue());
-				PoolManager.Instance.Spawn("AddCoinEffect", myTransform.position, Quaternion.identity);
-				SoundManager.Instance.PlaySound2D("AddCoin");
+				if(GameManager.Instance.IsAddCoin(GameManager.Instance.GetHeightCoinValue()))
+				{
+					GameManager.Instance.AddCoin(GameManager.Instance.GetHeightCoinValue());
+					PoolManager.Instance.Spawn("AddCoinEffect", myTransform.position, Quaternion.identity);
+					SoundManager.Instance.PlaySound2D("AddCoin");
+				}
+
 				lastOldHeight = GetLastHeight();
 			}
 		}
@@ -178,7 +181,9 @@ public class PlayableBlock : MonoBehaviour
 
             HP -= 1;
             DamagedAction?.Invoke();
-			Handheld.Vibrate();
+
+			if(GameManager.Instance.isVibe)
+				Handheld.Vibrate();
 
 			if (HP <= 0)
             {
@@ -225,5 +230,9 @@ public class PlayableBlock : MonoBehaviour
 		int idx = UnityEngine.Random.Range(1, 6);
 		string soundTag = string.Format("Bounce_{0}", idx);
 		SoundManager.Instance.PlaySound2D(soundTag);
+	}
+
+	public void OnSpawnObject()
+	{
 	}
 }

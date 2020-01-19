@@ -9,7 +9,7 @@ public abstract class UIGroup : MonoBehaviour
 	private bool isShow;
     public CanvasGroup canvasGroup;
 
-	protected abstract void InitUI();
+	public abstract void InitUI();
 
 	public abstract void RefreshUI();
 
