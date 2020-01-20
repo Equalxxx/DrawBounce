@@ -11,8 +11,9 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public const string ProductCoin_160000 = "coin_160000";
 	public const string ProductSkin = "skin";
 
-	private const string _ios_CoinId = "com.MysticLights.iosapp.coin";
-	private const string _android_CoinId = "com.MysticLights.androidapp.coin";
+	//private const string _ios_CoinId = "coin_15000_google";
+	private const string _android_CoinId1 = "코인 15000개";
+	private const string _android_CoinId2 = "코인 160000개";
 
 	//private const string _ios_SkinId = "com.MysticLights.app.coin";
 	//private const string _android_SkinId = "com.MysticLights.app.coin";
@@ -31,6 +32,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		}
 
 		DontDestroyOnLoad(gameObject);
+
 		InitUnityIAP();
 	}
 
@@ -43,15 +45,13 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 
 		builder.AddProduct(
 			ProductCoin_15000, ProductType.Consumable, new IDs() {
-				{ _ios_CoinId, AppleAppStore.Name},
-				{_android_CoinId, GooglePlay.Name}
+				{ _android_CoinId1, GooglePlay.Name}
 			}
 		);
 
 		builder.AddProduct(
 			ProductCoin_160000, ProductType.Consumable, new IDs() {
-				{ _ios_CoinId, AppleAppStore.Name},
-				{_android_CoinId, GooglePlay.Name}
+				{ _android_CoinId2, GooglePlay.Name}
 			}
 		);
 
@@ -60,14 +60,15 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 
 	public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
 	{
-		Debug.Log(message: "IAP Initialized success");
+		Debug.Log("IAP Initialized success");
+
 		storeController = controller;
 		storeExtensionProvider = extensions;
 	}
 
 	public void OnInitializeFailed(InitializationFailureReason error)
 	{
-		Debug.LogFormat("IAP Initialized failed : {0}", error);
+		Debug.LogWarningFormat("IAP Initialized failed : {0}", error);
 	}
 
 	public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)

@@ -8,69 +8,60 @@ public class AdmobRewardAd : MonoBehaviour
 {
 	private readonly string unitId = "ca-app-pub-2141587155447938/6851523586";
 
-	private readonly string test_unitId = "ca-app-pub-3940256099942544/8691691433";
+	private readonly string test_unitId = "ca-app-pub-3940256099942544/5224354917";
 	private readonly string test_deviceId = "";
 
-	private RewardBasedVideoAd rewardAd;
+	private RewardedAd rewardedAd;
 
-	private void InitAd()
+	public void Start()
 	{
-		string id = Debug.isDebugBuild ? test_unitId : unitId;
-
-		MobileAds.Initialize(id);
-		rewardAd = RewardBasedVideoAd.Instance;
-
-		AdRequest request = new AdRequest.Builder().AddTestDevice(test_deviceId).Build();
-
-		rewardAd.LoadAd(request, id);
-
-		//광고 요청이 성공적으로 로드되면 호출됩니다.
-		rewardAd.OnAdLoaded += OnAdLoaded;
-		//광고 요청을 로드하지 못했을 때 호출됩니다.
-		rewardAd.OnAdFailedToLoad += OnAdFailedToLoad;
-		//광고가 표시될 때 호출됩니다.
-		rewardAd.OnAdOpening += OnAdOpening;
-		//광고가 재생되기 시작하면 호출됩니다.
-		rewardAd.OnAdStarted += OnAdStarted;
-		//사용자가 비디오 시청을 통해 보상을 받을 때 호출됩니다.
-		rewardAd.OnAdRewarded += OnAdRewarded;
-		//광고가 닫힐 때 호출됩니다.
-		rewardAd.OnAdClosed += OnAdClosed;
-		//광고 클릭으로 인해 사용자가 애플리케이션을 종료한 경우 호출됩니다.
-		rewardAd.OnAdLeavingApplication += OnAdLeavingApplication;
+		CreateAndLoadRewardedAd();
 	}
 
-	void OnAdLoaded(object sender, EventArgs args) { Debug.Log("OnAdLoaded"); }
-	void OnAdFailedToLoad(object sender, AdFailedToLoadEventArgs e) { Debug.Log("OnAdFailedToLoad"); }
-	void OnAdOpening(object sender, EventArgs e) { Debug.Log("OnAdOpening"); }
-	void OnAdStarted(object sender, EventArgs e) { Debug.Log("OnAdStarted"); }
-
-	void OnAdRewarded(object sender, Reward e)
+	public void CreateAndLoadRewardedAd()
 	{
-		Debug.Log("OnAdRewarded");
+		string adUnitId = Debug.isDebugBuild ? test_unitId : unitId;
+
+		rewardedAd = new RewardedAd(adUnitId);
+
+		rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
+		rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
+		rewardedAd.OnAdClosed += HandleRewardedAdClosed;
+
+		// Create an empty ad request.
+		AdRequest request = new AdRequest.Builder().Build();
+		// Load the rewarded ad with the request.
+		rewardedAd.LoadAd(request);
 	}
 
-	void OnAdClosed(object sender, EventArgs e)
+	public void HandleRewardedAdLoaded(object sender, EventArgs args)
 	{
-		Debug.Log("OnAdClosed");
+		MonoBehaviour.print("HandleRewardedAdLoaded event received");
 	}
 
-	void OnAdLeavingApplication(object sender, EventArgs e) { Debug.Log("OnAdLeavingApplication"); }
-
-	public void Show()
+	public void HandleRewardedAdClosed(object sender, EventArgs args)
 	{
-		InitAd();
+		MonoBehaviour.print("HandleRewardedAdClosed event received");
 
-		StartCoroutine("ShowScreenAd");
+		CreateAndLoadRewardedAd();
 	}
 
-	private IEnumerator ShowScreenAd()
+	public void HandleUserEarnedReward(object sender, Reward args)
 	{
-		while (!rewardAd.IsLoaded())
+		string type = args.Type;
+		double amount = args.Amount;
+		MonoBehaviour.print(
+			"HandleRewardedAdRewarded event received for "
+						+ amount.ToString() + " " + type);
+
+		AdmobManager.AdRewardVideoAction?.Invoke();
+	}
+
+	public void ShowAd()
+	{
+		if (this.rewardedAd.IsLoaded())
 		{
-			yield return null;
+			this.rewardedAd.Show();
 		}
-
-		rewardAd.Show();
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MysticLights;
@@ -6,8 +7,11 @@ using MysticLights;
 public enum AdmobAdType { Interstitial, RewardVideo }
 public class AdmobManager : Singleton<AdmobManager>
 {
-	private AdmobScreenAd screenAd;
+	//private AdmobScreenAd screenAd;
 	private AdmobRewardAd rewardAd;
+
+	//public static Action AdInterstitialAction;
+	public static Action AdRewardVideoAction;
 
 	private void Awake()
 	{
@@ -24,7 +28,7 @@ public class AdmobManager : Singleton<AdmobManager>
 
 	private void Init()
 	{
-		screenAd = GetComponent<AdmobScreenAd>();
+		//screenAd = GetComponent<AdmobScreenAd>();
 		rewardAd = GetComponent<AdmobRewardAd>();
 	}
 
@@ -33,10 +37,10 @@ public class AdmobManager : Singleton<AdmobManager>
 		switch(adType)
 		{
 			case AdmobAdType.Interstitial:
-				screenAd.Show();
+				//screenAd.ShowAd();
 				break;
 			case AdmobAdType.RewardVideo:
-				rewardAd.Show();
+				rewardAd.ShowAd();
 				break;
 		}
 	}

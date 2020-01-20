@@ -9293,7 +9293,7 @@ MonoBehaviour:
   myButton: {fileID: 349162577}
   coinText: {fileID: 1465420195}
   addCoinValue: 0
-  limitHeight: 100
+  limitHeight: 30
   btnObject: {fileID: 291374227}
 --- !u!1 &352421773
 GameObject:
@@ -16708,7 +16708,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.313589, y: 0.3658539, z: -20}
+  m_LocalPosition: {x: -3.316, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -22349,7 +22349,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.404182, y: 0.3658539, z: -20}
+  m_LocalPosition: {x: 3.316, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -23946,7 +23946,6 @@ GameObject:
   - component: {fileID: 939869726}
   - component: {fileID: 939869725}
   - component: {fileID: 939869724}
-  - component: {fileID: 939869723}
   m_Layer: 0
   m_Name: AdmobManager
   m_TagString: Untagged
@@ -23954,18 +23953,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &939869723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939869722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bc5dca90848d0c40a0c9e3bda69473a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &939869724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24074,7 +24061,6 @@ MonoBehaviour:
   canvasGroup: {fileID: 954284760}
   recordText: {fileID: 201274669}
   maxMeterText: {fileID: 990491921}
-  limitHeight: 100
 --- !u!1 &978664672
 GameObject:
   m_ObjectHideFlags: 0

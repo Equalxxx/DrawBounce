@@ -79,5 +79,9 @@ public class BuyCoinButton : BasicUIButton
 			GameManager.Instance.AddCoin(addCoin);
 			GameManager.Instance.gameSettings.SaveGameInfo();
 		}
+		else
+		{
+			UIManager.Instance.notConnectedUI.Show();
+		}
 	}
 }

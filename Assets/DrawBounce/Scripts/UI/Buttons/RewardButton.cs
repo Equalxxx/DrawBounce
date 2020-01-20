@@ -11,6 +11,20 @@ public class RewardButton : BasicUIButton
 	public int limitHeight = 100;
 	public GameObject btnObject;
 
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+
+		AdmobManager.AdRewardVideoAction += AddReward;
+	}
+
+	protected override void OnDisable()
+	{
+		base.OnDisable();
+
+		AdmobManager.AdRewardVideoAction -= AddReward;
+	}
+
 	protected override void InitButton()
 	{
 		Debug.Log("Reward Button Init");
@@ -56,14 +70,11 @@ public class RewardButton : BasicUIButton
 			Debug.Log("Reward add coin success");
 
 			AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
-			GameManager.Instance.AddCoin(addCoinValue);
 		}
 		else
 		{
 			Debug.Log("Reward add coin failed");
 		}
-
-		Show(false);
 	}
 
 	void Show(bool show)
@@ -74,5 +85,11 @@ public class RewardButton : BasicUIButton
 			btnObject.SetActive(show);
 
 		Debug.LogFormat("Show reward button : {0}", show);
+	}
+
+	void AddReward()
+	{
+		GameManager.Instance.AddCoin(addCoinValue);
+		Show(false);
 	}
 }
