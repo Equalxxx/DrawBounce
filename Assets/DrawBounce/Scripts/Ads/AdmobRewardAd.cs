@@ -13,40 +13,46 @@ public class AdmobRewardAd : MonoBehaviour
 
 	private RewardedAd rewardedAd;
 
+	public static bool IsRewarded;
+	public static bool IsShowAd;
+
 	public void Start()
 	{
-		CreateAndLoadRewardedAd();
+		rewardedAd = CreateAndLoadRewardedAd();
 	}
 
-	public void CreateAndLoadRewardedAd()
+	public RewardedAd CreateAndLoadRewardedAd()
 	{
-		string adUnitId = Debug.isDebugBuild ? test_unitId : unitId;
+		string adUnitId = test_unitId;
 
-		rewardedAd = new RewardedAd(adUnitId);
+		RewardedAd ad = new RewardedAd(adUnitId);
 
-		rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
-		rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
-		rewardedAd.OnAdClosed += HandleRewardedAdClosed;
+		ad.OnAdLoaded += HandleRewardedAdLoaded;
+		ad.OnUserEarnedReward += HandleUserEarnedReward;
+		ad.OnAdClosed += HandleRewardedAdClosed;
 
 		// Create an empty ad request.
 		AdRequest request = new AdRequest.Builder().Build();
 		// Load the rewarded ad with the request.
-		rewardedAd.LoadAd(request);
+		ad.LoadAd(request);
+
+		return ad;
 	}
 
-	public void HandleRewardedAdLoaded(object sender, EventArgs args)
+	void HandleRewardedAdLoaded(object sender, EventArgs args)
 	{
 		MonoBehaviour.print("HandleRewardedAdLoaded event received");
 	}
 
-	public void HandleRewardedAdClosed(object sender, EventArgs args)
+	void HandleRewardedAdClosed(object sender, EventArgs args)
 	{
 		MonoBehaviour.print("HandleRewardedAdClosed event received");
 
-		CreateAndLoadRewardedAd();
+		this.rewardedAd = CreateAndLoadRewardedAd();
+		IsShowAd = false;
 	}
 
-	public void HandleUserEarnedReward(object sender, Reward args)
+	void HandleUserEarnedReward(object sender, Reward args)
 	{
 		string type = args.Type;
 		double amount = args.Amount;
@@ -54,7 +60,7 @@ public class AdmobRewardAd : MonoBehaviour
 			"HandleRewardedAdRewarded event received for "
 						+ amount.ToString() + " " + type);
 
-		AdmobManager.AdRewardVideoAction?.Invoke();
+		IsRewarded = true;
 	}
 
 	public void ShowAd()

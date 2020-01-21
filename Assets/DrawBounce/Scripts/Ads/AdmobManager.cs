@@ -11,7 +11,7 @@ public class AdmobManager : Singleton<AdmobManager>
 	private AdmobRewardAd rewardAd;
 
 	//public static Action AdInterstitialAction;
-	public static Action AdRewardVideoAction;
+	//public static Action AdRewardVideoAction;
 
 	private void Awake()
 	{

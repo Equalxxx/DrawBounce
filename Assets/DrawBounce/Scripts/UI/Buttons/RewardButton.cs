@@ -15,14 +15,14 @@ public class RewardButton : BasicUIButton
 	{
 		base.OnEnable();
 
-		AdmobManager.AdRewardVideoAction += AddReward;
+		//AdmobManager.AdRewardVideoAction += AddReward;
 	}
 
 	protected override void OnDisable()
 	{
 		base.OnDisable();
 
-		AdmobManager.AdRewardVideoAction -= AddReward;
+		//AdmobManager.AdRewardVideoAction -= AddReward;
 	}
 
 	protected override void InitButton()
@@ -67,13 +67,14 @@ public class RewardButton : BasicUIButton
 	{
 		if(GameManager.Instance.IsAddCoin(addCoinValue))
 		{
-			Debug.Log("Reward add coin success");
-
+			Debug.Log("Start reward ad success");
+			AdmobRewardAd.IsShowAd = true;
 			AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
+			StartCoroutine(WaitForAd());
 		}
 		else
 		{
-			Debug.Log("Reward add coin failed");
+			Debug.Log("Start reward ad failed");
 		}
 	}
 
@@ -87,9 +88,21 @@ public class RewardButton : BasicUIButton
 		Debug.LogFormat("Show reward button : {0}", show);
 	}
 
-	void AddReward()
+	IEnumerator WaitForAd()
 	{
-		GameManager.Instance.AddCoin(addCoinValue);
-		Show(false);
+		while(AdmobRewardAd.IsShowAd)
+		{
+			yield return null;
+		}
+
+		Debug.Log("Show ad is done");
+
+		if (AdmobRewardAd.IsRewarded)
+		{
+			Debug.LogFormat("Add Reward coin : {0}",addCoinValue);
+			GameManager.Instance.AddCoin(addCoinValue);
+			Show(false);
+			AdmobRewardAd.IsRewarded = false;
+		}
 	}
 }

@@ -53,7 +53,13 @@ public class BuyCoinButton : BasicUIButton
 			}
 			else
 			{
-				if(GameManager.Instance.testMode)
+				if(Debug.isDebugBuild)
+				{
+					Debug.Log("debug purchase");
+					IAPManager.Instance.Purchase(targetProductId, PurchaseComplete);
+					SoundManager.Instance.PlaySound2D("Buy_Item");
+				}
+				else if(GameManager.Instance.testMode)
 				{
 					GameManager.Instance.AddCoin(addCoin);
 					GameManager.Instance.gameSettings.SaveGameInfo();

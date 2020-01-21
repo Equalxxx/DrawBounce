@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Purchasing;
 using MysticLights;
 
@@ -23,6 +24,8 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 
 	public bool IsInitialized => storeController != null && storeExtensionProvider != null;
 
+	public Text debugText;
+
 	private void Awake()
 	{
 		if(Instance != null && Instance != this)
@@ -40,6 +43,8 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	{
 		if (IsInitialized)
 			return;
+
+		Debug.Log("Start initialized IAP");
 
 		var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
@@ -61,7 +66,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
 	{
 		Debug.Log("IAP Initialized success");
-
+		debugText.text = "IAP Initialized success";
 		storeController = controller;
 		storeExtensionProvider = extensions;
 	}
@@ -69,6 +74,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public void OnInitializeFailed(InitializationFailureReason error)
 	{
 		Debug.LogWarningFormat("IAP Initialized failed : {0}", error);
+		debugText.text = string.Format("IAP Initialized failed : {0}", error);
 	}
 
 	public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
@@ -90,12 +96,16 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public void OnPurchaseFailed(Product i, PurchaseFailureReason p)
 	{
 		Debug.LogWarningFormat("Purchase failed : {0}, {1}", i.definition.id, p);
+		debugText.text = string.Format("Purchase failed : {0}, {1}", i.definition.id, p);
 	}
 
 	public void Purchase(string productId, Action<bool> callback)
 	{
 		if (!IsInitialized)
+		{
+			Debug.LogWarning("Not Initialized IAP");
 			return;
+		}
 
 		var product = storeController.products.WithID(productId);
 		
