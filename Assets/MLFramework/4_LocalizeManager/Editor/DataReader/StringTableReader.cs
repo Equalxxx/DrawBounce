@@ -119,8 +119,10 @@ public class StringTableReader : EditorWindow
                     {
                         if (Convert.ToString(itemDataTable[i].GetValue(row, indexColumn)).Equals(""))
                             continue;
+						if (Convert.ToString(itemDataTable[i].GetValue(row, stringDataColumn)).Equals(""))
+							continue;
 
-                        int index = Convert.ToInt32(itemDataTable[i].GetValue(row, indexColumn));
+						int index = Convert.ToInt32(itemDataTable[i].GetValue(row, indexColumn));
                         string stringData = Convert.ToString(itemDataTable[i].GetValue(row, stringDataColumn));
                         string fontName = Convert.ToString(itemDataTable[i].GetValue(row, fontNameColumn));
 

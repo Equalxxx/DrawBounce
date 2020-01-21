@@ -12,6 +12,7 @@ public class OptionButton : BasicUIButton
 	public MuteButton muteBGMButton;
 	public MuteButton muteSEButton;
 	public VibeButton vibeButton;
+	public TutorialButton tutorialButton;
 
 	protected override void OnEnable()
 	{
@@ -22,6 +23,7 @@ public class OptionButton : BasicUIButton
 		muteBGMButton.ShowButton(false);
 		muteSEButton.ShowButton(false);
 		vibeButton.ShowButton(false);
+		tutorialButton.ShowButton(false);
 	}
 
 	protected override void InitButton()
@@ -39,6 +41,7 @@ public class OptionButton : BasicUIButton
 			muteBGMButton.ShowButton(true);
 			muteSEButton.ShowButton(true);
 			vibeButton.ShowButton(true);
+			tutorialButton.ShowButton(true);
 		}
 		else
 		{
@@ -46,6 +49,7 @@ public class OptionButton : BasicUIButton
 			muteBGMButton.ShowButton(false);
 			muteSEButton.ShowButton(false);
 			vibeButton.ShowButton(false);
+			tutorialButton.ShowButton(false);
 		}
 	}
 }

@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace MysticLights
 {
     public class LocalizeManager : Singleton<LocalizeManager>
     {
-        public enum LocalizeLanguageType { KR, ENG }
+        public enum LocalizeLanguageType { KR, ENG, JP }
         public enum LocalizeAssetType { Texture, Sprite, Prefab }
 
         private ResourceManager.LinkType resLinkType = ResourceManager.LinkType.Resources;
@@ -147,7 +148,26 @@ namespace MysticLights
             return font;
         }
 
-        public static T GetLocalizeAsset<T>(string assetName, LocalizeAssetType assetType)
+		public static TMP_FontAsset GetTMPFont(int strIndex)
+		{
+			if (!Instance.LoadStringTable())
+			{
+				return null;
+			}
+
+			string fontName = Instance.stringTable.GetFontData(strIndex);
+
+			TMP_FontAsset font = ResourceManager.LoadAsset<TMP_FontAsset>(Instance.fontPath, fontName, Instance.resLinkType);
+
+			if (font == null)
+			{
+				Debug.LogError("Not found Font : " + fontName);
+			}
+
+			return font;
+		}
+
+		public static T GetLocalizeAsset<T>(string assetName, LocalizeAssetType assetType)
         {
             string assetPath = "";
             switch (assetType)

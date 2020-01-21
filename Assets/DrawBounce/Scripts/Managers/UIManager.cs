@@ -12,8 +12,9 @@ public class UIManager : Singleton<UIManager>
 	public float fadeDuration = 1f;
 
 	public GameObject pauseUI;
-	public GameObject practiceObj;
-	public NotConnectedUI notConnectedUI;
+	public GameObject practiceUI;
+	public TutorialUI tutorialUI;
+	public ShowMessageUI showMessageUI;
 
 	private void Awake()
 	{
@@ -61,7 +62,12 @@ public class UIManager : Singleton<UIManager>
 
 	void ShowPracticeUI(bool success)
 	{
-		if(practiceObj.activeSelf == success)
-			practiceObj.SetActive(!success);
+		if(practiceUI.activeSelf == success)
+			practiceUI.SetActive(!success);
+	}
+
+	public void ShowQuitUI(bool show)
+	{
+
 	}
 }

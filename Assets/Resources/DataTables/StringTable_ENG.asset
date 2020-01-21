@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28849e21404c254448540b75ec173f14, type: 3}
+  m_Name: StringTable_ENG
+  m_EditorClassIdentifier: 
+  stringDataList:
+  - index: 0
+    stringData: PRESS START
+    fontName: LiberationSans SDF
+  - index: 1
+    stringData: PRESS RESTART
+    fontName: LiberationSans SDF
+  - index: 2
+    stringData: Do you want to quit?
+    fontName: LiberationSans SDF
+  - index: 5
+    stringData: Coin
+    fontName: LiberationSans SDF
+  - index: 6
+    stringData: Height
+    fontName: LiberationSans SDF
+  - index: 10
+    stringData: Network not avaliable
+    fontName: LiberationSans SDF
+  - index: 11
+    stringData: Exceeded the maximum coin limit
+    fontName: LiberationSans SDF
+  - index: 12
+    stringData: Not available in practice mode
+    fontName: LiberationSans SDF

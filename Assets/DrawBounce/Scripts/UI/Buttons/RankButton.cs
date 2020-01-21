@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MysticLights;
 
 public class RankButton : BasicUIButton
 {
@@ -13,6 +14,6 @@ public class RankButton : BasicUIButton
 		if (GooglePlayManager.IsConnected)
 			GooglePlayManager.Instance.ShowLeaderboardUI();
 		else
-			UIManager.Instance.notConnectedUI.Show();
+			UIManager.Instance.showMessageUI.Show(10);
 	}
 }

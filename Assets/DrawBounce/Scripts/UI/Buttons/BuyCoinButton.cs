@@ -67,7 +67,7 @@ public class BuyCoinButton : BasicUIButton
 				}
 				else
 				{
-					UIManager.Instance.notConnectedUI.Show();
+					UIManager.Instance.showMessageUI.Show(10);
 					SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 				}
 			}
@@ -87,7 +87,7 @@ public class BuyCoinButton : BasicUIButton
 		}
 		else
 		{
-			UIManager.Instance.notConnectedUI.Show();
+			UIManager.Instance.showMessageUI.Show(10);
 		}
 	}
 }

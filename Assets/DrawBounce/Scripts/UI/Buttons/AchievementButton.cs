@@ -13,6 +13,6 @@ public class AchievementButton : BasicUIButton
 		if (GooglePlayManager.IsConnected)
 			GooglePlayManager.Instance.ShowAchievementUI();
 		else
-			UIManager.Instance.notConnectedUI.Show();
+			UIManager.Instance.showMessageUI.Show(10);
 	}
 }
