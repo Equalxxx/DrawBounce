@@ -25,6 +25,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public bool IsInitialized => storeController != null && storeExtensionProvider != null;
 
 	public Text debugText;
+	public static Action<bool, string> PuchaseCompleteAction;
 
 	private void Awake()
 	{
@@ -35,8 +36,12 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		}
 
 		DontDestroyOnLoad(gameObject);
+	}
 
-		InitUnityIAP();
+	private void Start()
+	{
+		if(storeController == null)
+			InitUnityIAP();
 	}
 
 	void InitUnityIAP()
@@ -48,17 +53,20 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 
 		var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-		builder.AddProduct(
-			ProductCoin_15000, ProductType.Consumable, new IDs() {
-				{ _android_CoinId1, GooglePlay.Name}
-			}
-		);
+		builder.AddProduct(ProductCoin_15000, ProductType.Consumable);
+		builder.AddProduct(ProductCoin_160000, ProductType.Consumable);
 
-		builder.AddProduct(
-			ProductCoin_160000, ProductType.Consumable, new IDs() {
-				{ _android_CoinId2, GooglePlay.Name}
-			}
-		);
+		//builder.AddProduct(
+		//	ProductCoin_15000, ProductType.Consumable, new IDs() {
+		//		{ _android_CoinId1, GooglePlay.Name}
+		//	}
+		//);
+
+		//builder.AddProduct(
+		//	ProductCoin_160000, ProductType.Consumable, new IDs() {
+		//		{ _android_CoinId2, GooglePlay.Name}
+		//	}
+		//);
 
 		UnityPurchasing.Initialize(this, builder);
 	}
@@ -90,6 +98,8 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 			Debug.LogFormat("Increase coin : {0}", 160000);
 		}
 
+		PuchaseCompleteAction?.Invoke(true, e.purchasedProduct.definition.id);
+
 		return PurchaseProcessingResult.Complete;
 	}
 
@@ -97,9 +107,10 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	{
 		Debug.LogWarningFormat("Purchase failed : {0}, {1}", i.definition.id, p);
 		debugText.text = string.Format("Purchase failed : {0}, {1}", i.definition.id, p);
+		PuchaseCompleteAction?.Invoke(false);
 	}
 
-	public void Purchase(string productId, Action<bool> callback)
+	public void Purchase(string productId)
 	{
 		if (!IsInitialized)
 		{
@@ -113,16 +124,10 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		{
 			Debug.LogFormat("Try purchase : {0}", product.definition.id);
 			storeController.InitiatePurchase(product);
-
-			if(callback != null)
-				callback.Invoke(true);
 		}
 		else
 		{
 			Debug.LogFormat("Try purchase failed : {0}", productId);
-
-			if (callback != null)
-				callback.Invoke(false);
 		}
 	}
 

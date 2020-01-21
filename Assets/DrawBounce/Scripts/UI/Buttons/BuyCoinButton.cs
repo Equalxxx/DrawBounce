@@ -13,6 +13,18 @@ public class BuyCoinButton : BasicUIButton
 	public int price = 100;
 	public int addCoin = 1000;
 
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+		IAPManager.PuchaseCompleteAction += PurchaseComplete;
+	}
+
+	protected override void OnDisable()
+	{
+		base.OnDisable();
+		IAPManager.PuchaseCompleteAction -= PurchaseComplete;
+	}
+
 	protected override void InitButton()
 	{
 		RefreshUI();
@@ -48,7 +60,7 @@ public class BuyCoinButton : BasicUIButton
 		{
 			if(GooglePlayManager.IsConnected)
 			{
-				IAPManager.Instance.Purchase(targetProductId, PurchaseComplete);
+				IAPManager.Instance.Purchase(targetProductId);
 				SoundManager.Instance.PlaySound2D("Buy_Item");
 			}
 			else
@@ -56,7 +68,7 @@ public class BuyCoinButton : BasicUIButton
 				if(Debug.isDebugBuild)
 				{
 					Debug.Log("debug purchase");
-					IAPManager.Instance.Purchase(targetProductId, PurchaseComplete);
+					IAPManager.Instance.Purchase(targetProductId);
 					SoundManager.Instance.PlaySound2D("Buy_Item");
 				}
 				else if(GameManager.Instance.testMode)
@@ -78,12 +90,15 @@ public class BuyCoinButton : BasicUIButton
 		}
 	}
 
-	void PurchaseComplete(bool success)
+	void PurchaseComplete(bool success, string productId)
 	{
 		if(success)
 		{
-			GameManager.Instance.AddCoin(addCoin);
-			GameManager.Instance.gameSettings.SaveGameInfo();
+			if(string.Equals(productId, targetProductId))
+			{
+				GameManager.Instance.AddCoin(addCoin);
+				GameManager.Instance.gameSettings.SaveGameInfo();
+			}
 		}
 		else
 		{

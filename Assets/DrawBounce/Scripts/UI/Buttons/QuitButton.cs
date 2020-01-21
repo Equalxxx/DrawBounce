@@ -6,10 +6,6 @@ public class QuitButton : BasicUIButton
 {
 	public bool isQuit;
 
-	protected override void InitButton()
-	{
-	}
-
 	protected override void PressedButton()
 	{
 		if (isQuit)

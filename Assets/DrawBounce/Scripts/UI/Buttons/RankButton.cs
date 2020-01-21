@@ -5,10 +5,6 @@ using MysticLights;
 
 public class RankButton : BasicUIButton
 {
-	protected override void InitButton()
-	{
-	}
-
 	protected override void PressedButton()
 	{
 		if (GooglePlayManager.IsConnected)

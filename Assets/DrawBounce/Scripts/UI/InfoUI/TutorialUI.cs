@@ -11,12 +11,12 @@ public class TutorialUI : MonoBehaviour
 
 		if (show)
 		{
-			GameManager.Instance.player.Show(false);
+			Time.timeScale = 0f;
 			RefreshUI();
 		}
 		else
 		{
-			GameManager.Instance.player.Show(true);
+			Time.timeScale = 1f;
 		}
 	}
 

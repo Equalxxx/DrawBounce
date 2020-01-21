@@ -31,6 +31,6 @@ public abstract class BasicUIButton : MonoBehaviour
 		myButton.onClick.RemoveListener(PressedButton);
 	}
 
-	protected abstract void InitButton();
+	protected virtual void InitButton() { }
 	protected abstract void PressedButton();
 }

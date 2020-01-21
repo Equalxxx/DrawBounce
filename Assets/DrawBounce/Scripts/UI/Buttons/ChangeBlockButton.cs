@@ -28,10 +28,6 @@ public class ChangeBlockButton : BasicUIButton
 		GameManager.SetPlayableBlockAction -= RefreshUI;
 	}
 
-	protected override void InitButton()
-	{
-	}
-
 	protected override void PressedButton()
 	{
 		GameManager.Instance.SetPlayableBlockType(blockType);

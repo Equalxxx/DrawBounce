@@ -15,10 +15,6 @@ public class MuteButton : BasicUIButton
 	public Color onColor;
 	public Color offColor;
 
-	protected override void InitButton()
-	{
-	}
-
 	protected override void OnEnable()
 	{
 		base.OnEnable();

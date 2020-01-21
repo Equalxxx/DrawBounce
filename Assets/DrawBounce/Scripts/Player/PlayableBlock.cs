@@ -13,13 +13,13 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
     [Header("PlayerInfo")]
     public int HP;
     public float jumpPower = 6f;
+	public float addHeightCoinPer = 100f;
 
 	[Header("PlayerGraphic")]
 	public PlayableBlockType blockType;
-	//public SpriteRenderer sprRenderer;
-	//public ParticleSystem trailParticle;
-	//private ParticleSystem.MainModule trailModule;
 
+	public ParticleSystem trailParticle;
+	private ParticleSystem.MainModule trailModule;
 	public ParticleSystem boostTrail;
 	private ParticleSystem.MainModule boostModule;
 
@@ -47,6 +47,7 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 
 		//trailModule = trailParticle.main;
 		boostModule = boostTrail.main;
+		trailModule = trailParticle.main;
     }
 
 	private void OnEnable()
@@ -101,8 +102,8 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 		
 		isFastMove = true;
 		myRigidbody2D.isKinematic = true;
-		boostModule.duration = GameManager.Instance.moveToDuration;
-		boostTrail.Play();
+		//boostModule.duration = GameManager.Instance.moveToDuration;
+		//boostTrail.Play();
 
 		while (t < 1f)
 		{
@@ -124,6 +125,8 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
     private void FixedUpdate()
     {
         height = myTransform.position.y + offsetHeight;
+		trailModule.startRotation = -myTransform.localEulerAngles.z * Mathf.Deg2Rad;
+
 		if (isFastMove)
 			return;
 

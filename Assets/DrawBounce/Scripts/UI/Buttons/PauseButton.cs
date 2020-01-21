@@ -7,8 +7,6 @@ public class PauseButton : BasicUIButton
 {
 	public bool pauseSwitch;
 
-	protected override void InitButton() { }
-
 	protected override void PressedButton()
 	{
 		GameManager.Instance.SetPause(pauseSwitch);

@@ -13,6 +13,7 @@ public class UIManager : Singleton<UIManager>
 
 	public GameObject pauseUI;
 	public GameObject practiceUI;
+	public GameObject quitUI;
 	public TutorialUI tutorialUI;
 	public ShowMessageUI showMessageUI;
 
@@ -29,6 +30,14 @@ public class UIManager : Singleton<UIManager>
 	private void OnDisable()
 	{
 		GooglePlayManager.SignInAction -= ShowPracticeUI;
+	}
+
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			ShowQuitUI(true);
+		}
 	}
 
 	public void ShowUIGroup(UIGroupType groupType)
@@ -68,6 +77,12 @@ public class UIManager : Singleton<UIManager>
 
 	public void ShowQuitUI(bool show)
 	{
+		if (quitUI.activeSelf != show)
+			quitUI.SetActive(show);
 
+		if (show)
+			Time.timeScale = 0f;
+		else
+			Time.timeScale = 1f;
 	}
 }

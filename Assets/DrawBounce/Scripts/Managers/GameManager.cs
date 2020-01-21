@@ -10,7 +10,6 @@ public enum GameState { GameTitle, GamePlay, GameOver, EnterShop }
 public class GameInfo
 {
 	public int coin;
-	public int gem;
 
 	public int playerHP;
 	public int playerMaxHP;
@@ -70,6 +69,7 @@ public class GameManager : Singleton<GameManager>
 	public bool testMode;
 	[HideInInspector]
     public PlayableBlock player;
+	public Transform playerParent;
 
 	[Header("DataTables")]
 	public GameDataTable gameDataTable;
@@ -214,34 +214,42 @@ public class GameManager : Singleton<GameManager>
 
 	void UnlockAchievement(int height)
 	{
+		string achievementId = "";
+
 		if (height >= 2000)
 		{
-			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_2000);
+			achievementId = GPGSIds.achievement_2000;
 		}
 		else if (height >= 1000)
 		{
-			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_1000);
+			achievementId = GPGSIds.achievement_1000;
 		}
 		else if (height >= 900)
 		{
-			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_900);
+			achievementId = GPGSIds.achievement_900;
 		}
 		else if (height >= 700)
 		{
-			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_700);
+			achievementId = GPGSIds.achievement_700;
 		}
 		else if (height >= 500)
 		{
-			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_500);
+			achievementId = GPGSIds.achievement_500;
 		}
 		else if (height >= 300)
 		{
-			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_300);
+			achievementId = GPGSIds.achievement_300;
 		}
 		else if (height >= 100)
 		{
-			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_100);
+			achievementId = GPGSIds.achievement_100;
 		}
+		else
+		{
+			return;
+		}
+
+		GooglePlayManager.Instance.UnlockAchievement(achievementId);
 	}
 
 	void SetLevel(float height)
@@ -258,7 +266,7 @@ public class GameManager : Singleton<GameManager>
 
 	public int GetHeightCoinValue()
 	{
-		return 10 * curTargetHeight.level;
+		return (int)(10f * curTargetHeight.level * (player.addHeightCoinPer/100f));
 	}
 
 	public bool IsAddCoin(int addCoin)
@@ -285,6 +293,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		if (gameInfo.coin < useCoin)
 		{
+			Debug.LogWarningFormat("Coin not enough : {0}", useCoin);
 			return false;
 		}
 		else
@@ -298,42 +307,6 @@ public class GameManager : Singleton<GameManager>
 		UseCoinAction?.Invoke();
 
 		Debug.LogFormat("Used coin : {0}", useCoin);
-	}
-
-	public bool AddGem(int addGem)
-	{
-		if(gameInfo.gem + addGem > int.MaxValue)
-		{
-			Debug.LogError("Gem value max!");
-			return false;
-		}
-
-		gameInfo.gem += addGem;
-		AddGemAction?.Invoke();
-
-		SoundManager.Instance.PlaySound2D("Buy_Item");
-
-		Debug.LogFormat("Add gem : {0}", addGem);
-		return true;
-	}
-
-	public bool IsUseGem(int useGem)
-	{
-		if (gameInfo.gem < useGem)
-		{
-			return false;
-		}
-		else
-			return true;
-	}
-
-	public void UseGem(int useGem)
-	{
-		gameInfo.gem -= useGem;
-
-		UseGemAction?.Invoke();
-		SoundManager.Instance.PlaySound2D("Buy_Item");
-		Debug.LogFormat("Used gem : {0}", useGem);
 	}
 
 	public bool IsAddHP(int addHp)
@@ -456,31 +429,33 @@ public class GameManager : Singleton<GameManager>
 	{
 		curBlockType = blockType;
 		GameObject newBlock = null;
-
+		string playableTag = "";
 		switch (curBlockType)
 		{
 			case PlayableBlockType.Circle:
-				newBlock = PoolManager.Instance.Spawn("Circle", Vector3.zero, Quaternion.identity);
+				playableTag = "Circle";
 				break;
 			case PlayableBlockType.Rectangle:
-				newBlock = PoolManager.Instance.Spawn("Rectangle", Vector3.zero, Quaternion.identity);
+				playableTag = "Rectangle";
 				break;
 			case PlayableBlockType.Triangle:
-				newBlock = PoolManager.Instance.Spawn("Triangle", Vector3.zero, Quaternion.identity);
+				playableTag = "Triangle";
 				break;
 			case PlayableBlockType.Star:
-				newBlock = PoolManager.Instance.Spawn("Star", Vector3.zero, Quaternion.identity);
+				playableTag = "Star";
 				break;
 			case PlayableBlockType.Heart:
-				newBlock = PoolManager.Instance.Spawn("Heart", Vector3.zero, Quaternion.identity);
+				playableTag = "Heart";
 				break;
 			case PlayableBlockType.Male:
-				newBlock = PoolManager.Instance.Spawn("Male", Vector3.zero, Quaternion.identity);
+				playableTag = "Male";
 				break;
 			case PlayableBlockType.Female:
-				newBlock = PoolManager.Instance.Spawn("Female", Vector3.zero, Quaternion.identity);
+				playableTag = "Female";
 				break;
 		}
+
+		newBlock = PoolManager.Instance.Spawn(playableTag, Vector3.zero, Quaternion.identity, playerParent);
 
 		player = newBlock.GetComponent<PlayableBlock>();
 		player.InitPlayer();

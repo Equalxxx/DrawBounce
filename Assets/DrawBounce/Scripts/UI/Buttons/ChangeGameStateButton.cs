@@ -7,8 +7,6 @@ public class ChangeGameStateButton : BasicUIButton
 {
     public GameState state;
 
-	protected override void InitButton() { }
-
 	protected override void PressedButton()
     {
         GameManager.Instance.SetGameState(state);

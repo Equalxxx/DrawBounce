@@ -28,10 +28,6 @@ public class VibeButton : BasicUIButton
 		GameManager.ViberateAction -= SetVibe;
 	}
 
-	protected override void InitButton()
-	{
-	}
-
 	protected override void PressedButton()
 	{
 		isVibe = !isVibe;

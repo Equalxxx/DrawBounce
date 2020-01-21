@@ -15,11 +15,6 @@ public class BuyHeightButton : BasicUIButton
 	public Color onColor = Color.white;
 	public Color offColor = Color.white;
 
-	protected override void InitButton()
-	{
-
-	}
-
 	protected override void OnEnable()
 	{
 		base.OnEnable();
