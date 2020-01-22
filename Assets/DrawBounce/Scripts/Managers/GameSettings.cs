@@ -17,14 +17,14 @@ public class GameSettings : MonoBehaviour
 
 	private void OnEnable()
 	{
-		GooglePlayManager.OnSavedCloudAction += SetSaveInfo;
-		GooglePlayManager.OnLoadedCloudAction += SetLoadInfo;
+		GooglePlayManager.OnSavedCloudAction += SaveCompleteCallback;
+		GooglePlayManager.OnLoadedCloudAction += LoadCompleteCallback;
 	}
 
 	private void OnDisable()
 	{
-		GooglePlayManager.OnSavedCloudAction -= SetSaveInfo;
-		GooglePlayManager.OnLoadedCloudAction -= SetLoadInfo;
+		GooglePlayManager.OnSavedCloudAction -= SaveCompleteCallback;
+		GooglePlayManager.OnLoadedCloudAction -= LoadCompleteCallback;
 	}
 
 	public void SaveGameInfo()
@@ -34,15 +34,8 @@ public class GameSettings : MonoBehaviour
 		if (!GooglePlayManager.IsConnected)
 			return;
 
-		GameInfo gameInfo = GameManager.Instance.gameInfo;
-		PlayerPrefs.SetInt("Coin", gameInfo.coin);
-		PlayerPrefs.SetInt("PlayerHP", gameInfo.playerHP);
-		PlayerPrefs.SetInt("PlayerMaxHP", gameInfo.playerMaxHP);
-		PlayerPrefs.SetFloat("StartHeight", gameInfo.startHeight);
-		PlayerPrefs.SetFloat("LastHeight", gameInfo.lastHeight);
-
 		SaveDeviceOptions();
-		SaveInfoToServer(gameInfo);
+		SaveInfoToServer();
 
 		Debug.Log("Save GameSetting");
 	}
@@ -55,17 +48,23 @@ public class GameSettings : MonoBehaviour
 		PlayerPrefs.SetString("BlockType", GameManager.Instance.curBlockType.ToString());
 	}
 
-	void SaveInfoToServer(GameInfo gameInfo)
+	void SaveInfoToServer()
 	{
-		byte[] bytes = ObjectToByteArraySerialize(gameInfo);
-
-		GooglePlayManager.Instance.SaveToCloud(bytes);
+		GameInfo gameInfo = GameManager.Instance.gameInfo;
+		GooglePlayManager.Instance.SaveToCloud(gameInfo);
 	}
 
-	void SetSaveInfo(bool success)
+	void SaveCompleteCallback(bool success)
 	{
 		if (success)
 		{
+			GameInfo gameInfo = GameManager.Instance.gameInfo;
+
+			PlayerPrefs.SetInt("Coin", gameInfo.coin);
+			PlayerPrefs.SetInt("PlayerHP", gameInfo.playerHP);
+			PlayerPrefs.SetInt("PlayerMaxHP", gameInfo.playerMaxHP);
+			PlayerPrefs.SetFloat("StartHeight", gameInfo.startHeight);
+			PlayerPrefs.SetFloat("LastHeight", gameInfo.lastHeight);
 			Debug.Log("Save game info to server");
 		}
 		else
@@ -74,14 +73,13 @@ public class GameSettings : MonoBehaviour
 		}
 	}
 
-
 	public void LoadGameInfo()
 	{
 		if (GameManager.Instance.testMode)
 			return;
 
 		LoadDeviceOptions();
-		LoadInfoForServer();
+		//LoadInfoForServer();
 
 		Debug.Log("Load GameSetting");
 	}
@@ -109,19 +107,20 @@ public class GameSettings : MonoBehaviour
 		GameManager.Instance.SetPlayableBlockType(blockType);
 	}
 
-	void LoadInfoForServer()
-	{
-		GooglePlayManager.Instance.LoadFromCloud();
-	}
+	//void LoadInfoForServer()
+	//{
+	//	GooglePlayManager.Instance.LoadFromCloud();
+	//}
 
-	void SetLoadInfo(bool success)
+	void LoadCompleteCallback(bool success)
 	{
 		if(success)
 		{
 			GameInfo gameInfo = GameManager.Instance.gameInfo;
-			byte[] bytes = GooglePlayManager.Instance.savedBytes;
+			//byte[] bytes = GooglePlayManager.Instance.savedBytes;
 
-			gameInfo = Deserialize<GameInfo>(bytes);
+			//gameInfo = Deserialize<GameInfo>(bytes);
+			gameInfo = GooglePlayManager.Instance.savedGameInfo;
 
 			CheckDefaultGameInfo(gameInfo);
 
@@ -161,29 +160,29 @@ public class GameSettings : MonoBehaviour
 			gameInfo.lastHeight = 0f;
 	}
 
-	byte[] ObjectToByteArraySerialize(object obj)
-	{
-		using (var stream = new MemoryStream())
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-			bf.Serialize(stream, obj);
-			stream.Flush();
-			stream.Position = 0;
+	//byte[] ObjectToByteArraySerialize(object obj)
+	//{
+	//	using (var stream = new MemoryStream())
+	//	{
+	//		BinaryFormatter bf = new BinaryFormatter();
+	//		bf.Serialize(stream, obj);
+	//		stream.Flush();
+	//		stream.Position = 0;
 
-			return stream.ToArray();
-		}
-	}
+	//		return stream.ToArray();
+	//	}
+	//}
 
-	T Deserialize<T>(byte[] byteData)
-	{
-		using (var stream = new MemoryStream(byteData))
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-			stream.Seek(0, SeekOrigin.Begin);
+	//T Deserialize<T>(byte[] byteData)
+	//{
+	//	using (var stream = new MemoryStream(byteData))
+	//	{
+	//		BinaryFormatter bf = new BinaryFormatter();
+	//		stream.Seek(0, SeekOrigin.Begin);
 
-			return (T)bf.Deserialize(stream);
-		}
-	}
+	//		return (T)bf.Deserialize(stream);
+	//	}
+	//}
 
 	T ParseEnum<T>(string value, T defaultValue) where T : struct
 	{

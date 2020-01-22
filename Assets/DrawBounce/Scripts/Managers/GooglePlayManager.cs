@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
@@ -10,6 +12,8 @@ using MysticLights;
 public class GooglePlayManager : Singleton<GooglePlayManager>
 {
 	private const string saveFile = "drawbouncegamedata";
+	private ISavedGameMetadata myGame;
+	public GameInfo savedGameInfo;
 
 	public static Action<bool> SignInAction;
 	public static Action<bool> OnSavedCloudAction;
@@ -42,6 +46,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 			if (bSuccess)
 			{
 				Debug.Log("SignIn Success : " + Social.localUser.userName);
+				LoadFromCloud();
 			}
 			else
 			{
@@ -123,117 +128,185 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 		}
 	}
 
-	[HideInInspector]
-	public byte[] savedBytes;
-
-	public void SaveToCloud(byte[] bytes)
+	/// <summary>
+	/// Save to cloud
+	/// </summary>
+	public void SaveToCloud(GameInfo gameData)
 	{
-		savedBytes = bytes;
-		ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+		string jsonData = JsonUtility.ToJson(gameData);
+		byte[] bytes = Encoding.UTF8.GetBytes(jsonData);
 
-		if (Social.localUser.authenticated)
-		{
-			savedGameClient.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, OnSavedGameOpenedToSave);
-		}
-		else
-		{
-			Debug.LogWarning("Show save to cloud failed");
-
-			OnSavedCloudAction?.Invoke(false);
-		}
+		SavedGameMetadataUpdate update = new SavedGameMetadataUpdate.Builder().Build();
+		((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(myGame, update, bytes, SaveCallBack);
 	}
 
-	void OnSavedGameOpenedToSave(SavedGameRequestStatus status, ISavedGameMetadata game)
+	private void SaveCallBack(SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
-		if(status == SavedGameRequestStatus.Success)
+		if (status == SavedGameRequestStatus.Success)
 		{
-			SaveGame(game, savedBytes, DateTime.Now.TimeOfDay);
-		}
-		else
-		{
-			Debug.LogWarning("Load saved gamedata failed");
-
-			OnSavedCloudAction?.Invoke(false);
-		}
-	}
-
-	void SaveGame(ISavedGameMetadata game, byte[] savedData, TimeSpan totalPlaytime)
-	{
-		ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
-		SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
-		builder = builder.WithUpdatedPlayedTime(totalPlaytime).WithUpdatedDescription(string.Format("Saved game at {0}", DateTime.Now));
-
-		SavedGameMetadataUpdate updatedMetadata = builder.Build();
-		savedGameClient.CommitUpdate(game, updatedMetadata, savedData, OnSavedGameWritten);
-	}
-
-	void OnSavedGameWritten(SavedGameRequestStatus status, ISavedGameMetadata game)
-	{
-		if(status == SavedGameRequestStatus.Success)
-		{
-			Debug.Log("Game data saved success");
-
+			Debug.Log("Save game data success");
+			LoadFromCloud();
 			OnSavedCloudAction?.Invoke(true);
 		}
 		else
 		{
-			Debug.LogWarning("Game data saved failed");
-
+			Debug.LogWarning("Save game data failed");
 			OnSavedCloudAction?.Invoke(false);
 		}
 	}
-
+	
+	/// <summary>
+	/// Load from cloud
+	/// </summary>
 	public void LoadFromCloud()
 	{
-		if (Social.localUser.authenticated)
-		{
-			ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
-
-			savedGameClient.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, OnSavedGameOpenedToRead);
-		}
-		else
-		{
-			Debug.LogWarning("Show load from cloud failed");
-
-			OnLoadedCloudAction?.Invoke(false);
-		}
+		((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLastKnownGood, LoadGame);
 	}
 
-	void OnSavedGameOpenedToRead(SavedGameRequestStatus status, ISavedGameMetadata game)
+	void LoadGame(SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
 		if (status == SavedGameRequestStatus.Success)
 		{
-			LoadGameData(game);
+			myGame = game;
+			LoadData(myGame);
 		}
 		else
 		{
-			Debug.LogWarning("Load saved gamedata failed");
-
+			Debug.LogWarning("Load game data failed");
 			OnLoadedCloudAction?.Invoke(false);
 		}
 	}
 
-	void LoadGameData(ISavedGameMetadata game)
+	void LoadData(ISavedGameMetadata game)
 	{
-		ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
-		savedGameClient.ReadBinaryData(game, OnSavedGameDataRead);
+		((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(game, LoadDataCallBack);
 	}
 
-	void OnSavedGameDataRead(SavedGameRequestStatus status, byte[] data)
+	void LoadDataCallBack(SavedGameRequestStatus status, byte[] LoadedData)
 	{
-		if(status == SavedGameRequestStatus.Success)
+		if (status == SavedGameRequestStatus.Success)
 		{
-			Debug.Log("Read gamedata success");
-
-			savedBytes = data;
-
-			OnLoadedCloudAction?.Invoke(true);
+			try
+			{
+				string jsonData = Encoding.UTF8.GetString(LoadedData);
+				savedGameInfo = JsonUtility.FromJson<GameInfo>(jsonData);
+				OnLoadedCloudAction?.Invoke(true);
+			}
+			catch (Exception e)
+			{
+				Debug.LogWarningFormat("Load failed : {0}", e);
+				OnLoadedCloudAction?.Invoke(false);
+			}
 		}
 		else
 		{
-			Debug.LogWarning("Read gamedata failed");
-
 			OnLoadedCloudAction?.Invoke(false);
 		}
 	}
+
+	//[HideInInspector]
+	//public byte[] savedBytes;
+
+	//public void SaveToCloud(byte[] bytes)
+	//{
+	//	savedBytes = bytes;
+	//	ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+
+	//	if (Social.localUser.authenticated)
+	//	{
+	//		savedGameClient.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, OnSavedGameOpenedToSave);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Show save to cloud failed");
+	//		OnSavedCloudAction?.Invoke(false);
+	//	}
+	//}
+
+	//void OnSavedGameOpenedToSave(SavedGameRequestStatus status, ISavedGameMetadata game)
+	//{
+	//	if(status == SavedGameRequestStatus.Success)
+	//	{
+	//		SaveGame(game, savedBytes, DateTime.Now.TimeOfDay);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Load saved gamedata failed");
+	//		OnSavedCloudAction?.Invoke(false);
+	//	}
+	//}
+
+	//void SaveGame(ISavedGameMetadata game, byte[] savedData, TimeSpan totalPlaytime)
+	//{
+	//	ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+	//	SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
+	//	builder = builder.WithUpdatedPlayedTime(totalPlaytime).WithUpdatedDescription(string.Format("Saved game at {0}", DateTime.Now));
+
+	//	SavedGameMetadataUpdate updatedMetadata = builder.Build();
+	//	savedGameClient.CommitUpdate(game, updatedMetadata, savedData, OnSavedGameWritten);
+	//}
+
+	//void OnSavedGameWritten(SavedGameRequestStatus status, ISavedGameMetadata game)
+	//{
+	//	if(status == SavedGameRequestStatus.Success)
+	//	{
+	//		Debug.Log("Game data saved success");
+	//		OnSavedCloudAction?.Invoke(true);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Game data saved failed");
+	//		OnSavedCloudAction?.Invoke(false);
+	//	}
+	//}
+
+	//public void LoadFromCloud()
+	//{
+	//	if (Social.localUser.authenticated)
+	//	{
+	//		ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+
+	//		savedGameClient.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, OnSavedGameOpenedToRead);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Show load from cloud failed");
+	//		OnLoadedCloudAction?.Invoke(false);
+	//	}
+	//}
+
+	//void OnSavedGameOpenedToRead(SavedGameRequestStatus status, ISavedGameMetadata game)
+	//{
+	//	if (status == SavedGameRequestStatus.Success)
+	//	{
+	//		LoadGameData(game);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Load saved gamedata failed");
+	//		OnLoadedCloudAction?.Invoke(false);
+	//	}
+	//}
+
+	//void LoadGameData(ISavedGameMetadata game)
+	//{
+	//	ISavedGameClient savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+	//	savedGameClient.ReadBinaryData(game, OnSavedGameDataRead);
+	//}
+
+	//void OnSavedGameDataRead(SavedGameRequestStatus status, byte[] data)
+	//{
+	//	if(status == SavedGameRequestStatus.Success)
+	//	{
+	//		Debug.Log("Read gamedata success");
+
+	//		savedBytes = data;
+	//		OnLoadedCloudAction?.Invoke(true);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Read gamedata failed");
+	//		OnLoadedCloudAction?.Invoke(false);
+	//	}
+	//}
 }

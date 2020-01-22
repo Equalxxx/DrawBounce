@@ -23,8 +23,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	private IExtensionProvider storeExtensionProvider;
 
 	public bool IsInitialized => storeController != null && storeExtensionProvider != null;
-
-	public Text debugText;
+	
 	public static Action<bool, string> PuchaseCompleteAction;
 
 	private void Awake()
@@ -74,7 +73,6 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
 	{
 		Debug.Log("IAP Initialized success");
-		debugText.text = "IAP Initialized success";
 		storeController = controller;
 		storeExtensionProvider = extensions;
 	}
@@ -82,7 +80,6 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public void OnInitializeFailed(InitializationFailureReason error)
 	{
 		Debug.LogWarningFormat("IAP Initialized failed : {0}", error);
-		debugText.text = string.Format("IAP Initialized failed : {0}", error);
 	}
 
 	public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
@@ -106,8 +103,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	public void OnPurchaseFailed(Product i, PurchaseFailureReason p)
 	{
 		Debug.LogWarningFormat("Purchase failed : {0}, {1}", i.definition.id, p);
-		debugText.text = string.Format("Purchase failed : {0}, {1}", i.definition.id, p);
-		PuchaseCompleteAction?.Invoke(false);
+		PuchaseCompleteAction?.Invoke(false, i.definition.id);
 	}
 
 	public void Purchase(string productId)
