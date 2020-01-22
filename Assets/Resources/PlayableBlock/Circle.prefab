@@ -4824,6 +4824,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 0
   jumpPower: 8
+  addHeightCoinPer: 100
   blockType: 0
   trailParticle: {fileID: 1723631181522557933}
   boostTrail: {fileID: 3943668895757686381}
@@ -4835,7 +4836,6 @@ MonoBehaviour:
   hitSmallTag: Hit_Spark
   hitBigTag: Hit_Block
   explosionTag: Explosion_End
-  test: 0
 --- !u!1 &6221910375232625587
 GameObject:
   m_ObjectHideFlags: 0
