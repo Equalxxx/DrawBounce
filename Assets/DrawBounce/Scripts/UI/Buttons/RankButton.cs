@@ -7,7 +7,7 @@ public class RankButton : BasicUIButton
 {
 	protected override void PressedButton()
 	{
-		if (GooglePlayManager.IsConnected)
+		if (GameManager.IsInternetConnected && GooglePlayManager.IsAuthenticated)
 			GooglePlayManager.Instance.ShowLeaderboardUI();
 		else
 			UIManager.Instance.showMessageUI.Show(10);

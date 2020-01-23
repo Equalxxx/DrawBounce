@@ -38,15 +38,6 @@ public class BuyCoinButton : BasicUIButton
 
 	protected override void PressedButton()
 	{
-		//int useGem = price;
-
-		//if (GameManager.Instance.AddCoin(addCoin))
-		//{
-		//	GameManager.Instance.gameSettings.SaveGameInfo();
-
-		//	RefreshUI();
-		//}
-
 		if (targetProductId == IAPManager.ProductSkin)
 		{
 			if (IAPManager.Instance.HadPurchased(targetProductId))
@@ -58,7 +49,7 @@ public class BuyCoinButton : BasicUIButton
 
 		if (GameManager.Instance.IsAddCoin(addCoin))
 		{
-			if(GooglePlayManager.IsConnected)
+			if(GameManager.IsInternetConnected && GooglePlayManager.IsAuthenticated)
 			{
 				IAPManager.Instance.Purchase(targetProductId);
 				SoundManager.Instance.PlaySound2D("Buy_Item");
@@ -69,12 +60,6 @@ public class BuyCoinButton : BasicUIButton
 				{
 					Debug.Log("debug purchase");
 					IAPManager.Instance.Purchase(targetProductId);
-					SoundManager.Instance.PlaySound2D("Buy_Item");
-				}
-				else if(GameManager.Instance.testMode)
-				{
-					GameManager.Instance.AddCoin(addCoin);
-					GameManager.Instance.gameSettings.SaveGameInfo();
 					SoundManager.Instance.PlaySound2D("Buy_Item");
 				}
 				else
@@ -103,6 +88,7 @@ public class BuyCoinButton : BasicUIButton
 		else
 		{
 			UIManager.Instance.showMessageUI.Show(10);
+			Debug.Log("Purchase Failed");
 		}
 	}
 }

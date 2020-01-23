@@ -10,7 +10,7 @@ public class AchievementButton : BasicUIButton
 
 	protected override void PressedButton()
 	{
-		if (GooglePlayManager.IsConnected)
+		if (GameManager.IsInternetConnected && GooglePlayManager.IsAuthenticated)
 			GooglePlayManager.Instance.ShowAchievementUI();
 		else
 			UIManager.Instance.showMessageUI.Show(10);

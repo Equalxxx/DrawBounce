@@ -40,6 +40,7 @@ public class GameManager : Singleton<GameManager>
 	public bool isMuteBGM;
 	public bool isMuteSE;
 	public bool isVibe;
+	public static bool IsInternetConnected => Application.internetReachability != NetworkReachability.NotReachable;
 
 	// Game State Actions
 	public static Action GameInitAction;

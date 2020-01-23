@@ -8,6 +8,7 @@ using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
 using MysticLights;
+using UnityEngine.Networking;
 
 public class GooglePlayManager : Singleton<GooglePlayManager>
 {
@@ -19,7 +20,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 	public static Action<bool> OnSavedCloudAction;
 	public static Action<bool> OnLoadedCloudAction;
 
-	public static bool IsConnected => Social.localUser.authenticated;
+	public static bool IsAuthenticated => Social.localUser.authenticated;
 
 	private void Awake()
 	{
@@ -42,6 +43,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 	private void Start()
 	{
 		SignIn();
+
 	}
 
 	#region Sign

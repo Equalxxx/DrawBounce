@@ -214,13 +214,13 @@ namespace LunarConsolePlugin
 
 		void Awake()
 		{
-			string uniqID = SystemInfo.deviceUniqueIdentifier;
-			if (!string.Equals(testUniqID, uniqID))
-			{
-				Debug.Log("Destroy Lunar console");
-				Destroy(this.gameObject);
-				return;
-			}
+			//string uniqID = SystemInfo.deviceUniqueIdentifier;
+			//if (!string.Equals(testUniqID, uniqID))
+			//{
+			//	Debug.Log("Destroy Lunar console");
+			//	Destroy(this.gameObject);
+			//	return;
+			//}
 
             InitInstance();
         }

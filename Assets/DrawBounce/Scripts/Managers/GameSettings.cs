@@ -31,7 +31,9 @@ public class GameSettings : MonoBehaviour
 	{
 		if (GameManager.Instance.testMode)
 			return;
-		if (!GooglePlayManager.IsConnected)
+		if (!GameManager.IsInternetConnected)
+			return;
+		if (!GooglePlayManager.IsAuthenticated)
 			return;
 
 		SaveDeviceOptions();
