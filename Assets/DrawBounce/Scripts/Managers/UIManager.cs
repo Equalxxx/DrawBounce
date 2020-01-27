@@ -14,22 +14,13 @@ public class UIManager : Singleton<UIManager>
 	public GameObject pauseUI;
 	public GameObject practiceUI;
 	public GameObject quitUI;
+	public GameObject loadingUI;
 	public TutorialUI tutorialUI;
 	public ShowMessageUI showMessageUI;
 
-	private void Awake()
+	private void Start()
 	{
 		ShowPauseUI(false);
-	}
-
-	private void OnEnable()
-	{
-		GooglePlayManager.SignInAction += ShowPracticeUI;
-	}
-
-	private void OnDisable()
-	{
-		GooglePlayManager.SignInAction -= ShowPracticeUI;
 	}
 
 	private void Update()
@@ -69,10 +60,16 @@ public class UIManager : Singleton<UIManager>
 			pauseUI.SetActive(show);
 	}
 
-	void ShowPracticeUI(bool success)
+	public void ShowPracticeUI(bool show)
 	{
-		if(practiceUI.activeSelf == success)
-			practiceUI.SetActive(!success);
+		if(practiceUI.activeSelf != show)
+			practiceUI.SetActive(show);
+	}
+
+	public void ShowLoadingUI(bool show)
+	{
+		if (loadingUI.activeSelf != show)
+			loadingUI.SetActive(show);
 	}
 
 	public void ShowQuitUI(bool show)

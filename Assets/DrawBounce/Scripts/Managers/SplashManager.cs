@@ -14,6 +14,13 @@ public class SplashManager : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
 
+		GooglePlayManager.Instance.SignIn();
+
+		while (!GooglePlayManager.IsSignInProcess)
+		{
+			yield return null;
+		}
+
         yield return FadeScreen.Instance.Fade(true);
 
         SceneControl.LoadNextScene(nextSceneName);

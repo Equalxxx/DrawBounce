@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MysticLights;
 
 public class ChangeBlockButton : BasicUIButton
 {
@@ -10,6 +11,8 @@ public class ChangeBlockButton : BasicUIButton
 
 	public Sprite onSprite;
 	public Sprite offSprite;
+	public float limitHeight;
+	public GameObject lockObj;
 
 	protected override void OnEnable()
 	{
@@ -28,10 +31,25 @@ public class ChangeBlockButton : BasicUIButton
 		GameManager.SetPlayableBlockAction -= RefreshUI;
 	}
 
+	protected override void InitButton()
+	{
+		if (GameManager.Instance.gameInfo.lastHeight >= limitHeight)
+		{
+			myButton.interactable = true;
+			lockObj.SetActive(false);
+		}
+		else
+		{
+			myButton.interactable = false;
+			lockObj.SetActive(true);
+		}
+	}
+
 	protected override void PressedButton()
 	{
 		GameManager.Instance.SetPlayableBlockType(blockType);
 		GameManager.Instance.gameSettings.SaveDeviceOptions();
+		SoundManager.Instance.PlaySound2D("Click", 0.5f);
 	}
 
 	void RefreshUI(PlayableBlockType pbType)

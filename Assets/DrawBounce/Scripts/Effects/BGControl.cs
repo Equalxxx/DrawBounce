@@ -4,38 +4,74 @@ using UnityEngine;
 
 public class BGControl : MonoBehaviour
 {
-	private SpriteRenderer sprRenderer;
-	public Color[] bgColors;
+	[System.Serializable]
+	public class BGColorSet
+	{
+		public Color innerColor;
+		public Color outerColor;
+	}
+
+	public SpriteRenderer sprInnerBG;
+	public SpriteRenderer sprOuterBG;
+	public List<BGColorSet> bgColorSetList;
+
 	public float duration = 1f;
 
 	public float delay = 3f;
+	public int colorIdx;
+	public int testIdx;
 
-	IEnumerator Start()
+#if UNITY_EDITOR
+	private void Update()
 	{
-		sprRenderer = GetComponent<SpriteRenderer>();
+		if (Input.GetKeyDown(KeyCode.Q))
+		{
+			//colorIdx = testIdx;
+			//StartCoroutine(ChangeBG());
+			ChangeBGColor();
+		}
+	}
+#endif
+
+	public void ChangeBGColor(bool first = false)
+	{
+		if (first)
+		{
+			colorIdx = 0;
+		}
+		else
+		{
+			colorIdx++;
+			if (colorIdx >= bgColorSetList.Count)
+				colorIdx = 0;
+		}
+
+		StartCoroutine(ChangeBG());
+	}
+
+	IEnumerator ChangeBG()
+	{
+		Color startInnerColor = sprInnerBG.color;
+		Color endInnerColor = bgColorSetList[colorIdx].innerColor;
+		Color startOuterColor = sprOuterBG.color;
+		Color endOuterColor = bgColorSetList[colorIdx].outerColor;
 
 		float t = 0f;
-		int rndIdx = Random.Range(0, bgColors.Length);
-
-		Color startColor = sprRenderer.color;
-		Color endColor = bgColors[rndIdx];
 
 		while (true)
 		{
 			t += Time.deltaTime / duration;
-			sprRenderer.color = Color.Lerp(startColor, endColor, t);
+			sprInnerBG.color = Color.Lerp(startInnerColor, endInnerColor, t);
+			sprOuterBG.color = Color.Lerp(startOuterColor, endOuterColor, t);
 
 			if (t >= 1f)
 			{
-				t = 0f;
-				rndIdx = Random.Range(0, bgColors.Length);
-				startColor = sprRenderer.color;
-				endColor = bgColors[rndIdx];
-
-				yield return new WaitForSeconds(delay);
+				break;
 			}
 
 			yield return null;
 		}
+
+		Debug.LogFormat("Change BG Color : {0}", colorIdx);
 	}
 }

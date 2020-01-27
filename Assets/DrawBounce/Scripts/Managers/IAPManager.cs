@@ -9,12 +9,12 @@ using MysticLights;
 public class IAPManager : Singleton<IAPManager>, IStoreListener
 {
 	public const string ProductCoin_15000 = "coin_15000";
-	public const string ProductCoin_160000 = "coin_160000";
+	public const string ProductCoin_80000 = "coin_80000";
 	public const string ProductSkin = "skin";
 
 	//private const string _ios_CoinId = "coin_15000_google";
 	private const string _android_CoinId1 = "코인 15000개";
-	private const string _android_CoinId2 = "코인 160000개";
+	private const string _android_CoinId2 = "코인 80000개";
 
 	//private const string _ios_SkinId = "com.MysticLights.app.coin";
 	//private const string _android_SkinId = "com.MysticLights.app.coin";
@@ -53,7 +53,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
 		builder.AddProduct(ProductCoin_15000, ProductType.Consumable);
-		builder.AddProduct(ProductCoin_160000, ProductType.Consumable);
+		builder.AddProduct(ProductCoin_80000, ProductType.Consumable);
 
 		//builder.AddProduct(
 		//	ProductCoin_15000, ProductType.Consumable, new IDs() {
@@ -90,7 +90,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		{
 			Debug.LogFormat("Increase coin : {0}", 15000);
 		}
-		else if (e.purchasedProduct.definition.id == ProductCoin_160000)
+		else if (e.purchasedProduct.definition.id == ProductCoin_80000)
 		{
 			Debug.LogFormat("Increase coin : {0}", 160000);
 		}

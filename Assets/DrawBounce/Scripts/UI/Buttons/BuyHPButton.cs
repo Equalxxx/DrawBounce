@@ -20,12 +20,14 @@ public class BuyHPButton : BasicUIButton
 	{
 		base.OnEnable();
 		GameManager.GameInitAction += RefreshUI;
+		GameSettings.GameSettingAction += RefreshUI;
 	}
 
 	protected override void OnDisable()
 	{
 		base.OnDisable();
 		GameManager.GameInitAction -= RefreshUI;
+		GameSettings.GameSettingAction -= RefreshUI;
 	}
 
 	void RefreshUI()
@@ -51,8 +53,6 @@ public class BuyHPButton : BasicUIButton
 		{
 			GameManager.Instance.UseCoin(useCoin);
 			GameManager.Instance.AddHP(addHp);
-
-			GameManager.Instance.gameSettings.SaveGameInfo();
 
 			RefreshUI();
 		}

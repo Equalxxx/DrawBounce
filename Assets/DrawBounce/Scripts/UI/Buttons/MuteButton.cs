@@ -18,14 +18,14 @@ public class MuteButton : BasicUIButton
 	protected override void OnEnable()
 	{
 		base.OnEnable();
-		GameManager.GameSettingAction += SetMute;
+		GameSettings.GameSettingAction += SetMute;
 		GameManager.SoundMuteAction += SetMute;
 	}
 
 	protected override void OnDisable()
 	{
 		base.OnDisable();
-		GameManager.GameSettingAction -= SetMute;
+		GameSettings.GameSettingAction -= SetMute;
 		GameManager.SoundMuteAction -= SetMute;
 	}
 

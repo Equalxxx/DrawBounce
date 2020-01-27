@@ -18,6 +18,7 @@ public class CoinInfoUI : MonoBehaviour
 		GameManager.GameInitAction += RefreshUI;
 		GameManager.UseCoinAction += RefreshUI;
 		GameManager.AddCoinAction += RefreshUI;
+		GameSettings.GameSettingAction += RefreshUI;
 	}
 
 	private void OnDisable()
@@ -25,6 +26,7 @@ public class CoinInfoUI : MonoBehaviour
 		GameManager.GameInitAction -= RefreshUI;
 		GameManager.UseCoinAction -= RefreshUI;
 		GameManager.AddCoinAction -= RefreshUI;
+		GameSettings.GameSettingAction -= RefreshUI;
 	}
 
 	void RefreshUI()

@@ -3,64 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using MysticLights;
 
 public class RewardButton : BasicUIButton
 {
 	public TextMeshProUGUI coinText;
 	public int addCoinValue;
-	public int limitHeight = 100;
-	public GameObject btnObject;
-
-	protected override void OnEnable()
-	{
-		base.OnEnable();
-
-		//AdmobManager.AdRewardVideoAction += AddReward;
-	}
-
-	protected override void OnDisable()
-	{
-		base.OnDisable();
-
-		//AdmobManager.AdRewardVideoAction -= AddReward;
-	}
+	private RewardUI rewardUI;
 
 	protected override void InitButton()
 	{
-		Debug.Log("Reward Button Init");
-		if (GameManager.Instance.player == null)
-			return;
+		if (rewardUI == null)
+			rewardUI = GetComponentInParent<RewardUI>();
 
-		int height = (int)GameManager.Instance.player.GetLastHeight();
-		int startHeight = (int)GameManager.Instance.gameInfo.startHeight;
-
-		if(height - startHeight >= limitHeight)
-		{
-			if(height >= 1000)
-			{
-				addCoinValue = 1000;
-			}
-			else if(height >= 500)
-			{
-				addCoinValue = 500;
-			}
-			else if (height >= 300)
-			{
-				addCoinValue = 300;
-			}
-			else
-			{
-				addCoinValue = 100;
-			}
-
-			Show(true);
-			coinText.text = addCoinValue.ToString();
-		}
-		else
-		{
-			addCoinValue = 0;
-			Show(false);
-		}
+		addCoinValue = rewardUI.addCoinValue;
 	}
 
 	protected override void PressedButton()
@@ -68,24 +24,25 @@ public class RewardButton : BasicUIButton
 		if(GameManager.Instance.IsAddCoin(addCoinValue))
 		{
 			Debug.Log("Start reward ad success");
-			AdmobRewardAd.IsShowAd = true;
-			AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
-			StartCoroutine(WaitForAd());
+			if(GameManager.IsConnected && !GameManager.IsPracticeMode)
+			{
+				AdmobRewardAd.IsShowAd = true;
+				AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
+				StartCoroutine(WaitForAd());
+			}
+			else
+			{
+				Debug.LogFormat("Add Reward coin : {0}", addCoinValue);
+				GameManager.Instance.AddCoin(addCoinValue);
+				AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
+				coinEffect.RefreshEffect(addCoinValue);
+				rewardUI.Show(false);
+			}
 		}
 		else
 		{
 			Debug.Log("Start reward ad failed");
 		}
-	}
-
-	void Show(bool show)
-	{
-		myButton.interactable = show;
-
-		if (btnObject.activeSelf != show)
-			btnObject.SetActive(show);
-
-		Debug.LogFormat("Show reward button : {0}", show);
 	}
 
 	IEnumerator WaitForAd()
@@ -101,7 +58,9 @@ public class RewardButton : BasicUIButton
 		{
 			Debug.LogFormat("Add Reward coin : {0}",addCoinValue);
 			GameManager.Instance.AddCoin(addCoinValue);
-			Show(false);
+			AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
+			coinEffect.RefreshEffect(addCoinValue);
+			rewardUI.Show(false);
 			AdmobRewardAd.IsRewarded = false;
 		}
 	}

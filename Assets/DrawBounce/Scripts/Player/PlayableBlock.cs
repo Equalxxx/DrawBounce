@@ -142,8 +142,8 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 				if(GameManager.Instance.IsAddCoin(GameManager.Instance.GetHeightCoinValue()))
 				{
 					GameManager.Instance.AddCoin(GameManager.Instance.GetHeightCoinValue());
-					PoolManager.Instance.Spawn("AddCoinEffect", myTransform.position, Quaternion.identity);
-					SoundManager.Instance.PlaySound2D("AddCoin");
+					AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", myTransform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
+					coinEffect.RefreshEffect(GameManager.Instance.GetHeightCoinValue());
 				}
 
 				lastOldHeight = GetLastHeight();

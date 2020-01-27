@@ -39,24 +39,8 @@ namespace MysticLights
 
         private void OnValidate()
         {
-            if (languageType != oldLanguageType)
-            {
-                oldLanguageType = languageType;
-                stringTable = null;
-                LoadStringTable();
-                if (OnChangeLanguage != null)
-                    OnChangeLanguage();
-            }
-
-            if (showLocalizeInfo != oldShowLocalizeInfo)
-            {
-                oldShowLocalizeInfo = showLocalizeInfo;
-                if (OnShowLocalizeInfo != null)
-                    OnShowLocalizeInfo();
-
-                Debug.Log("Show string index : " + showLocalizeInfo);
-            }
-        }
+			RefreshLocalize();
+		}
 
         private void Awake()
         {
@@ -74,6 +58,34 @@ namespace MysticLights
             if (OnChangeLanguage != null)
                 OnChangeLanguage();
         }
+
+		public void SetLanguage(LocalizeLanguageType setLanguageType)
+		{
+			languageType = setLanguageType;
+
+			RefreshLocalize();
+		}
+
+		void RefreshLocalize()
+		{
+			if (languageType != oldLanguageType)
+			{
+				oldLanguageType = languageType;
+				stringTable = null;
+				LoadStringTable();
+				if (OnChangeLanguage != null)
+					OnChangeLanguage();
+			}
+
+			if (showLocalizeInfo != oldShowLocalizeInfo)
+			{
+				oldShowLocalizeInfo = showLocalizeInfo;
+				if (OnShowLocalizeInfo != null)
+					OnShowLocalizeInfo();
+
+				Debug.Log("Show string index : " + showLocalizeInfo);
+			}
+		}
 
         private void Update()
         {

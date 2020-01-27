@@ -38,39 +38,30 @@ public class BuyCoinButton : BasicUIButton
 
 	protected override void PressedButton()
 	{
-		if (targetProductId == IAPManager.ProductSkin)
-		{
-			if (IAPManager.Instance.HadPurchased(targetProductId))
-			{
-				Debug.LogFormat("Had product : {0}", targetProductId);
-				return;
-			}
-		}
-
 		if (GameManager.Instance.IsAddCoin(addCoin))
 		{
-			if(GameManager.IsInternetConnected && GooglePlayManager.IsAuthenticated)
+			if(GameManager.IsConnected)
 			{
-				IAPManager.Instance.Purchase(targetProductId);
-				SoundManager.Instance.PlaySound2D("Buy_Item");
-			}
-			else
-			{
-				if(Debug.isDebugBuild)
+				if(!GameManager.IsPracticeMode)
 				{
-					Debug.Log("debug purchase");
 					IAPManager.Instance.Purchase(targetProductId);
 					SoundManager.Instance.PlaySound2D("Buy_Item");
 				}
 				else
 				{
-					UIManager.Instance.showMessageUI.Show(10);
+					UIManager.Instance.showMessageUI.Show(12);
 					SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 				}
+			}
+			else
+			{
+				UIManager.Instance.showMessageUI.Show(10);
+				SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 			}
 		}
 		else
 		{
+			UIManager.Instance.showMessageUI.Show(11);
 			SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 		}
 	}
@@ -82,12 +73,12 @@ public class BuyCoinButton : BasicUIButton
 			if(string.Equals(productId, targetProductId))
 			{
 				GameManager.Instance.AddCoin(addCoin);
-				GameManager.Instance.gameSettings.SaveGameInfo();
+				AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
+				coinEffect.RefreshEffect(addCoin);
 			}
 		}
 		else
 		{
-			UIManager.Instance.showMessageUI.Show(10);
 			Debug.Log("Purchase Failed");
 		}
 	}

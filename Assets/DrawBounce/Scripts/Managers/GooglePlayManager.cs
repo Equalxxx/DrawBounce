@@ -13,18 +13,15 @@ using UnityEngine.Networking;
 public class GooglePlayManager : Singleton<GooglePlayManager>
 {
 	private const string saveFile = "drawbouncegamedata";
-	private ISavedGameMetadata myGame;
-	public GameInfo savedGameInfo;
+
+	public static bool IsSignInProcess = false;
+	public static bool IsAuthenticated => Social.localUser.authenticated;
 
 	public static Action<bool> SignInAction;
-	public static Action<bool> OnSavedCloudAction;
-	public static Action<bool> OnLoadedCloudAction;
-
-	public static bool IsAuthenticated => Social.localUser.authenticated;
 
 	private void Awake()
 	{
-		if(Instance != this)
+		if (Instance != this)
 		{
 			Destroy(this.gameObject);
 			return;
@@ -40,12 +37,6 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 		PlayGamesPlatform.Activate();
 	}
 
-	private void Start()
-	{
-		SignIn();
-
-	}
-
 	#region Sign
 
 	public void SignIn()
@@ -53,18 +44,20 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 		if (Social.localUser.authenticated)
 			return;
 
+		IsSignInProcess = false;
+
 		Social.localUser.Authenticate((bool bSuccess) =>
 		{
 			if (bSuccess)
 			{
 				Debug.Log("SignIn Success : " + Social.localUser.userName);
-				LoadFromCloud();
 			}
 			else
 			{
 				Debug.LogWarningFormat("SignIn Failed");
 			}
 
+			IsSignInProcess = true;
 			SignInAction?.Invoke(bSuccess);
 		});
 	}
@@ -83,15 +76,23 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 	public void UnlockAchievement(string achievementId)
 	{
 #if UNITY_ANDROID
-		PlayGamesPlatform.Instance.ReportProgress(achievementId, 100f, null);
+		PlayGamesPlatform.Instance.ReportProgress(achievementId, 100f, SendAchievementCallback);
 #elif UNITY_IOS
 		Social.ReportProgress(achievementId, 100f, null);
 #endif
 	}
 
+	void SendAchievementCallback(bool success)
+	{
+		if (success)
+			Debug.Log("Send Achievement Success");
+		else
+			Debug.LogWarning("Send Achievement Failed");
+	}
+
 	public void ShowAchievementUI()
 	{
-		if(Social.localUser.authenticated)
+		if (Social.localUser.authenticated)
 		{
 			Debug.Log("Show Achievement success");
 			Social.ShowAchievementsUI();
@@ -111,7 +112,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 #if UNITY_ANDROID
 		PlayGamesPlatform.Instance.ReportScore(score, GPGSIds.leaderboard, (bool success) =>
 		{
-			if(success)
+			if (success)
 			{
 				Debug.LogFormat("Report score success : {0}", score);
 			}
@@ -154,80 +155,139 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 
 	#endregion
 
-	#region Save
+	#region Save & Load
 
-	public void SaveToCloud(GameInfo gameData)
+	public bool isProcessing
 	{
-		string jsonData = JsonUtility.ToJson(gameData);
-		byte[] bytes = Encoding.UTF8.GetBytes(jsonData);
-
-		SavedGameMetadataUpdate update = new SavedGameMetadataUpdate.Builder().Build();
-		((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(myGame, update, bytes, SaveCallBack);
+		get;
+		private set;
 	}
 
-	private void SaveCallBack(SavedGameRequestStatus status, ISavedGameMetadata game)
+	public string loadedData
 	{
-		if (status == SavedGameRequestStatus.Success)
+		get;
+		private set;
+	}
+
+	private void ProcessCloudData(byte[] cloudData)
+	{
+		if (cloudData == null)
 		{
-			Debug.Log("Save game data success");
-			LoadFromCloud();
-			OnSavedCloudAction?.Invoke(true);
+			Debug.Log("No Data saved to the cloud");
+			return;
+		}
+
+		string progress = BytesToString(cloudData);
+		loadedData = progress;
+	}
+
+	public void LoadFromCloud(Action<string> afterLoadAction)
+	{
+		if (IsAuthenticated && !isProcessing)
+		{
+			StartCoroutine(LoadFromCloudRoutin(afterLoadAction));
 		}
 		else
 		{
-			Debug.LogWarning("Save game data failed");
-			OnSavedCloudAction?.Invoke(false);
+			Debug.LogWarningFormat("LoadFromCloud failed. IsAuthenticated : {0}", IsAuthenticated);
 		}
 	}
 
-	#endregion
-
-	#region Load
-
-	public void LoadFromCloud()
+	private IEnumerator LoadFromCloudRoutin(Action<string> loadAction)
 	{
-		((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLastKnownGood, LoadGame);
+		isProcessing = true;
+		Debug.Log("Loading game progress from the cloud.");
+
+		((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(
+			saveFile,
+			DataSource.ReadCacheOrNetwork,
+			ConflictResolutionStrategy.UseLongestPlaytime,
+			OnFileOpenToLoad);
+
+		while (isProcessing)
+		{
+			yield return null;
+		}
+
+		loadAction.Invoke(loadedData);
 	}
 
-	void LoadGame(SavedGameRequestStatus status, ISavedGameMetadata game)
+	public void SaveToCloud(string dataToSave)
 	{
-		if (status == SavedGameRequestStatus.Success)
+		if (IsAuthenticated)
 		{
-			myGame = game;
-			LoadData(myGame);
+			loadedData = dataToSave;
+			isProcessing = true;
+			((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, OnFileOpenToSave);
 		}
 		else
 		{
-			Debug.LogWarning("Load game data failed");
-			OnLoadedCloudAction?.Invoke(false);
+			Debug.LogWarningFormat("SaveToCloud failed. IsAuthenticated : {0}", IsAuthenticated);
 		}
 	}
 
-	void LoadData(ISavedGameMetadata game)
-	{
-		((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(game, LoadDataCallBack);
-	}
-
-	void LoadDataCallBack(SavedGameRequestStatus status, byte[] LoadedData)
+	private void OnFileOpenToSave(SavedGameRequestStatus status, ISavedGameMetadata metaData)
 	{
 		if (status == SavedGameRequestStatus.Success)
 		{
-			try
-			{
-				string jsonData = Encoding.UTF8.GetString(LoadedData);
-				savedGameInfo = JsonUtility.FromJson<GameInfo>(jsonData);
-				OnLoadedCloudAction?.Invoke(true);
-			}
-			catch (Exception e)
-			{
-				Debug.LogWarningFormat("Load failed : {0}", e);
-				OnLoadedCloudAction?.Invoke(false);
-			}
+			byte[] data = StringToBytes(loadedData);
+
+			SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
+
+			SavedGameMetadataUpdate updatedMetadata = builder.Build();
+
+			((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(metaData, updatedMetadata, data, OnGameSave);
 		}
 		else
 		{
-			OnLoadedCloudAction?.Invoke(false);
+			Debug.LogWarning("Error opening Saved Game" + status);
 		}
+	}
+
+	private void OnFileOpenToLoad(SavedGameRequestStatus status, ISavedGameMetadata metaData)
+	{
+		if (status == SavedGameRequestStatus.Success)
+		{
+			((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(metaData, OnGameLoad);
+		}
+		else
+		{
+			Debug.LogWarning("Error opening Saved Game" + status);
+		}
+	}
+
+	private void OnGameLoad(SavedGameRequestStatus status, byte[] bytes)
+	{
+		if (status != SavedGameRequestStatus.Success)
+		{
+			Debug.LogWarning("Error Saving" + status);
+		}
+		else
+		{
+			ProcessCloudData(bytes);
+		}
+
+		isProcessing = false;
+	}
+
+	private void OnGameSave(SavedGameRequestStatus status, ISavedGameMetadata metaData)
+	{
+		if (status != SavedGameRequestStatus.Success)
+		{
+			Debug.LogWarning("Error Saving" + status);
+		}
+
+		isProcessing = false;
+	}
+
+	private byte[] StringToBytes(string stringToConvert)
+	{
+		return Encoding.UTF8.GetBytes(stringToConvert);
+	}
+
+	private string BytesToString(byte[] bytes)
+	{
+		return Encoding.UTF8.GetString(bytes);
 	}
 
 	#endregion

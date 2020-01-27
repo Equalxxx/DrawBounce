@@ -19,12 +19,14 @@ public class BuyHeightButton : BasicUIButton
 	{
 		base.OnEnable();
 		GameManager.GameInitAction += RefreshUI;
+		GameSettings.GameSettingAction += RefreshUI;
 	}
 
 	protected override void OnDisable()
 	{
 		base.OnDisable();
 		GameManager.GameInitAction -= RefreshUI;
+		GameSettings.GameSettingAction -= RefreshUI;
 	}
 
 	void RefreshUI()
@@ -50,8 +52,6 @@ public class BuyHeightButton : BasicUIButton
 		{
 			GameManager.Instance.UseCoin(useCoin);
 			GameManager.Instance.AddHeight(addHeight);
-
-			GameManager.Instance.gameSettings.SaveGameInfo();
 
 			RefreshUI();
 		}

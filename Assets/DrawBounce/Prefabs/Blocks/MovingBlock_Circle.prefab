@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 5561915497811056562}
   - component: {fileID: 5561915497811056575}
   - component: {fileID: 4937641628834387126}
-  - component: {fileID: 5561915497811056561}
+  - component: {fileID: 1892968142220441496}
+  - component: {fileID: 9023473718091731022}
   m_Layer: 8
   m_Name: MovingBlock_Circle
   m_TagString: Block
@@ -77,7 +78,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 3, y: 3}
+  m_Size: {x: 3.5, y: 3.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -98,8 +99,8 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
---- !u!114 &5561915497811056561
+  m_Radius: 1.7
+--- !u!114 &1892968142220441496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,8 +109,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 5561915497811056563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b543c1ba0660ab84a83b8745b279d330, type: 3}
+  m_Script: {fileID: 11500000, guid: 54ca97c0806c33a4bb7d880159078844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movingType: 1
-  moveFactor: 3
+--- !u!114 &9023473718091731022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5561915497811056563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c120876377aaeff49ba1cbe77a11f5ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movingType: 0
+  duration: 8
+  targetPosition: {x: -5, y: 4, z: 0}

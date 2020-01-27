@@ -17,14 +17,14 @@ public class VibeButton : BasicUIButton
 	protected override void OnEnable()
 	{
 		base.OnEnable();
-		GameManager.GameSettingAction += SetVibe;
+		GameSettings.GameSettingAction += SetVibe;
 		GameManager.ViberateAction += SetVibe;
 	}
 
 	protected override void OnDisable()
 	{
 		base.OnDisable();
-		GameManager.GameSettingAction -= SetVibe;
+		GameSettings.GameSettingAction -= SetVibe;
 		GameManager.ViberateAction -= SetVibe;
 	}
 

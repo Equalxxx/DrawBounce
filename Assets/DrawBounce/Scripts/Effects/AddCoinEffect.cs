@@ -7,21 +7,25 @@ using TMPro;
 public class AddCoinEffect : MonoBehaviour, IPoolObject
 {
 	public float duration = 1f;
-	private DOTweenAnimation tweenAnim;
+	//private DOTweenAnimation tweenAnim;
 	private TextMeshPro coinText;
 
 	private void Awake()
 	{
 		coinText = GetComponentInChildren<TextMeshPro>();
-		tweenAnim = GetComponentInChildren<DOTweenAnimation>();
-		tweenAnim.duration = duration;
+		//tweenAnim = GetComponentInChildren<DOTweenAnimation>();
+		//tweenAnim.duration = duration;
 	}
 
 	public void OnSpawnObject()
 	{
-		coinText.text = string.Format("+{0}", GameManager.Instance.GetHeightCoinValue());
-		tweenAnim.DORestart();
+		//tweenAnim.DORestart();
 		StartCoroutine(AutoDisable());
+	}
+
+	public void RefreshEffect(int coinValue)
+	{
+		coinText.text = string.Format("+{0}", coinValue);
 	}
 
 	IEnumerator AutoDisable()

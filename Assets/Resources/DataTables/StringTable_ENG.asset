@@ -37,3 +37,26 @@ MonoBehaviour:
   - index: 12
     stringData: Not available in practice mode
     fontName: LiberationSans SDF
+  - index: 20
+    stringData: Touch & drag the screen with your finger to flick the falling blocks
+      up
+    fontName: LiberationSans SDF
+  - index: 21
+    stringData: Avoid the white blocks on the screen and go further
+    fontName: LiberationSans SDF
+  - index: 22
+    stringData: Be sure to collect the coins that come out after the game. Coins
+      are used to purchase HP, starting height, etc.
+    fontName: LiberationSans SDF
+  - index: 23
+    stringData: If you have a hard time playing the game, click on the button at
+      the bottom of the first screen to buy health and starting height.
+    fontName: LiberationSans SDF
+  - index: 24
+    stringData: Try different blocks in the store Blocks differ in the amount of
+      coins you can earn
+    fontName: LiberationSans SDF
+  - index: 25
+    stringData: If there is no internet connection, you will enter practice mode.
+      This mode does not activate the autosave function.
+    fontName: LiberationSans SDF

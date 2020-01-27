@@ -16,7 +16,7 @@ public class MoveObject : MonoBehaviour
 	void Awake()
     {
 		myTransform = transform;
-		originPosition = myTransform.position;
+		originPosition = myTransform.localPosition;
 	}
 
 	private void OnEnable()
@@ -56,6 +56,7 @@ public class MoveObject : MonoBehaviour
 						myTransform.localPosition = startPos;
 						break;
 				}
+
 				myTransform.localPosition = startPos;
 			}
 

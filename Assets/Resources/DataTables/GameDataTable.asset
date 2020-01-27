@@ -145,25 +145,25 @@ MonoBehaviour:
     targetHeight: 400
   - index: 3
     level: 4
-    targetHeight: 550
+    targetHeight: 600
   - index: 4
     level: 5
-    targetHeight: 700
+    targetHeight: 800
   - index: 5
     level: 6
-    targetHeight: 850
+    targetHeight: 1000
   - index: 6
     level: 7
-    targetHeight: 1000
+    targetHeight: 1250
   - index: 7
     level: 8
-    targetHeight: 1150
+    targetHeight: 1500
   - index: 8
     level: 9
-    targetHeight: 1300
+    targetHeight: 1800
   - index: 9
     level: 10
-    targetHeight: 1450
+    targetHeight: 2100
   shopInfoList:
   - index: 0
     itemType: 0

@@ -10,6 +10,7 @@ TagManager:
   - Bottom
   - Side
   - EndBlock
+  - ItemRange
   layers:
   - Default
   - TransparentFX

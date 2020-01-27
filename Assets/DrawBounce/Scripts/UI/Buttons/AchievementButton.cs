@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class AchievementButton : BasicUIButton
 {
-	protected override void InitButton()
-	{
-	}
-
 	protected override void PressedButton()
 	{
-		if (GameManager.IsInternetConnected && GooglePlayManager.IsAuthenticated)
-			GooglePlayManager.Instance.ShowAchievementUI();
+		if (GameManager.IsConnected)
+		{
+			if (!GameManager.IsPracticeMode)
+			{
+				GooglePlayManager.Instance.ShowAchievementUI();
+			}
+			else
+			{
+				UIManager.Instance.showMessageUI.Show(12);
+			}
+		}
 		else
 			UIManager.Instance.showMessageUI.Show(10);
 	}

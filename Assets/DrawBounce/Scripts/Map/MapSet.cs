@@ -8,6 +8,7 @@ public class MapSet : MonoBehaviour, IPoolObject
 
 	public SpriteRenderer areaRenderer;
 	private DefaultBlock[] defaultBlocks;
+	private BasicItem[] basicItems;
 
 	private void OnValidate()
 	{
@@ -20,9 +21,17 @@ public class MapSet : MonoBehaviour, IPoolObject
 		if (defaultBlocks == null || defaultBlocks.Length == 0)
 			defaultBlocks = GetComponentsInChildren<DefaultBlock>();
 
+		if (basicItems == null || basicItems.Length == 0)
+			basicItems = GetComponentsInChildren<BasicItem>();
+
 		for (int i = 0; i < defaultBlocks.Length; i++)
 		{
 			defaultBlocks[i].InitBlock();
+		}
+
+		for(int i = 0; i < basicItems.Length; i++)
+		{
+			basicItems[i].InitItem();
 		}
 	}
 

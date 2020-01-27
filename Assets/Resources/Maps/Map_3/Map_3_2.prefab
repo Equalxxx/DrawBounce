@@ -47,7 +47,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   height: 8
   areaRenderer: {fileID: 4086717012254129903}
-  defaultBlocks: []
 --- !u!1 &2331054084316032798
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,6 +248,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Size.x
       value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7650427613335291662, guid: 370f3690e40068045840f671288a04c5,
+        type: 3}
+      propertyPath: targetPosition.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7650427613335291662, guid: 370f3690e40068045840f671288a04c5,
+        type: 3}
+      propertyPath: targetPosition.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7650427613335291662, guid: 370f3690e40068045840f671288a04c5,
+        type: 3}
+      propertyPath: duration
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 370f3690e40068045840f671288a04c5, type: 3}

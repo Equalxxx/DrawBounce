@@ -10,10 +10,8 @@ public enum GameState { GameTitle, GamePlay, GameOver, EnterShop }
 public class GameInfo
 {
 	public int coin;
-
 	public int playerHP;
 	public int playerMaxHP;
-
 	public float startHeight;
 	public float lastHeight;
 }
@@ -40,7 +38,8 @@ public class GameManager : Singleton<GameManager>
 	public bool isMuteBGM;
 	public bool isMuteSE;
 	public bool isVibe;
-	public static bool IsInternetConnected => Application.internetReachability != NetworkReachability.NotReachable;
+	public bool isTutorial;
+	public static bool IsPracticeMode;
 
 	// Game State Actions
 	public static Action GameInitAction;
@@ -48,11 +47,8 @@ public class GameManager : Singleton<GameManager>
 	public static Action GameOverAction;
 
 	// Game Play Actions
-	public static Action AddGemAction;
-	public static Action UseGemAction;
 	public static Action AddCoinAction;
 	public static Action UseCoinAction;
-
 	public static Action AddPlayerHPAction;
 	public static Action AddHeightAction;
 
@@ -61,7 +57,6 @@ public class GameManager : Singleton<GameManager>
 
 	public static Action SoundMuteAction;
 	public static Action ViberateAction;
-	public static Action GameSettingAction;
 
 	public static Action<PlayableBlockType> SetPlayableBlockAction;
 
@@ -71,6 +66,7 @@ public class GameManager : Singleton<GameManager>
 	[HideInInspector]
     public PlayableBlock player;
 	public Transform playerParent;
+	public BGControl bgControl;
 
 	[Header("DataTables")]
 	public GameDataTable gameDataTable;
@@ -78,15 +74,21 @@ public class GameManager : Singleton<GameManager>
 
 	private void Start()
     {
-		if(!testMode)
+#if !UNITY_EDITOR
+		if(Application.systemLanguage == SystemLanguage.Korean)
 		{
-			gameSettings.LoadGameInfo();
-			GameSettingAction?.Invoke();
+			LocalizeManager.Instance.SetLanguage(LocalizeManager.LocalizeLanguageType.KR);
+		}
+		else if(Application.systemLanguage == SystemLanguage.Japanese)
+		{
+			LocalizeManager.Instance.SetLanguage(LocalizeManager.LocalizeLanguageType.JP);
 		}
 		else
 		{
-			SetPlayableBlockType(PlayableBlockType.Circle);
+			LocalizeManager.Instance.SetLanguage(LocalizeManager.LocalizeLanguageType.ENG);
 		}
+#endif
+		gameSettings.LoadGameInfo();
 
         gameState = GameState.GameTitle;
 
@@ -138,8 +140,15 @@ public class GameManager : Singleton<GameManager>
 		curTargetHeight = gameDataTable.GetTargetHeightInfo(1);
 
 		player.InitPlayer();
-
+		bgControl.ChangeBGColor(true);
 		GameInitAction?.Invoke();
+
+		yield return new WaitForSeconds(0.25f);
+		if (isTutorial)
+		{
+			UIManager.Instance.tutorialUI.Show(true);
+			isTutorial = false;
+		}
 
 		while (gameState == GameState.GameTitle)
         {
@@ -179,12 +188,15 @@ public class GameManager : Singleton<GameManager>
     IEnumerator GameOver()
     {
         Debug.Log("Game over!");
+
+		yield return new WaitForSeconds(0.5f);
+
         UIManager.Instance.ShowUIGroup(UIGroupType.Result);
 
 		gameInfo.playerHP = 1;
 		gameInfo.startHeight = 0f;
 
-		gameSettings.SaveGameInfo();
+		gameSettings.SaveInfoToServer();
 
 		GooglePlayManager.Instance.ReportScore((int)gameInfo.lastHeight);
 		UnlockAchievement((int)gameInfo.lastHeight);
@@ -211,6 +223,27 @@ public class GameManager : Singleton<GameManager>
 		}
 
 		Debug.Log("Shop is done!");
+	}
+
+	public static bool IsConnected
+	{
+		get
+		{
+			if (!GooglePlayManager.IsAuthenticated || 
+				Application.internetReachability == NetworkReachability.NotReachable)
+			{
+				IsPracticeMode = true;
+				UIManager.Instance.ShowPracticeUI(true);
+				return false;
+			}
+			else
+			{
+				if(!IsPracticeMode)
+					UIManager.Instance.ShowPracticeUI(false);
+
+				return true;
+			}
+		}
 	}
 
 	void UnlockAchievement(int height)
@@ -262,6 +295,7 @@ public class GameManager : Singleton<GameManager>
 				return;
 
 			curTargetHeight = gameDataTable.GetTargetHeightInfo(nextLevel);
+			bgControl.ChangeBGColor();
 		}
 	}
 
@@ -287,6 +321,8 @@ public class GameManager : Singleton<GameManager>
 
         AddCoinAction?.Invoke();
 
+		gameSettings.SaveInfoToServer();
+
 		Debug.LogFormat("Add coin : {0}", addCoin);
     }
 
@@ -306,6 +342,8 @@ public class GameManager : Singleton<GameManager>
 		gameInfo.coin -= useCoin;
 
 		UseCoinAction?.Invoke();
+
+		gameSettings.SaveInfoToServer();
 
 		Debug.LogFormat("Used coin : {0}", useCoin);
 	}
@@ -428,6 +466,14 @@ public class GameManager : Singleton<GameManager>
 
 	public void SetPlayableBlockType(PlayableBlockType blockType)
 	{
+		if (player != null)
+		{
+			if (player.blockType == blockType)
+				return;
+
+			player.Show(false);
+		}
+
 		curBlockType = blockType;
 		GameObject newBlock = null;
 		string playableTag = "";
