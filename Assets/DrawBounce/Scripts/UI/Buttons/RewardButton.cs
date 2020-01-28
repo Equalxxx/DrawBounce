@@ -35,6 +35,7 @@ public class RewardButton : BasicUIButton
 				Debug.LogFormat("Add Reward coin : {0}", addCoinValue);
 				GameManager.Instance.AddCoin(addCoinValue);
 				AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
+				SoundManager.Instance.PlaySound2D("AddCoin");
 				coinEffect.RefreshEffect(addCoinValue);
 				rewardUI.Show(false);
 			}
@@ -59,6 +60,7 @@ public class RewardButton : BasicUIButton
 			Debug.LogFormat("Add Reward coin : {0}",addCoinValue);
 			GameManager.Instance.AddCoin(addCoinValue);
 			AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
+			SoundManager.Instance.PlaySound2D("AddCoin");
 			coinEffect.RefreshEffect(addCoinValue);
 			rewardUI.Show(false);
 			AdmobRewardAd.IsRewarded = false;

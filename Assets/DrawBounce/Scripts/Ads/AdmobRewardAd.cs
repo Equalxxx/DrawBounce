@@ -21,7 +21,7 @@ public class AdmobRewardAd : MonoBehaviour
 		rewardedAd = CreateAndLoadRewardedAd();
 	}
 
-	public RewardedAd CreateAndLoadRewardedAd()
+	RewardedAd CreateAndLoadRewardedAd()
 	{
 		string adUnitId = test_unitId;
 

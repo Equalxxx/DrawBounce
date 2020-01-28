@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RewardUI : MonoBehaviour
 {
-	public int limitHeight = 100;
+	public int limitHeight = 50;
 	public int addHeight = 100;
 	public int addCoinValue;
 	private RewardButton rewardButton;
@@ -20,27 +20,17 @@ public class RewardUI : MonoBehaviour
 			rewardButton = GetComponentInChildren<RewardButton>();
 
 		int height = (int)GameManager.Instance.player.GetLastHeight();
-		int startHeight = (int)GameManager.Instance.gameInfo.startHeight;
 
-		if (height - startHeight >= limitHeight)
+		if (height >= 100)
 		{
-			if (height >= 100)
-			{
-				addCoinValue = GetRewardValue(height);
-			}
-			else
-			{
-				addCoinValue = 100;
-			}
-
-			Show(true);
-			rewardButton.coinText.text = addCoinValue.ToString();
+			addCoinValue = GetRewardValue(height);
 		}
 		else
 		{
-			addCoinValue = 0;
-			Show(false);
+			addCoinValue = 100;
 		}
+
+		rewardButton.coinText.text = addCoinValue.ToString();
 	}
 
 	public void Show(bool show)

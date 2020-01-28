@@ -8,6 +8,7 @@ public class ResultUIGroup : UIGroup
 	public TextMeshProUGUI recordText;
 	public TextMeshProUGUI maxMeterText;
 	public RewardUI rewardUI;
+	public int limitHeight = 50;
 
 	private void OnValidate()
 	{
@@ -26,7 +27,19 @@ public class ResultUIGroup : UIGroup
 
 	public override void InitUI()
 	{
-		rewardUI.InitUI();
+		int height = (int)GameManager.Instance.player.GetLastHeight();
+		int startHeight = (int)GameManager.Instance.gameInfo.startHeight;
+
+		if (height - startHeight >= limitHeight)
+		{
+			rewardUI.Show(true);
+			rewardUI.InitUI();
+		}
+		else
+		{
+			rewardUI.Show(false);
+			AdmobManager.Instance.ShowAd(AdmobAdType.Interstitial);
+		}
 	}
 
 	public override void RefreshUI()

@@ -2,16 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GoogleMobileAds.Api;
 using MysticLights;
 
-public enum AdmobAdType { Interstitial, RewardVideo }
+public enum AdmobAdType { Interstitial, RewardVideo, Banner }
 public class AdmobManager : Singleton<AdmobManager>
 {
-	//private AdmobScreenAd screenAd;
+	private AdmobInterstitialAd interstitialAd;
 	private AdmobRewardAd rewardAd;
-
-	//public static Action AdInterstitialAction;
-	//public static Action AdRewardVideoAction;
+	private AdmobBannerAd bannerAd;
 
 	private void Awake()
 	{
@@ -23,13 +22,9 @@ public class AdmobManager : Singleton<AdmobManager>
 
 		DontDestroyOnLoad(gameObject);
 
-		Init();
-	}
-
-	private void Init()
-	{
-		//screenAd = GetComponent<AdmobScreenAd>();
+		interstitialAd = GetComponent<AdmobInterstitialAd>();
 		rewardAd = GetComponent<AdmobRewardAd>();
+		bannerAd = GetComponent<AdmobBannerAd>();
 	}
 
 	public void ShowAd(AdmobAdType adType)
@@ -37,11 +32,34 @@ public class AdmobManager : Singleton<AdmobManager>
 		switch(adType)
 		{
 			case AdmobAdType.Interstitial:
-				//screenAd.ShowAd();
+				interstitialAd.ShowAd();
 				break;
 			case AdmobAdType.RewardVideo:
 				rewardAd.ShowAd();
 				break;
+			case AdmobAdType.Banner:
+				bannerAd.ShowAd();
+				break;
 		}
+	}
+
+	public float GetBannerHeight()
+	{
+		return bannerAd.GetHeight();
+	}
+
+	public float GetBannerWidth()
+	{
+		return bannerAd.GetWidth();
+	}
+
+	public int GetAdSizeWidth()
+	{
+		return AdSize.GetPortraitAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth).Width;
+	}
+
+	public int GetAdSizeHeight()
+	{
+		return AdSize.GetPortraitAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth).Height;
 	}
 }

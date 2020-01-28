@@ -39,6 +39,7 @@ public class GameManager : Singleton<GameManager>
 	public bool isMuteSE;
 	public bool isVibe;
 	public bool isTutorial;
+	public bool isAds;
 	public static bool IsPracticeMode;
 
 	// Game State Actions
@@ -74,6 +75,12 @@ public class GameManager : Singleton<GameManager>
 
 	private void Start()
     {
+		isAds = true;
+		UIManager.Instance.SetUIRects();
+
+		if(isAds)
+			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
+
 #if !UNITY_EDITOR
 		if(Application.systemLanguage == SystemLanguage.Korean)
 		{
