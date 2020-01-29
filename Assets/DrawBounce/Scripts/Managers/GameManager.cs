@@ -199,6 +199,9 @@ public class GameManager : Singleton<GameManager>
 
 		yield return new WaitForSeconds(0.5f);
 
+		gameInfo.playerHP = 1;
+		gameInfo.startHeight = 0f;
+
 		gameSettings.SaveInfoToServer();
 
 		while (gameSettings.isProcessing)
@@ -214,9 +217,6 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Game over!");
 
         UIManager.Instance.ShowUIGroup(UIGroupType.Result);
-
-		gameInfo.playerHP = 1;
-		gameInfo.startHeight = 0f;
 
 		GooglePlayManager.Instance.ReportScore((int)gameInfo.lastHeight);
 		UnlockAchievement((int)gameInfo.lastHeight);
