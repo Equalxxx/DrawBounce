@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using MysticLights;
 
+public enum WaitingPopupType { Saving, Loading }
+
 public class UIManager : Singleton<UIManager>
 {
     public UIGroup[] uiGroups;
@@ -15,9 +17,11 @@ public class UIManager : Singleton<UIManager>
 	public GameObject pauseUI;
 	public GameObject practiceUI;
 	public GameObject quitUI;
-	public GameObject loadingUI;
+	public GameObject noAdsUI;
+	public WaitingPopupUI waitingPopupUI;
 	public TutorialUI tutorialUI;
 	public ShowMessageUI showMessageUI;
+
 
 	private void Start()
 	{
@@ -67,10 +71,20 @@ public class UIManager : Singleton<UIManager>
 			practiceUI.SetActive(show);
 	}
 
-	public void ShowLoadingUI(bool show)
+	public void ShowNoAdsUI(bool show)
 	{
-		if (loadingUI.activeSelf != show)
-			loadingUI.SetActive(show);
+		if (noAdsUI.activeSelf != show)
+			noAdsUI.SetActive(show);
+
+		if (show)
+			Time.timeScale = 0f;
+		else
+			Time.timeScale = 1f;
+	}
+
+	public void ShowWaitingPopupUI(bool show)
+	{
+		waitingPopupUI.ShowPopupUI(show);
 	}
 
 	public void ShowQuitUI(bool show)

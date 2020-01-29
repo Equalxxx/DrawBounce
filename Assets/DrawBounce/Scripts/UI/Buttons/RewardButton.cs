@@ -63,6 +63,7 @@ public class RewardButton : BasicUIButton
 			SoundManager.Instance.PlaySound2D("AddCoin");
 			coinEffect.RefreshEffect(addCoinValue);
 			rewardUI.Show(false);
+
 			AdmobRewardAd.IsRewarded = false;
 		}
 	}

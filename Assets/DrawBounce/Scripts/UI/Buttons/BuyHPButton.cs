@@ -53,7 +53,6 @@ public class BuyHPButton : BasicUIButton
 		{
 			GameManager.Instance.UseCoin(useCoin);
 			GameManager.Instance.AddHP(addHp);
-
 			RefreshUI();
 		}
 		else

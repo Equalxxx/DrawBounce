@@ -10,7 +10,7 @@ public enum SoundType { BGM, SE }
 public class GameSettings : MonoBehaviour
 {
 	public static Action GameSettingAction;
-	public static bool IsLoadedGameInfo;
+	public bool isProcessing;
 
 	private void Awake()
 	{
@@ -31,8 +31,13 @@ public class GameSettings : MonoBehaviour
 
 	public void SaveInfoToServer()
 	{
-		if (!GameManager.IsConnected)
+		if (!GameManager.IsConnected && GameManager.IsPracticeMode)
+		{
+			isProcessing = false;
 			return;
+		}
+
+		isProcessing = true;
 
 		GameInfo gameInfo = GameManager.Instance.gameInfo;
 
@@ -44,14 +49,31 @@ public class GameSettings : MonoBehaviour
 
 		string stringData = JsonUtility.ToJson(gameInfo);
 		GooglePlayManager.Instance.SaveToCloud(stringData);
+		StartCoroutine(SaveToCloudSync());
+		Debug.LogFormat("Save GameInfo to server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
+	}
 
-		Debug.LogFormat("Save GameInfo to server : {0}, {1}", gameInfo.coin, gameInfo.lastHeight);
+	IEnumerator SaveToCloudSync()
+	{
+		Debug.Log("Save Processing start");
+		UIManager.Instance.ShowWaitingPopupUI(true);
+
+		while (GooglePlayManager.Instance.isProcessing)
+		{
+			yield return null;
+		}
+
+		UIManager.Instance.ShowWaitingPopupUI(false);
+
+		isProcessing = false;
+
+		Debug.Log("Save Processing done");
 	}
 
 	public void LoadGameInfo()
 	{
 		LoadDeviceOptions();
-		LoadInfoForServer();
+		StartCoroutine(LoadInfoForServer());
 
 		Debug.Log("Load GameSetting");
 	}
@@ -86,10 +108,11 @@ public class GameSettings : MonoBehaviour
 		Debug.Log("Load Device Options");
 	}
 
-	void LoadInfoForServer()
+	IEnumerator LoadInfoForServer()
 	{
-		IsLoadedGameInfo = false;
-		UIManager.Instance.ShowLoadingUI(true);
+		isProcessing = true;
+		UIManager.Instance.ShowWaitingPopupUI(true);
+		yield return new WaitForSecondsRealtime(0.5f);
 
 		if (GameManager.IsConnected)
 		{
@@ -99,7 +122,8 @@ public class GameSettings : MonoBehaviour
 		{
 			LoadInfoForLocal();
 
-			IsLoadedGameInfo = true;
+			isProcessing = false;
+			UIManager.Instance.ShowWaitingPopupUI(false);
 			GameSettingAction?.Invoke();
 		}
 	}
@@ -114,9 +138,9 @@ public class GameSettings : MonoBehaviour
 		gameInfo.startHeight = PlayerPrefs.GetFloat("StartHeight", 0f);
 		gameInfo.lastHeight = PlayerPrefs.GetFloat("LastHeight", 0f);
 
-		Debug.LogWarningFormat("Load GameInfo for local : {0}, {1}", gameInfo.coin, gameInfo.lastHeight);
+		Debug.LogWarningFormat("Load GameInfo for local : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 
-		UIManager.Instance.ShowLoadingUI(false);
+		UIManager.Instance.ShowWaitingPopupUI(false);
 	}
 
 	void LoadCompleteCallback(string loadData)
@@ -128,16 +152,16 @@ public class GameSettings : MonoBehaviour
 
 			GameManager.Instance.gameInfo = gameInfo;
 
-			Debug.LogFormat("Load GameInfo for server : {0}, {1}", gameInfo.coin, gameInfo.lastHeight);
+			Debug.LogFormat("Load GameInfo for server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 
-			UIManager.Instance.ShowLoadingUI(false);
+			UIManager.Instance.ShowWaitingPopupUI(false);
 		}
 		else
 		{
 			LoadInfoForLocal();
 		}
 
-		IsLoadedGameInfo = true;
+		isProcessing = false;
 		GameSettingAction?.Invoke();
 	}
 

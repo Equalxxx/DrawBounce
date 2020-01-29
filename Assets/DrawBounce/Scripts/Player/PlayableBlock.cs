@@ -173,6 +173,9 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 
 			ShakeCamera.ShakePosOrder();
 
+			if (GameManager.Instance.isVibe)
+				Handheld.Vibrate();
+
 			SoundManager.Instance.PlaySound2D("Explosion_Over");
 			Dead();
 		}

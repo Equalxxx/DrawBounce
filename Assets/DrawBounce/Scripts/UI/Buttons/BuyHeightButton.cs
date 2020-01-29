@@ -52,7 +52,6 @@ public class BuyHeightButton : BasicUIButton
 		{
 			GameManager.Instance.UseCoin(useCoin);
 			GameManager.Instance.AddHeight(addHeight);
-
 			RefreshUI();
 		}
 		else

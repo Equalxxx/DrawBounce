@@ -168,6 +168,13 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator GamePlay()
     {
+		gameSettings.SaveInfoToServer();
+
+		while (gameSettings.isProcessing)
+		{
+			yield return null;
+		}
+
 		Debug.Log("Game play!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
 
@@ -190,6 +197,15 @@ public class GameManager : Singleton<GameManager>
             yield return null;
         }
 
+		yield return new WaitForSeconds(0.5f);
+
+		gameSettings.SaveInfoToServer();
+
+		while (gameSettings.isProcessing)
+		{
+			yield return null;
+		}
+
 		Debug.Log("Game play is done!");
 	}
 
@@ -197,14 +213,10 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("Game over!");
 
-		yield return new WaitForSeconds(0.5f);
-
         UIManager.Instance.ShowUIGroup(UIGroupType.Result);
 
 		gameInfo.playerHP = 1;
 		gameInfo.startHeight = 0f;
-
-		gameSettings.SaveInfoToServer();
 
 		GooglePlayManager.Instance.ReportScore((int)gameInfo.lastHeight);
 		UnlockAchievement((int)gameInfo.lastHeight);
@@ -329,8 +341,6 @@ public class GameManager : Singleton<GameManager>
 
         AddCoinAction?.Invoke();
 
-		gameSettings.SaveInfoToServer();
-
 		Debug.LogFormat("Add coin : {0}", addCoin);
     }
 
@@ -350,8 +360,6 @@ public class GameManager : Singleton<GameManager>
 		gameInfo.coin -= useCoin;
 
 		UseCoinAction?.Invoke();
-
-		gameSettings.SaveInfoToServer();
 
 		Debug.LogFormat("Used coin : {0}", useCoin);
 	}

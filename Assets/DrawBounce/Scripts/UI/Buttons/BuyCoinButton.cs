@@ -76,6 +76,7 @@ public class BuyCoinButton : BasicUIButton
 				AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
 				SoundManager.Instance.PlaySound2D("AddCoin");
 				coinEffect.RefreshEffect(addCoin);
+				GameManager.Instance.gameSettings.SaveInfoToServer();
 			}
 		}
 		else

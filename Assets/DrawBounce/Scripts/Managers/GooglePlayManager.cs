@@ -33,7 +33,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 			.EnableSavedGames()
 			.Build();
 		PlayGamesPlatform.InitializeInstance(config);
-		PlayGamesPlatform.DebugLogEnabled = true;
+		PlayGamesPlatform.DebugLogEnabled = false;
 		PlayGamesPlatform.Activate();
 	}
 
@@ -46,7 +46,8 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 
 		IsSignInProcess = false;
 
-		Social.localUser.Authenticate((bool bSuccess) =>
+		//Social.localUser.Authenticate((bool bSuccess) =>
+		PlayGamesPlatform.Instance.Authenticate((bool bSuccess) =>
 		{
 			if (bSuccess)
 			{
@@ -272,7 +273,11 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 
 	private void OnGameSave(SavedGameRequestStatus status, ISavedGameMetadata metaData)
 	{
-		if (status != SavedGameRequestStatus.Success)
+		if (status == SavedGameRequestStatus.Success)
+		{
+			Debug.Log("Success Save To Cloud");
+		}
+		else
 		{
 			Debug.LogWarning("Error Saving" + status);
 		}
