@@ -41,12 +41,12 @@ public class AdmobRewardAd : MonoBehaviour
 
 	void HandleRewardedAdLoaded(object sender, EventArgs args)
 	{
-		MonoBehaviour.print("HandleRewardedAdLoaded event received");
+		Debug.Log("HandleRewardedAdLoaded event received");
 	}
 
 	void HandleRewardedAdClosed(object sender, EventArgs args)
 	{
-		MonoBehaviour.print("HandleRewardedAdClosed event received");
+		Debug.Log("HandleRewardedAdClosed event received");
 
 		this.rewardedAd = CreateAndLoadRewardedAd();
 		IsShowAd = false;
@@ -56,9 +56,7 @@ public class AdmobRewardAd : MonoBehaviour
 	{
 		string type = args.Type;
 		double amount = args.Amount;
-		MonoBehaviour.print(
-			"HandleRewardedAdRewarded event received for "
-						+ amount.ToString() + " " + type);
+		Debug.Log("HandleRewardedAdRewarded event received for " + amount.ToString() + " " + type);
 
 		IsRewarded = true;
 	}

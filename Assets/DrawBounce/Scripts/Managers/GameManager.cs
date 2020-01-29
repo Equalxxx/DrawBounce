@@ -75,11 +75,12 @@ public class GameManager : Singleton<GameManager>
 
 	private void Start()
     {
-		isAds = true;
+		isAds = !IAPManager.Instance.HadPurchased("noadspackage");
+		if(isAds && IsConnected)
+			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
+
 		UIManager.Instance.SetUIRects();
 
-		if(isAds)
-			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
 
 #if !UNITY_EDITOR
 		if(Application.systemLanguage == SystemLanguage.Korean)

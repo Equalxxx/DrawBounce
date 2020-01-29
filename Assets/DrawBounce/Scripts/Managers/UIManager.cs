@@ -8,7 +8,7 @@ public class UIManager : Singleton<UIManager>
 {
     public UIGroup[] uiGroups;
     public UIGroup currentUIGroup;
-	public RectTransform[] uiTransforms;
+	public RectTransform uiTransform;
 	public RectTransform canvasTrans;
 	public float fadeDuration = 1f;
 
@@ -86,27 +86,16 @@ public class UIManager : Singleton<UIManager>
 
 	public void SetUIRects()
 	{
-		Debug.LogFormat("Test Size1 : {0}", Mathf.RoundToInt(100f * Screen.dpi / 160f / 2f));
-		Debug.LogFormat("Test Size2 : {0}", AdmobManager.Instance.GetBannerHeight() / 2f - 50f);
-		Debug.LogFormat("dpi : {0}", Screen.dpi); // 160f);
-		Debug.LogFormat("adheight : {0}", adHeight());
-		Debug.LogFormat("Test Size3 width : {0}, height : {1}", AdmobManager.Instance.GetBannerWidth(), AdmobManager.Instance.GetBannerHeight());
-		Debug.LogFormat("screen width : {0}, height : {1}", Screen.width, Screen.height);
-		Debug.LogFormat("ad width : {0}, height : {1}", AdmobManager.Instance.GetAdSizeWidth(), AdmobManager.Instance.GetAdSizeHeight());
-
-		for (int i = 0; i < uiTransforms.Length; i++)
+		if (GameManager.Instance.isAds && GameManager.IsConnected)
 		{
-			if(GameManager.Instance.isAds)
-			{
-				//uiTransforms[i].offsetMax = new Vector2(0f, -(50f * Screen.dpi / 160f));
-				uiTransforms[i].offsetMax = new Vector2(0f, -(adHeight()));
-			}
-			else
-			{
-				uiTransforms[i].offsetMax = Vector2.zero;
-			}
+			uiTransform.offsetMax = new Vector2(0f, -(adHeight()));
+		}
+		else
+		{
+			uiTransform.offsetMax = Vector2.zero;
 		}
 	}
+
 	public float adHeight()
 	{
 		float aspect = (Screen.height / canvasTrans.sizeDelta.y);
@@ -114,12 +103,4 @@ public class UIManager : Singleton<UIManager>
 
 		return height;
 	}
-	//public float adHeight()
-	//{
-	//	float f = Screen.dpi / 160f;
-	//	float dp = Screen.height / f;
-	//	return (dp > 720f) ? 90f * f
-	//		  : (dp > 400f) ? 50f * f
-	//		  : 32f * f;
-	//}
 }

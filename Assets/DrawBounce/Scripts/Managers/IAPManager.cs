@@ -10,7 +10,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 {
 	public const string ProductCoin_15000 = "coin_15000";
 	public const string ProductCoin_80000 = "coin_80000";
-	public const string ProductSkin = "skin";
+	public const string ProductNoAds = "noadspackage";
 
 	//private const string _ios_CoinId = "coin_15000_google";
 	private const string _android_CoinId1 = "코인 15000개";
@@ -54,6 +54,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 
 		builder.AddProduct(ProductCoin_15000, ProductType.Consumable);
 		builder.AddProduct(ProductCoin_80000, ProductType.Consumable);
+		builder.AddProduct(ProductNoAds, ProductType.NonConsumable);
 
 		//builder.AddProduct(
 		//	ProductCoin_15000, ProductType.Consumable, new IDs() {
@@ -93,6 +94,10 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		else if (e.purchasedProduct.definition.id == ProductCoin_80000)
 		{
 			Debug.LogFormat("Increase coin : {0}", 160000);
+		}
+		else if (e.purchasedProduct.definition.id == ProductNoAds)
+		{
+			Debug.Log("Buy No Ads success");
 		}
 
 		PuchaseCompleteAction?.Invoke(true, e.purchasedProduct.definition.id);
