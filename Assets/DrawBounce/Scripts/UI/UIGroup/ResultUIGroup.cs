@@ -28,7 +28,7 @@ public class ResultUIGroup : UIGroup
 	public override void InitUI()
 	{
 		int height = (int)GameManager.Instance.player.GetLastHeight();
-		int startHeight = (int)GameManager.Instance.gameInfo.startHeight;
+		int startHeight = (int)GameManager.Instance.lastStartHeight;
 
 		if (height - startHeight >= limitHeight)
 		{

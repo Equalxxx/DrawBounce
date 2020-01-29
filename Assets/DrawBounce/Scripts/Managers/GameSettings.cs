@@ -100,6 +100,13 @@ public class GameSettings : MonoBehaviour
 
 		GameManager.Instance.isTutorial = tuto;
 
+		if (GameManager.Instance.isTutorial)
+		{
+			UIManager.Instance.tutorialUI.Show(true);
+			GameManager.Instance.isTutorial = false;
+			SaveDeviceOptions();
+		}
+
 		string strBlockType = PlayerPrefs.GetString("BlockType", "Circle");
 		PlayableBlockType blockType = ParseEnum<PlayableBlockType>(strBlockType, PlayableBlockType.Circle);
 

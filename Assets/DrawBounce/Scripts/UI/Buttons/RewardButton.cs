@@ -65,6 +65,8 @@ public class RewardButton : BasicUIButton
 			rewardUI.Show(false);
 
 			AdmobRewardAd.IsRewarded = false;
+
+			GameManager.Instance.SaveGame();
 		}
 	}
 }

@@ -30,6 +30,7 @@ public class GameManager : Singleton<GameManager>
 	public float maxStartHeight = 1000f;
 	public float limitStartHeight = 100f;
 	public float moveToDuration = 5f;
+	public int lastStartHeight;
 
 	public PlayableBlockType curBlockType;
 
@@ -150,13 +151,7 @@ public class GameManager : Singleton<GameManager>
 		player.InitPlayer();
 		bgControl.ChangeBGColor(true);
 		GameInitAction?.Invoke();
-
-		yield return new WaitForSeconds(0.25f);
-		if (isTutorial)
-		{
-			UIManager.Instance.tutorialUI.Show(true);
-			isTutorial = false;
-		}
+		lastStartHeight = 0;
 
 		while (gameState == GameState.GameTitle)
         {
@@ -168,13 +163,6 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator GamePlay()
     {
-		gameSettings.SaveInfoToServer();
-
-		while (gameSettings.isProcessing)
-		{
-			yield return null;
-		}
-
 		Debug.Log("Game play!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
 
@@ -199,15 +187,12 @@ public class GameManager : Singleton<GameManager>
 
 		yield return new WaitForSeconds(0.5f);
 
+		lastStartHeight = (int)gameInfo.startHeight;
+
 		gameInfo.playerHP = 1;
 		gameInfo.startHeight = 0f;
 
-		gameSettings.SaveInfoToServer();
-
-		while (gameSettings.isProcessing)
-		{
-			yield return null;
-		}
+		yield return WaittingSaving();
 
 		Debug.Log("Game play is done!");
 	}
@@ -243,6 +228,23 @@ public class GameManager : Singleton<GameManager>
 		}
 
 		Debug.Log("Shop is done!");
+	}
+
+	public void SaveGame()
+	{
+		StartCoroutine(WaittingSaving());
+	}
+
+	IEnumerator WaittingSaving()
+	{
+		gameSettings.SaveInfoToServer();
+
+		while (gameSettings.isProcessing)
+		{
+			yield return null;
+		}
+
+		Debug.Log("Save is done");
 	}
 
 	public static bool IsConnected
