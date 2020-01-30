@@ -51,22 +51,10 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		Debug.Log("Start initialized IAP");
 
 		var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-
-		builder.AddProduct(ProductCoin_15000, ProductType.Consumable);
-		builder.AddProduct(ProductCoin_80000, ProductType.Consumable);
-		builder.AddProduct(ProductNoAds, ProductType.NonConsumable);
-
-		//builder.AddProduct(
-		//	ProductCoin_15000, ProductType.Consumable, new IDs() {
-		//		{ _android_CoinId1, GooglePlay.Name}
-		//	}
-		//);
-
-		//builder.AddProduct(
-		//	ProductCoin_160000, ProductType.Consumable, new IDs() {
-		//		{ _android_CoinId2, GooglePlay.Name}
-		//	}
-		//);
+		
+		builder.AddProduct(ProductCoin_15000, ProductType.Consumable, new IDs { { ProductCoin_15000, GooglePlay.Name } });
+		builder.AddProduct(ProductCoin_80000, ProductType.Consumable, new IDs { { ProductCoin_80000, GooglePlay.Name } });
+		builder.AddProduct(ProductNoAds, ProductType.NonConsumable, new IDs { { ProductNoAds, GooglePlay.Name } });
 
 		UnityPurchasing.Initialize(this, builder);
 	}
