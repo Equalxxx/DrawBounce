@@ -100,7 +100,7 @@ public class UIManager : Singleton<UIManager>
 
 	public void SetUIRects()
 	{
-		if (GameManager.Instance.isAds && GameManager.IsConnected)
+		if (!GameManager.IsNoAds && GameManager.IsConnected)
 		{
 			uiTransform.offsetMax = new Vector2(0f, -(adHeight()));
 		}

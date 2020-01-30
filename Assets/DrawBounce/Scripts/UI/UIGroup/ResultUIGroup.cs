@@ -38,7 +38,8 @@ public class ResultUIGroup : UIGroup
 		else
 		{
 			rewardUI.Show(false);
-			AdmobManager.Instance.ShowAd(AdmobAdType.Interstitial);
+			if(!GameManager.IsNoAds)
+				AdmobManager.Instance.ShowAd(AdmobAdType.Interstitial);
 		}
 	}
 

@@ -11,6 +11,9 @@ public class RewardButton : BasicUIButton
 	public int addCoinValue;
 	private RewardUI rewardUI;
 
+	public Sprite adsSprite;
+	public Sprite boxSprite;
+
 	protected override void InitButton()
 	{
 		if (rewardUI == null)
@@ -24,20 +27,24 @@ public class RewardButton : BasicUIButton
 		if(GameManager.Instance.IsAddCoin(addCoinValue))
 		{
 			Debug.Log("Start reward ad success");
-			if(GameManager.IsConnected && !GameManager.IsPracticeMode)
+			if (GameManager.IsConnected && !GameManager.IsPracticeMode)
 			{
-				AdmobRewardAd.IsShowAd = true;
-				AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
-				StartCoroutine(WaitForAd());
+				if (!GameManager.IsNoAds)
+				{
+					AdmobRewardAd.IsShowAd = true;
+					AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
+					StartCoroutine(WaitForAd());
+				}
+				else
+				{
+					AddCoinProcess();
+
+					GameManager.Instance.SaveGame();
+				}
 			}
 			else
 			{
-				Debug.LogFormat("Add Reward coin : {0}", addCoinValue);
-				GameManager.Instance.AddCoin(addCoinValue);
-				AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
-				SoundManager.Instance.PlaySound2D("AddCoin");
-				coinEffect.RefreshEffect(addCoinValue);
-				rewardUI.Show(false);
+				AddCoinProcess();
 			}
 		}
 		else
@@ -57,16 +64,21 @@ public class RewardButton : BasicUIButton
 
 		if (AdmobRewardAd.IsRewarded)
 		{
-			Debug.LogFormat("Add Reward coin : {0}",addCoinValue);
-			GameManager.Instance.AddCoin(addCoinValue);
-			AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
-			SoundManager.Instance.PlaySound2D("AddCoin");
-			coinEffect.RefreshEffect(addCoinValue);
-			rewardUI.Show(false);
+			AddCoinProcess();
 
 			AdmobRewardAd.IsRewarded = false;
 
 			GameManager.Instance.SaveGame();
 		}
+	}
+
+	void AddCoinProcess()
+	{
+		Debug.LogFormat("Add Reward coin : {0}", addCoinValue);
+		GameManager.Instance.AddCoin(addCoinValue);
+		AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
+		SoundManager.Instance.PlaySound2D("AddCoin");
+		coinEffect.RefreshEffect(addCoinValue);
+		rewardUI.Show(false);
 	}
 }

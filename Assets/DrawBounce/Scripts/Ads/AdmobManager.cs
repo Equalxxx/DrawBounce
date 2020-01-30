@@ -43,6 +43,11 @@ public class AdmobManager : Singleton<AdmobManager>
 		}
 	}
 
+	public void HideBannerAd()
+	{
+		bannerAd.HideAd();
+	}
+
 	public float GetBannerHeight()
 	{
 		return bannerAd.GetHeight();

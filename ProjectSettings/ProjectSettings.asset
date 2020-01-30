@@ -159,13 +159,13 @@ PlayerSettings:
   m_ColorGamuts: 00000000
   targetPixelDensity: 48
   resolutionScalingMode: 0
-  androidSupportedAspectRatio: 1
+  androidSupportedAspectRatio: 2
   androidMaxAspectRatio: 16.9
   applicationIdentifier:
     Android: com.mysticlights.drawbounce
     Standalone: com.Company.ProductName
   buildNumber: {}
-  AndroidBundleVersionCode: 3
+  AndroidBundleVersionCode: 4
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

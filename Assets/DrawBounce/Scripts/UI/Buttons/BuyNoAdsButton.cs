@@ -1,15 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using MysticLights;
 
-public class BuyCoinButton : BasicUIButton
+public class BuyNoAdsButton : BasicUIButton
 {
-	public TextMeshProUGUI coinValueText;
-	public TextMeshProUGUI gemValueText;
-
-	public string targetProductId;
+	public string targetProductId = "noadspackage";
 	public int price = 100;
 	public int addCoin = 1000;
 
@@ -25,24 +21,13 @@ public class BuyCoinButton : BasicUIButton
 		IAPManager.PuchaseCompleteAction -= PurchaseComplete;
 	}
 
-	protected override void InitButton()
-	{
-		RefreshUI();
-	}
-
-	void RefreshUI()
-	{
-		coinValueText.text = addCoin.ToString();
-		gemValueText.text = price.ToString();
-	}
-
 	protected override void PressedButton()
 	{
 		if (GameManager.Instance.IsAddCoin(addCoin))
 		{
-			if(GameManager.IsConnected)
+			if (GameManager.IsConnected)
 			{
-				if(!GameManager.IsPracticeMode)
+				if (!GameManager.IsPracticeMode)
 				{
 					IAPManager.Instance.Purchase(targetProductId);
 					SoundManager.Instance.PlaySound2D("Buy_Item");
@@ -68,15 +53,17 @@ public class BuyCoinButton : BasicUIButton
 
 	void PurchaseComplete(bool success, string productId)
 	{
-		if(success)
+		if (success)
 		{
-			if(string.Equals(productId, targetProductId))
+			if (string.Equals(productId, targetProductId))
 			{
 				GameManager.Instance.AddCoin(addCoin);
 				AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
 				SoundManager.Instance.PlaySound2D("AddCoin");
 				coinEffect.RefreshEffect(addCoin);
 				GameManager.Instance.gameSettings.SaveInfoToServer();
+
+				GameManager.Instance.CheckNoAds();
 			}
 		}
 		else

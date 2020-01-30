@@ -79,6 +79,11 @@ public class AdmobBannerAd : MonoBehaviour
 		bannerAd.Show();
 	}
 
+	public void HideAd()
+	{
+		bannerAd.Hide();
+	}
+
 	public float GetWidth()
 	{
 		return bannerAd.GetWidthInPixels();

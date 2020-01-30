@@ -40,7 +40,7 @@ public class GameManager : Singleton<GameManager>
 	public bool isMuteSE;
 	public bool isVibe;
 	public bool isTutorial;
-	public bool isAds;
+	public static bool IsNoAds;
 	public static bool IsPracticeMode;
 
 	// Game State Actions
@@ -59,6 +59,7 @@ public class GameManager : Singleton<GameManager>
 
 	public static Action SoundMuteAction;
 	public static Action ViberateAction;
+	public static Action CheckNoAdsAction;
 
 	public static Action<PlayableBlockType> SetPlayableBlockAction;
 
@@ -76,12 +77,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Start()
     {
-		isAds = !IAPManager.Instance.HadPurchased("noadspackage");
-		if(isAds && IsConnected)
-			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
-
-		UIManager.Instance.SetUIRects();
-
+		CheckNoAds();
 
 #if !UNITY_EDITOR
 		if(Application.systemLanguage == SystemLanguage.Korean)
@@ -266,6 +262,21 @@ public class GameManager : Singleton<GameManager>
 				return true;
 			}
 		}
+	}
+
+	public void CheckNoAds()
+	{
+		IsNoAds = IAPManager.Instance.HadPurchased("noadspackage");
+		Debug.LogFormat("NoAds : {0}", IsNoAds);
+
+		if (!IsNoAds && IsConnected)
+			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
+		else
+			AdmobManager.Instance.HideBannerAd();
+
+		UIManager.Instance.SetUIRects();
+
+		CheckNoAdsAction?.Invoke();
 	}
 
 	void UnlockAchievement(int height)
