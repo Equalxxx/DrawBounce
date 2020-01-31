@@ -51,7 +51,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 		{
 			if (bSuccess)
 			{
-				Debug.Log("SignIn Success : " + Social.localUser.userName);
+				Debug.Log("SignIn Success : " + Social.localUser.userName + " " + Social.localUser.id);
 			}
 			else
 			{

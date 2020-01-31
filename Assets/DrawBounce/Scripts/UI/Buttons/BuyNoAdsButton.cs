@@ -30,7 +30,6 @@ public class BuyNoAdsButton : BasicUIButton
 				if (!GameManager.IsPracticeMode)
 				{
 					IAPManager.Instance.Purchase(targetProductId);
-					SoundManager.Instance.PlaySound2D("Buy_Item");
 				}
 				else
 				{

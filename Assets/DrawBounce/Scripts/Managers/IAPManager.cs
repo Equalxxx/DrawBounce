@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Purchasing;
+using UnityEngine.Purchasing.Security;
 using MysticLights;
 
 public class IAPManager : Singleton<IAPManager>, IStoreListener
@@ -51,7 +52,7 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 		Debug.Log("Start initialized IAP");
 
 		var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-		
+
 		builder.AddProduct(ProductCoin_15000, ProductType.Consumable, new IDs { { ProductCoin_15000, GooglePlay.Name } });
 		builder.AddProduct(ProductCoin_80000, ProductType.Consumable, new IDs { { ProductCoin_80000, GooglePlay.Name } });
 		builder.AddProduct(ProductNoAds, ProductType.NonConsumable, new IDs { { ProductNoAds, GooglePlay.Name } });
@@ -73,19 +74,39 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 
 	public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
 	{
-		Debug.LogFormat("Purchase success : {0}", e.purchasedProduct.definition.id);
+		bool validPurchase = true; // Presume valid for platforms with no R.V.
 
-		if(e.purchasedProduct.definition.id == ProductCoin_15000)
+		// Unity IAP's validation logic is only included on these platforms.
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
+		// Prepare the validator with the secrets we prepared in the Editor
+		// obfuscation window.
+		var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
+			AppleTangle.Data(), Application.identifier);
+
+		try
 		{
-			Debug.LogFormat("Increase coin : {0}", 15000);
+			// On Google Play, result has a single product ID.
+			// On Apple stores, receipts contain multiple products.
+			var result = validator.Validate(e.purchasedProduct.receipt);
+			// For informational purposes, we list the receipt(s)
+			Debug.Log("Receipt is valid. Contents:");
+			foreach (IPurchaseReceipt productReceipt in result)
+			{
+				Debug.Log(productReceipt.productID);
+				Debug.Log(productReceipt.purchaseDate);
+				Debug.Log(productReceipt.transactionID);
+			}
 		}
-		else if (e.purchasedProduct.definition.id == ProductCoin_80000)
+		catch (IAPSecurityException)
 		{
-			Debug.LogFormat("Increase coin : {0}", 160000);
+			Debug.Log("Invalid receipt, not unlocking content");
+			validPurchase = false;
 		}
-		else if (e.purchasedProduct.definition.id == ProductNoAds)
+#endif
+
+		if (validPurchase)
 		{
-			Debug.Log("Buy No Ads success");
+			// Unlock the appropriate content here.
 		}
 
 		PuchaseCompleteAction?.Invoke(true, e.purchasedProduct.definition.id);
