@@ -77,6 +77,7 @@ public class GameManager : Singleton<GameManager>
 
 	private void Start()
     {
+		IsNoAds = IAPManager.Instance.HadPurchased("noadspackage");
 		CheckNoAds();
 
 #if !UNITY_EDITOR
@@ -266,7 +267,6 @@ public class GameManager : Singleton<GameManager>
 
 	public void CheckNoAds()
 	{
-		IsNoAds = IAPManager.Instance.HadPurchased("noadspackage");
 		Debug.LogFormat("NoAds : {0}", IsNoAds);
 
 		if (!IsNoAds && IsConnected)

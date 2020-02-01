@@ -5,6 +5,8 @@ using TMPro;
 
 public class TitleUIGroup : UIGroup
 {
+	public GameObject noAdsBtn;
+
 	private void OnValidate()
 	{
 		groupType = UIGroupType.Title;
@@ -12,7 +14,10 @@ public class TitleUIGroup : UIGroup
 
 	public override void InitUI()
 	{
-
+		if (GameManager.IsConnected && GameManager.IsNoAds)
+			noAdsBtn.SetActive(true);
+		else
+			noAdsBtn.SetActive(false);
 	}
 
 	public override void RefreshUI()

@@ -3,12 +3,12 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using Firebase;
+using Firebase.Auth;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
 using MysticLights;
-using UnityEngine.Networking;
 
 public class GooglePlayManager : Singleton<GooglePlayManager>
 {
@@ -18,6 +18,9 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 	public static bool IsAuthenticated => Social.localUser.authenticated;
 
 	public static Action<bool> SignInAction;
+
+	private FirebaseAuth auth;
+	private FirebaseUser user;
 
 	private void Awake()
 	{
@@ -31,13 +34,24 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 
 		PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
 			.EnableSavedGames()
+			.RequestIdToken()
+			.RequestEmail()
 			.Build();
 		PlayGamesPlatform.InitializeInstance(config);
 		PlayGamesPlatform.DebugLogEnabled = false;
 		PlayGamesPlatform.Activate();
+
+		InitializeFirebase();
 	}
 
 	#region Sign
+
+	void InitializeFirebase()
+	{
+		auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+		auth.StateChanged += AuthStateChanged;
+		AuthStateChanged(this, null);
+	}
 
 	public void SignIn()
 	{
@@ -46,12 +60,13 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 
 		IsSignInProcess = false;
 
-		//Social.localUser.Authenticate((bool bSuccess) =>
-		PlayGamesPlatform.Instance.Authenticate((bool bSuccess) =>
+		Social.localUser.Authenticate((bool bSuccess) =>
+		//PlayGamesPlatform.Instance.Authenticate((bool bSuccess) =>
 		{
 			if (bSuccess)
 			{
 				Debug.Log("SignIn Success : " + Social.localUser.userName + " " + Social.localUser.id);
+				StartCoroutine(SignInFirebase());
 			}
 			else
 			{
@@ -59,7 +74,59 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 			}
 
 			IsSignInProcess = true;
-			SignInAction?.Invoke(bSuccess);
+		});
+	}
+
+	IEnumerator SignInFirebase()
+	{
+		while(string.IsNullOrEmpty(((PlayGamesLocalUser)(Social.localUser)).GetIdToken()))
+		{
+			yield return null;
+		}
+
+		string idToken = ((PlayGamesLocalUser)(Social.localUser)).GetIdToken();
+		Credential credential = GoogleAuthProvider.GetCredential(idToken, null);
+
+		auth.SignInWithCredentialAsync(credential).ContinueWith(task =>
+		{
+			if (task.IsCanceled)
+			{
+				Debug.LogError("SignInWithCredentialAsync was canceled");
+				return;
+			}
+			else if (task.IsFaulted)
+			{
+				Debug.LogErrorFormat("SignInWithCredentialAsync encountered an error: {0}", task.Exception);
+				SignInAction?.Invoke(false);
+				return;
+			}
+
+			user = task.Result;
+
+			if (user != null)
+			{
+				Debug.LogFormat("Email Address : {0}", PlayGamesPlatform.Instance.GetUserEmail());
+				if(!string.Equals(user.Email, PlayGamesPlatform.Instance.GetUserEmail()))
+				{
+					user.UpdateEmailAsync(PlayGamesPlatform.Instance.GetUserEmail()).ContinueWith(taskemail =>
+					{
+						if (taskemail.IsCanceled)
+						{
+							Debug.LogError("UpdateEmailAsync was canceled");
+							return;
+						}
+						else if (taskemail.IsFaulted)
+						{
+							Debug.LogErrorFormat("UpdateEmailAsync encountered an error: {0}", task.Exception);
+							return;
+						}
+
+						Debug.Log("User email updated successfully.");
+					});
+				}
+			}
+
+			SignInAction?.Invoke(true);
 		});
 	}
 
@@ -68,6 +135,26 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 #if UNITY_ANDROID
 		PlayGamesPlatform.Instance.SignOut();
 #endif
+		auth.SignOut();
+	}
+
+	void AuthStateChanged(object sender, System.EventArgs eventArgs)
+	{
+		if (auth.CurrentUser != user)
+		{
+			bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null;
+			if (!signedIn && user != null)
+			{
+				Debug.LogFormat("Signed out {0}", user.UserId);
+			}
+			user = auth.CurrentUser;
+			if (signedIn)
+			{
+				Debug.LogFormat("Signed in {0}", user.UserId);
+				Debug.LogFormat("Display Name : {0}",user.DisplayName);
+				Debug.LogFormat("EmailAddress : {0}",user.Email);
+			}
+		}
 	}
 
 	#endregion

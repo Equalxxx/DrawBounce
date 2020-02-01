@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "702570432974",
+    "firebase_url": "https://draw-bounce-61800636.firebaseio.com",
+    "project_id": "draw-bounce-61800636",
+    "storage_bucket": "draw-bounce-61800636.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702570432974:android:4dff5ad5f33681ad83c39f",
+        "android_client_info": {
+          "package_name": "com.mysticlights.drawbounce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702570432974-lu5j6fg91a66grn8o4vokts3jdfhtk79.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mysticlights.drawbounce",
+            "certificate_hash": "5d415546cf8cce2784dee6bcf23ac1b3f5918d7e"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7ZNtOUPf3m10r-Gv5x9QfZH5UamSeoqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702570432974-lppji7ue7uvnufi770rbemff0a703mbt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

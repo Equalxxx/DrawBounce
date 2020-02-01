@@ -13511,6 +13511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groupType: 0
   canvasGroup: {fileID: 501484056}
+  noAdsBtn: {fileID: 335174027}
 --- !u!1 &509191571
 GameObject:
   m_ObjectHideFlags: 0
@@ -20153,7 +20154,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.316, y: 2.5760005, z: -20}
+  m_LocalPosition: {x: -2.9907749, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -26365,7 +26366,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.868, y: 2.5760005, z: -20}
+  m_LocalPosition: {x: 2.9907749, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -33695,6 +33696,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isProcessing: 0
+  deviceSettings:
+    muteBGM: 0
+    muteSE: 0
+    viverate: 0
+    tutorial: 0
+    blockType: 0
 --- !u!1 &1273174679
 GameObject:
   m_ObjectHideFlags: 0
