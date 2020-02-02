@@ -13,26 +13,18 @@ public class UIManager : Singleton<UIManager>
 	public RectTransform uiTransform;
 	public RectTransform canvasTrans;
 	public float fadeDuration = 1f;
-
-	public GameObject pauseUI;
-	public GameObject practiceUI;
-	public GameObject quitUI;
-	public GameObject noAdsUI;
-	public WaitingPopupUI waitingPopupUI;
-	public TutorialUI tutorialUI;
+	
 	public ShowMessageUI showMessageUI;
+	public GameObject practiceUI;
+	public GameObject noAdsButton;
 
-
-	private void Start()
-	{
-		ShowPauseUI(false);
-	}
+	public CoinInfoUI coinInfoUI;
 
 	private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			ShowQuitUI(true);
+			ShowPopup(PopupUIType.Quit, true);
 		}
 	}
 
@@ -59,43 +51,43 @@ public class UIManager : Singleton<UIManager>
         Debug.LogFormat("Change UI group : {0}", groupType);
     }
 
-	public void ShowPauseUI(bool show)
+	public void ShowPopup(PopupUIType popupType, bool show)
 	{
-		if (pauseUI.activeSelf != show)
-			pauseUI.SetActive(show);
+		if(show)
+		{
+			switch(popupType)
+			{
+				case PopupUIType.Quit:
+					PopupUIManager.Instance.ShowPopupUI("QuitPopupUI");
+					break;
+				case PopupUIType.Pause:
+					PopupUIManager.Instance.ShowPopupUI("PausePopupUI");
+					break;
+				case PopupUIType.Tutorial:
+					PopupUIManager.Instance.ShowPopupUI("TutorialPopupUI");
+					break;
+				case PopupUIType.Waiting:
+					PopupUIManager.Instance.ShowPopupUI("WaitingPopupUI");
+					break;
+				case PopupUIType.NoAds:
+					PopupUIManager.Instance.ShowPopupUI("NoAdsPopupUI");
+					break;
+				case PopupUIType.Practice:
+					PopupUIManager.Instance.ShowPopupUI("PracticePopupUI");
+					break;
+			}
+		}
+		else
+		{
+			if(PopupUIManager.Instance.curPopupUI.popupUIType == popupType)
+				PopupUIManager.Instance.ClosePopupUI();
+		}
 	}
 
 	public void ShowPracticeUI(bool show)
 	{
-		if(practiceUI.activeSelf != show)
+		if (practiceUI.activeSelf != show)
 			practiceUI.SetActive(show);
-	}
-
-	public void ShowNoAdsUI(bool show)
-	{
-		if (noAdsUI.activeSelf != show)
-			noAdsUI.SetActive(show);
-
-		if (show)
-			Time.timeScale = 0f;
-		else
-			Time.timeScale = 1f;
-	}
-
-	public void ShowWaitingPopupUI(bool show)
-	{
-		waitingPopupUI.ShowPopupUI(show);
-	}
-
-	public void ShowQuitUI(bool show)
-	{
-		if (quitUI.activeSelf != show)
-			quitUI.SetActive(show);
-
-		if (show)
-			Time.timeScale = 0f;
-		else
-			Time.timeScale = 1f;
 	}
 
 	public void SetUIRects()
@@ -110,11 +102,22 @@ public class UIManager : Singleton<UIManager>
 		}
 	}
 
+	public void ShowNoAdsButton(bool show)
+	{
+		if(noAdsButton.activeSelf != show)
+			noAdsButton.SetActive(show);
+	}
+
 	public float adHeight()
 	{
 		float aspect = (Screen.height / canvasTrans.sizeDelta.y);
 		float height = AdmobManager.Instance.GetBannerHeight() / aspect;
 
 		return height;
+	}
+
+	public void RefreshCoinInfoUI()
+	{
+		coinInfoUI.RefreshUI();
 	}
 }

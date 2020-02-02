@@ -28,7 +28,7 @@ public class ScrollBackground : MonoBehaviour
 	void InitBG()
 	{
 		isScroll = false;
-		player = GameManager.Instance.player;
+		player = GameManager.Instance.curPlayableBlock;
 
 		for (int i = 0; i < bgTrans.Count; i++)
 		{

@@ -38,7 +38,7 @@ public class VibeButton : BasicUIButton
 
 	void SetVibe()
 	{
-		isVibe = GameManager.Instance.isVibe;
+		isVibe = GameManager.Instance.deviceSettings.viberate;
 
 		RefreshUI();
 	}

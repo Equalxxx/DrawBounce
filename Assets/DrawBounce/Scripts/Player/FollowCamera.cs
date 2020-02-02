@@ -42,7 +42,7 @@ public class FollowCamera : MonoBehaviour
 
 	void Init()
 	{
-		player = GameManager.Instance.player;
+		player = GameManager.Instance.curPlayableBlock;
 		targetTrans = player.transform;
 
 		isFollow = false;

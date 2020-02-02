@@ -11,7 +11,7 @@ public class RewardUI : MonoBehaviour
 
 	public void InitUI()
 	{
-		if (GameManager.Instance.player == null)
+		if (GameManager.Instance.curPlayableBlock == null)
 			return;
 
 		Debug.Log("Reward Init");
@@ -19,7 +19,7 @@ public class RewardUI : MonoBehaviour
 		if (rewardButton == null)
 			rewardButton = GetComponentInChildren<RewardButton>();
 
-		int height = (int)GameManager.Instance.player.GetLastHeight();
+		int height = (int)GameManager.Instance.curPlayableBlock.GetLastHeight();
 
 		if (height >= 100)
 		{
@@ -45,6 +45,6 @@ public class RewardUI : MonoBehaviour
 	{
 		int amount = height / addHeight;
 
-		return (int)(amount * addHeight * (GameManager.Instance.player.addHeightCoinPer/100f));
+		return (int)(amount * addHeight * (GameManager.Instance.curPlayableBlock.addHeightCoinPer/100f));
 	}
 }

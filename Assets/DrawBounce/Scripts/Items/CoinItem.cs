@@ -20,7 +20,7 @@ public class CoinItem : BasicItem
 			originPosition = myTransform.position;
 		}
 		
-		targetTransform = GameManager.Instance.player.transform;
+		targetTransform = GameManager.Instance.curPlayableBlock.transform;
 
 		myTransform.position = originPosition;
 
@@ -68,9 +68,9 @@ public class CoinItem : BasicItem
 
 	int GetCoinValue()
 	{
-		int height = (int)GameManager.Instance.player.GetLastHeight();
+		int height = (int)GameManager.Instance.curPlayableBlock.GetLastHeight();
 		int amount = height / addHeight + 1;
 
-		return (int)(amount * (GameManager.Instance.player.addHeightCoinPer / 100f));
+		return (int)(amount * (GameManager.Instance.curPlayableBlock.addHeightCoinPer / 100f));
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using MysticLights;
 
@@ -11,13 +12,24 @@ public class RewardButton : BasicUIButton
 	public int addCoinValue;
 	private RewardUI rewardUI;
 
-	public Sprite adsSprite;
-	public Sprite boxSprite;
+	public Image adsImage;
+	public Image boxImage;
 
 	protected override void InitButton()
 	{
 		if (rewardUI == null)
 			rewardUI = GetComponentInParent<RewardUI>();
+
+		if (GameManager.IsNoAds)
+		{
+			adsImage.enabled = false;
+			boxImage.enabled = true;
+		}
+		else
+		{
+			adsImage.enabled = true;
+			boxImage.enabled = false;
+		}
 
 		addCoinValue = rewardUI.addCoinValue;
 	}

@@ -3,33 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class WaitingPopupUI : MonoBehaviour
+public class WaitingPopupUI : ProtoPopupUI
 {
 	public TextMeshProUGUI waitingText;
 	public string savingText = "Saving...";
 	public string loadingText = "Loading...";
 
-	public void ShowPopupUI(bool show)
+	public override void InitPopupUI()
 	{
-		if (gameObject.activeSelf != show)
-			gameObject.SetActive(show);
 
-		if(show)
-			RefreshUI();
 	}
 
-	void RefreshUI()
+	public override void RefreshUI()
 	{
-		//switch(waitingType)
-		//{
-		//	case WaitingPopupType.Saving:
-		//		waitingText.text = savingText;
-		//		break;
-		//	case WaitingPopupType.Loading:
-		//		waitingText.text = loadingText;
-		//		break;
-		//}
-
 		waitingText.text = loadingText;
+	}
+
+	public override void ClosePopupUI()
+	{
+
 	}
 }

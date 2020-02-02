@@ -42,6 +42,9 @@ public class ThemaEffect : MonoBehaviour
 			case PlayableBlockType.Heart:
 				myMaterial.mainTexture = sprites[6].texture;
 				break;
+			case PlayableBlockType.CoinCircle:
+				myMaterial.mainTexture = sprites[7].texture;
+				break;
 		}
 	}
 }

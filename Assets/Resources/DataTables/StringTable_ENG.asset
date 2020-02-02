@@ -60,3 +60,9 @@ MonoBehaviour:
     stringData: If there is no internet connection, you will enter practice mode.
       This mode does not activate the autosave function.
     fontName: LiberationSans SDF
+  - index: 40
+    stringData: Practice Mode
+    fontName: LiberationSans SDF
+  - index: 41
+    stringData: In practice mode, the game information applied is limited.
+    fontName: LiberationSans SDF

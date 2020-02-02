@@ -12,7 +12,7 @@ namespace MysticLights
         public GameObject popupModal;
         public Transform popupParent;
 
-        public List<ProtoPopupUI> popupUIList;
+        public List<ProtoPopupUI> popupUIList = new List<ProtoPopupUI>();
 
         //PopupUI Data
         private string tablePath = "datatables";
@@ -23,11 +23,6 @@ namespace MysticLights
             popupUITable = ResourceManager.LoadAsset<PopupUITable>(tablePath, "PopupUITable", resLinkType);
 
             ShowModal(false);
-        }
-
-        private void OnDestroy()
-        {
-            ResourceManager.ReleaseAll();
         }
 
         public void ShowPopupUI(string popupName)
@@ -53,6 +48,7 @@ namespace MysticLights
             if (curPopupUI == null)
                 return;
 
+			curPopupUI.ClosePopupUI();
             curPopupUI.ShowPopupUI(false);
             curPopupUI = null;
             ShowModal(false);
@@ -83,11 +79,13 @@ namespace MysticLights
                 newObj = Instantiate(newObj);
 
                 newObj.name = tag;
-                newObj.transform.SetParent(popupParent);
-                newObj.transform.localPosition = Vector3.zero;
-                newObj.transform.localRotation = Quaternion.identity;
+				RectTransform rectTransform = newObj.GetComponent<RectTransform>();
+				rectTransform.SetParent(popupParent);
+				rectTransform.localScale = Vector3.one;
+				rectTransform.offsetMin = Vector2.zero;
+				rectTransform.offsetMax = Vector2.zero;
 
-                popupUI = newObj.GetComponent<ProtoPopupUI>();
+				popupUI = newObj.GetComponent<ProtoPopupUI>();
                 popupUIList.Add(popupUI);
             }
 

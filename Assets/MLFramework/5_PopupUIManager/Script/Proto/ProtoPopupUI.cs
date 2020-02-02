@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class ProtoPopupUI : MonoBehaviour {
-    
-    public abstract void InitPopupUI();
-    public abstract void RefreshUI();
+public enum PopupUIType { Quit, Pause, Tutorial, Waiting, NoAds, Practice }
 
-    public virtual void ShowPopupUI(bool _show)
+public abstract class ProtoPopupUI : MonoBehaviour {
+
+	public PopupUIType popupUIType;
+	public abstract void InitPopupUI();
+    public abstract void RefreshUI();
+	public abstract void ClosePopupUI();
+
+    public virtual void ShowPopupUI(bool show)
     {
-        this.gameObject.SetActive(_show);
+		if (gameObject.activeSelf != show)
+			gameObject.SetActive(show);
     }
 }

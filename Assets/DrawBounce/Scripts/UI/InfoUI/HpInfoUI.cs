@@ -29,7 +29,7 @@ public class HpInfoUI : MonoBehaviour
 
     public void RefreshUI()
     {
-        int hp = GameManager.Instance.player.HP;
+        int hp = GameManager.Instance.curPlayableBlock.HP;
 
 		hpText.text = string.Format("x {0}",hp);
 	}

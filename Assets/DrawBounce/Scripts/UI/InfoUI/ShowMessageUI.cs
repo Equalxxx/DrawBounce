@@ -26,10 +26,10 @@ public class ShowMessageUI : MonoBehaviour
 		isPlaying = true;
 
 		anim.DOPlayForward();
-		yield return new WaitForSeconds(closeDelay);
+		yield return new WaitForSecondsRealtime(closeDelay);
 
 		anim.DOPlayBackwards();
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSecondsRealtime(0.5f);
 
 		isPlaying = false;
 	}

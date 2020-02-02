@@ -48,7 +48,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 
 	void InitializeFirebase()
 	{
-		auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+		auth = FirebaseAuth.DefaultInstance;
 		auth.StateChanged += AuthStateChanged;
 		AuthStateChanged(this, null);
 	}
@@ -71,15 +71,14 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 			else
 			{
 				Debug.LogWarningFormat("SignIn Failed");
+				IsSignInProcess = true;
 			}
-
-			IsSignInProcess = true;
 		});
 	}
 
 	IEnumerator SignInFirebase()
 	{
-		while(string.IsNullOrEmpty(((PlayGamesLocalUser)(Social.localUser)).GetIdToken()))
+		while (string.IsNullOrEmpty(((PlayGamesLocalUser)(Social.localUser)).GetIdToken()))
 		{
 			yield return null;
 		}
@@ -91,12 +90,12 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 		{
 			if (task.IsCanceled)
 			{
-				Debug.LogError("SignInWithCredentialAsync was canceled");
+				Debug.LogWarning("SignInWithCredentialAsync was canceled");
 				return;
 			}
 			else if (task.IsFaulted)
 			{
-				Debug.LogErrorFormat("SignInWithCredentialAsync encountered an error: {0}", task.Exception);
+				Debug.LogWarningFormat("SignInWithCredentialAsync encountered an error: {0}", task.Exception);
 				SignInAction?.Invoke(false);
 				return;
 			}
@@ -112,12 +111,12 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 					{
 						if (taskemail.IsCanceled)
 						{
-							Debug.LogError("UpdateEmailAsync was canceled");
+							Debug.LogWarning("UpdateEmailAsync was canceled");
 							return;
 						}
 						else if (taskemail.IsFaulted)
 						{
-							Debug.LogErrorFormat("UpdateEmailAsync encountered an error: {0}", task.Exception);
+							Debug.LogWarningFormat("UpdateEmailAsync encountered an error: {0}", task.Exception);
 							return;
 						}
 
@@ -125,7 +124,8 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 					});
 				}
 			}
-
+			
+			IsSignInProcess = true;
 			SignInAction?.Invoke(true);
 		});
 	}
@@ -155,6 +155,22 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 				Debug.LogFormat("EmailAddress : {0}",user.Email);
 			}
 		}
+	}
+
+	public string GetUserId()
+	{
+		if (user == null)
+			return "";
+
+		return user.UserId;
+	}
+
+	public string GetUserEmail()
+	{
+		if (user == null)
+			return "";
+
+		return user.Email;
 	}
 
 	#endregion

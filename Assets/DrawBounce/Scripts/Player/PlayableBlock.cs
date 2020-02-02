@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MysticLights;
 
-public enum PlayableBlockType { Circle, Rectangle, Triangle, Star, Male, Female, Heart }
+public enum PlayableBlockType { Circle, Rectangle, Triangle, Star, Male, Female, Heart, CoinCircle }
 public class PlayableBlock : MonoBehaviour, IPoolObject
 {
     private Rigidbody2D myRigidbody2D;
@@ -173,10 +173,9 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 
 			ShakeCamera.ShakePosOrder();
 
-			if (GameManager.Instance.isVibe)
+			if (GameManager.Instance.deviceSettings.viberate)
 				Handheld.Vibrate();
-
-			SoundManager.Instance.PlaySound2D("Explosion_Over");
+			
 			Dead();
 		}
         else
@@ -186,20 +185,26 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 
             ShakeCamera.ShakePosOrder();
 
-            HP -= 1;
-            DamagedAction?.Invoke();
-
-			if(GameManager.Instance.isVibe)
+			if(GameManager.Instance.deviceSettings.viberate)
 				Handheld.Vibrate();
 
-			if (HP <= 0)
-            {
-				SoundManager.Instance.PlaySound2D("Explosion_Over");
+			if(blockType == PlayableBlockType.CoinCircle)
+			{
 				Dead();
-            }
+			}
 			else
 			{
-				SoundManager.Instance.PlaySound2D("Explosion_Hit");
+				HP -= 1;
+				DamagedAction?.Invoke();
+
+				if (HP <= 0)
+				{
+					Dead();
+				}
+				else
+				{
+					SoundManager.Instance.PlaySound2D("Explosion_Hit");
+				}
 			}
         }
 
@@ -216,6 +221,8 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 			GameManager.Instance.gameInfo.lastHeight = GetLastHeight();
 
 		PoolManager.Instance.Spawn(explosionTag, myTransform.position, Quaternion.identity);
+
+		SoundManager.Instance.PlaySound2D("Explosion_Over");
 
 		if (gameObject.activeSelf)
             gameObject.SetActive(false);

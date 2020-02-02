@@ -16,20 +16,16 @@ public class CoinInfoUI : MonoBehaviour
 	private void OnEnable()
 	{
 		GameManager.GameInitAction += RefreshUI;
-		GameManager.UseCoinAction += RefreshUI;
-		GameManager.AddCoinAction += RefreshUI;
 		GameSettings.GameSettingAction += RefreshUI;
 	}
 
 	private void OnDisable()
 	{
 		GameManager.GameInitAction -= RefreshUI;
-		GameManager.UseCoinAction -= RefreshUI;
-		GameManager.AddCoinAction -= RefreshUI;
 		GameSettings.GameSettingAction -= RefreshUI;
 	}
 
-	void RefreshUI()
+	public void RefreshUI()
 	{
 		coinText.text = GameManager.Instance.gameInfo.coin.ToString();
 	}

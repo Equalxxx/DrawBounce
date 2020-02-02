@@ -16,9 +16,8 @@ public class MapArea : MonoBehaviour
 
 	void Start()
     {
-        if(!GameManager.Instance.testMode)
-		{
-			Destroy(gameObject);
-		}
-    }
+#if !UNITY_EDITOR
+		Destroy(gameObject);
+#endif
+	}
 }

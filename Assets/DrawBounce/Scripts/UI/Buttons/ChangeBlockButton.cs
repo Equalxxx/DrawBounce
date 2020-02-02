@@ -33,15 +33,31 @@ public class ChangeBlockButton : BasicUIButton
 
 	protected override void InitButton()
 	{
-		if (GameManager.Instance.gameInfo.lastHeight >= limitHeight)
+		if(blockType == PlayableBlockType.CoinCircle)
 		{
-			myButton.interactable = true;
-			lockObj.SetActive(false);
+			if(GameManager.IsNoAds)
+			{
+				myButton.interactable = true;
+				lockObj.SetActive(false);
+			}
+			else
+			{
+				myButton.interactable = false;
+				lockObj.SetActive(true);
+			}
 		}
 		else
 		{
-			myButton.interactable = false;
-			lockObj.SetActive(true);
+			if (GameManager.Instance.gameInfo.lastHeight >= limitHeight)
+			{
+				myButton.interactable = true;
+				lockObj.SetActive(false);
+			}
+			else
+			{
+				myButton.interactable = false;
+				lockObj.SetActive(true);
+			}
 		}
 	}
 

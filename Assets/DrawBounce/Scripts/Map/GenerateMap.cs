@@ -65,7 +65,7 @@ public class GenerateMap : MonoBehaviour
 
 	void InitMap()
 	{
-		player = GameManager.Instance.player;
+		player = GameManager.Instance.curPlayableBlock;
 
 		if (GameManager.Instance.gameInfo.startHeight >= 100f)
 		{

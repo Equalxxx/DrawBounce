@@ -27,7 +27,7 @@ public class ResultUIGroup : UIGroup
 
 	public override void InitUI()
 	{
-		int height = (int)GameManager.Instance.player.GetLastHeight();
+		int height = (int)GameManager.Instance.curPlayableBlock.GetLastHeight();
 		int startHeight = (int)GameManager.Instance.lastStartHeight;
 
 		if (height - startHeight >= limitHeight)
@@ -46,6 +46,6 @@ public class ResultUIGroup : UIGroup
 	public override void RefreshUI()
 	{
 		recordText.text = UnitCalculation.GetHeightText(GameManager.Instance.gameInfo.lastHeight, true);
-		maxMeterText.text = UnitCalculation.GetHeightText(GameManager.Instance.player.GetLastHeight(), true);
+		maxMeterText.text = UnitCalculation.GetHeightText(GameManager.Instance.curPlayableBlock.GetLastHeight(), true);
 	}
 }

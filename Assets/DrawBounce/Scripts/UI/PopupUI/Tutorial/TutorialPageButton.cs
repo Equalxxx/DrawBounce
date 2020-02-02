@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class TutorialPageButton : BasicUIButton
 {
-	private TutorialUI tutorialUI;
+	private TutorialPopupUI tutorialUI;
 	public int dir = 1;
+
+	protected override void InitButton()
+	{
+		if (tutorialUI == null)
+			tutorialUI = GetComponentInParent<TutorialPopupUI>();
+	}
 
 	protected override void PressedButton()
 	{
-		if (tutorialUI == null)
-			tutorialUI = UIManager.Instance.tutorialUI;
-
 		tutorialUI.ChangeTutorialPage(dir);
 	}
 }

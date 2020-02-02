@@ -12,7 +12,7 @@ public class BGControl : MonoBehaviour
 	}
 
 	public SpriteRenderer sprInnerBG;
-	public SpriteRenderer sprOuterBG;
+	public Camera bgCamera;
 	public List<BGColorSet> bgColorSetList;
 
 	public float duration = 1f;
@@ -26,8 +26,6 @@ public class BGControl : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			//colorIdx = testIdx;
-			//StartCoroutine(ChangeBG());
 			ChangeBGColor();
 		}
 	}
@@ -53,7 +51,7 @@ public class BGControl : MonoBehaviour
 	{
 		Color startInnerColor = sprInnerBG.color;
 		Color endInnerColor = bgColorSetList[colorIdx].innerColor;
-		Color startOuterColor = sprOuterBG.color;
+		Color startOuterColor = bgCamera.backgroundColor;
 		Color endOuterColor = bgColorSetList[colorIdx].outerColor;
 
 		float t = 0f;
@@ -62,7 +60,7 @@ public class BGControl : MonoBehaviour
 		{
 			t += Time.deltaTime / duration;
 			sprInnerBG.color = Color.Lerp(startInnerColor, endInnerColor, t);
-			sprOuterBG.color = Color.Lerp(startOuterColor, endOuterColor, t);
+			bgCamera.backgroundColor = Color.Lerp(startOuterColor, endOuterColor, t);
 
 			if (t >= 1f)
 			{

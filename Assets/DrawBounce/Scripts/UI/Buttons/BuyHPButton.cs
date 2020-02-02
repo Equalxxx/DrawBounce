@@ -32,10 +32,12 @@ public class BuyHPButton : BasicUIButton
 
 	void RefreshUI()
 	{
-		hpText.text = GameManager.Instance.gameInfo.playerHP.ToString();
+		GameManager gameManager = GameManager.Instance;
+
+		hpText.text = gameManager.gameInfo.playerHP.ToString();
 		priceText.text = UnitCalculation.GetCoinText(GetPrice());
 
-		if (GameManager.Instance.IsAddHP(1))
+		if (gameManager.IsAddHP(1) && gameManager.curPlayableBlock.blockType != PlayableBlockType.CoinCircle)
 		{
 			priceText.color = onColor;
 		}
@@ -48,12 +50,18 @@ public class BuyHPButton : BasicUIButton
 	protected override void PressedButton()
 	{
 		int useCoin = GetPrice();
+		GameManager gameManager = GameManager.Instance;
 
-		if (GameManager.Instance.IsUseCoin(useCoin) && GameManager.Instance.IsAddHP(addHp))
+		if (gameManager.IsUseCoin(useCoin) && gameManager.IsAddHP(addHp))
 		{
-			GameManager.Instance.UseCoin(useCoin);
-			GameManager.Instance.AddHP(addHp);
-			RefreshUI();
+			if(gameManager.curPlayableBlock.blockType != PlayableBlockType.CoinCircle)
+			{
+				gameManager.UseCoin(useCoin);
+				gameManager.AddHP(addHp);
+				RefreshUI();
+			}
+			else
+				SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
 		}
 		else
 		{

@@ -44,10 +44,10 @@ public class MuteButton : BasicUIButton
 		switch(soundType)
 		{
 			case SoundType.BGM:
-				isMute = GameManager.Instance.isMuteBGM;
+				isMute = GameManager.Instance.deviceSettings.muteBGM;
 				break;
 			case SoundType.SE:
-				isMute = GameManager.Instance.isMuteSE;
+				isMute = GameManager.Instance.deviceSettings.muteSE;
 				break;
 		}
 

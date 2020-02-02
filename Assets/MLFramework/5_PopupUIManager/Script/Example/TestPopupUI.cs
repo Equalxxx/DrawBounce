@@ -25,7 +25,12 @@ public class TestPopupUI : ProtoPopupUI
         Debug.Log("Refresh Popup UI : " + name);
     }
 
-    public void PressedBtn(int btnIndex)
+	public override void ClosePopupUI()
+	{
+
+	}
+
+	public void PressedBtn(int btnIndex)
     {
         if(btnIndex == 0)
         {

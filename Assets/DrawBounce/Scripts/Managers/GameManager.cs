@@ -33,13 +33,8 @@ public class GameManager : Singleton<GameManager>
 	public int lastStartHeight;
 
 	public PlayableBlockType curBlockType;
-
-	[Header("Game Settings")]
+	
 	public bool isPause;
-	public bool isMuteBGM;
-	public bool isMuteSE;
-	public bool isVibe;
-	public bool isTutorial;
 	public static bool IsNoAds;
 	public static bool IsPracticeMode;
 
@@ -48,38 +43,39 @@ public class GameManager : Singleton<GameManager>
     public static Action GamePlayAction;
 	public static Action GameOverAction;
 
-	// Game Play Actions
-	public static Action AddCoinAction;
-	public static Action UseCoinAction;
-	public static Action AddPlayerHPAction;
-	public static Action AddHeightAction;
-
 	public static Action<float> SetStartHeightAction;
 	public static Action<bool> PauseAction;
 
 	public static Action SoundMuteAction;
 	public static Action ViberateAction;
-	public static Action CheckNoAdsAction;
 
 	public static Action<PlayableBlockType> SetPlayableBlockAction;
 
 	[Header("GameManager Settings")]
 	public GameSettings gameSettings;
-	public bool testMode;
+	public DeviceSettings deviceSettings;
 	[HideInInspector]
-    public PlayableBlock player;
-	public Transform playerParent;
+    public PlayableBlock curPlayableBlock;
+	public Transform playableBlockParent;
 	public BGControl bgControl;
 
 	[Header("DataTables")]
 	public GameDataTable gameDataTable;
 	public MapDataTable mapDataTable;
 
+	public float signInTimeOut = 3f;
+
 	private void Start()
     {
-		IsNoAds = IAPManager.Instance.HadPurchased("noadspackage");
-		CheckNoAds();
+		StartCoroutine(InitGame());
 
+        FadeScreen.Instance.StartFade(false);
+
+		SoundManager.Instance.PlayMusic("BGM_1", true);
+	}
+
+	IEnumerator InitGame()
+	{
 #if !UNITY_EDITOR
 		if(Application.systemLanguage == SystemLanguage.Korean)
 		{
@@ -87,22 +83,112 @@ public class GameManager : Singleton<GameManager>
 		}
 		else if(Application.systemLanguage == SystemLanguage.Japanese)
 		{
-			LocalizeManager.Instance.SetLanguage(LocalizeManager.LocalizeLanguageType.JP);
+			LocalizeManager.Instance.SetLanguage(LocalizeManager.
+		LocalizeLanguageType.JP);
 		}
 		else
 		{
 			LocalizeManager.Instance.SetLanguage(LocalizeManager.LocalizeLanguageType.ENG);
 		}
 #endif
+		UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
+
+		float t = 0f;
+
+		while (!GooglePlayManager.IsSignInProcess)
+		{
+			t += Time.unscaledDeltaTime / signInTimeOut;
+			if (t >= 1f)
+			{
+				IsPracticeMode = true;
+				UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+				yield return null;
+				UIManager.Instance.ShowPopup(PopupUIType.Practice, true);
+				Debug.Log("Start Practice mode!");
+				break;
+			}
+
+			yield return null;
+		}
+
+		if(!IsPracticeMode)
+			UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+
+		CheckNoAds();
+
 		gameSettings.LoadGameInfo();
 
-        gameState = GameState.GameTitle;
+		gameState = GameState.GameTitle;
 
 		StartCoroutine(GameLoop());
 
-        FadeScreen.Instance.StartFade(false);
+		yield return new WaitForSeconds(1f);
 
-		SoundManager.Instance.PlayMusic("BGM_1", true);
+		if (deviceSettings.tutorial)
+		{
+			Debug.Log("Show Tutorial");
+			UIManager.Instance.ShowPopup(PopupUIType.Tutorial, true);
+			deviceSettings.tutorial = false;
+			gameSettings.SaveDeviceOptions();
+		}
+	}
+
+	public static bool IsConnected
+	{
+		get
+		{
+			Debug.LogFormat("Auth : {0}", GooglePlayManager.IsAuthenticated);
+			Debug.LogFormat("internet : {0}", Application.internetReachability);
+
+			if (IsPracticeMode)
+				return false;
+
+			if (!GooglePlayManager.IsAuthenticated || Application.internetReachability == NetworkReachability.NotReachable)
+			{
+				IsPracticeMode = true;
+				UIManager.Instance.ShowPracticeUI(true);
+				UIManager.Instance.ShowPopup(PopupUIType.Practice, true);
+				return false;
+			}
+			else
+			{
+				if (!IsPracticeMode)
+					UIManager.Instance.ShowPracticeUI(false);
+
+				return true;
+			}
+		}
+	}
+
+	public void CheckNoAds()
+	{
+		if (IsConnected)
+			IAPManager.Instance.ProductValidate("noadspackage", SetNoAds);
+		else
+			SetNoAds(true);
+	}
+
+	public void SetNoAds(bool noAds)
+	{
+		IsNoAds = noAds;
+
+		Debug.LogFormat("NoAds : {0}", IsNoAds);
+
+		if (IsNoAds)
+		{
+			AdmobManager.Instance.HideBannerAd();
+		}
+		else
+		{
+			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
+
+			if (curPlayableBlock.blockType == PlayableBlockType.CoinCircle)
+				SetPlayableBlockType(PlayableBlockType.Circle);
+		}
+
+		UIManager.Instance.ShowNoAdsButton(!IsNoAds);
+
+		UIManager.Instance.SetUIRects();
 	}
 
 	private void OnApplicationPause(bool pause)
@@ -145,7 +231,7 @@ public class GameManager : Singleton<GameManager>
 
 		curTargetHeight = gameDataTable.GetTargetHeightInfo(1);
 
-		player.InitPlayer();
+		curPlayableBlock.InitPlayer();
 		bgControl.ChangeBGColor(true);
 		GameInitAction?.Invoke();
 		lastStartHeight = 0;
@@ -163,7 +249,7 @@ public class GameManager : Singleton<GameManager>
 		Debug.Log("Game play!");
         UIManager.Instance.ShowUIGroup(UIGroupType.Game);
 
-		player.HP = gameInfo.playerHP;
+		curPlayableBlock.HP = gameInfo.playerHP;
 
 		curTargetHeight = gameDataTable.GetTargetHeightInfo(gameInfo.startHeight);
 
@@ -174,9 +260,9 @@ public class GameManager : Singleton<GameManager>
 
 		while (gameState == GameState.GamePlay)
         {
-			if(!player.isFastMove)
+			if(!curPlayableBlock.isFastMove)
 			{
-				SetLevel(player.height);
+				SetLevel(curPlayableBlock.height);
 			}
 
             yield return null;
@@ -186,7 +272,9 @@ public class GameManager : Singleton<GameManager>
 
 		lastStartHeight = (int)gameInfo.startHeight;
 
-		gameInfo.playerHP = 1;
+		if(curPlayableBlock.blockType != PlayableBlockType.CoinCircle)
+			gameInfo.playerHP = 1;
+
 		gameInfo.startHeight = 0f;
 
 		yield return WaittingSaving();
@@ -217,7 +305,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		Debug.Log("Enter shop!");
 		UIManager.Instance.ShowUIGroup(UIGroupType.Shop);
-		player.Show(false);
+		curPlayableBlock.Show(false);
 
 		while (gameState == GameState.EnterShop)
 		{
@@ -242,41 +330,6 @@ public class GameManager : Singleton<GameManager>
 		}
 
 		Debug.Log("Save is done");
-	}
-
-	public static bool IsConnected
-	{
-		get
-		{
-			if (!GooglePlayManager.IsAuthenticated || 
-				Application.internetReachability == NetworkReachability.NotReachable)
-			{
-				IsPracticeMode = true;
-				UIManager.Instance.ShowPracticeUI(true);
-				return false;
-			}
-			else
-			{
-				if(!IsPracticeMode)
-					UIManager.Instance.ShowPracticeUI(false);
-
-				return true;
-			}
-		}
-	}
-
-	public void CheckNoAds()
-	{
-		Debug.LogFormat("NoAds : {0}", IsNoAds);
-
-		if (!IsNoAds && IsConnected)
-			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
-		else
-			AdmobManager.Instance.HideBannerAd();
-
-		UIManager.Instance.SetUIRects();
-
-		CheckNoAdsAction?.Invoke();
 	}
 
 	void UnlockAchievement(int height)
@@ -334,7 +387,7 @@ public class GameManager : Singleton<GameManager>
 
 	public int GetHeightCoinValue()
 	{
-		return (int)(10f * curTargetHeight.level * (player.addHeightCoinPer/100f));
+		return (int)(10f * curTargetHeight.level * (curPlayableBlock.addHeightCoinPer/100f));
 	}
 
 	public bool IsAddCoin(int addCoin)
@@ -352,7 +405,7 @@ public class GameManager : Singleton<GameManager>
     {
 		gameInfo.coin += addCoin;
 
-        AddCoinAction?.Invoke();
+		UIManager.Instance.RefreshCoinInfoUI();
 
 		Debug.LogFormat("Add coin : {0}", addCoin);
     }
@@ -372,7 +425,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		gameInfo.coin -= useCoin;
 
-		UseCoinAction?.Invoke();
+		UIManager.Instance.RefreshCoinInfoUI();
 
 		Debug.LogFormat("Used coin : {0}", useCoin);
 	}
@@ -399,8 +452,6 @@ public class GameManager : Singleton<GameManager>
 		{
 			SoundManager.Instance.PlaySound2D("Buy_Item");
 		}
-
-		AddPlayerHPAction?.Invoke();
 
 		Debug.LogFormat("Add player hp : {0}", addHp);
 	}
@@ -429,8 +480,6 @@ public class GameManager : Singleton<GameManager>
 			SoundManager.Instance.PlaySound2D("Buy_Item");
 		}
 
-		AddHeightAction?.Invoke();
-
 		Debug.LogFormat("Add start height : {0}", addHeight);
 	}
 
@@ -440,8 +489,8 @@ public class GameManager : Singleton<GameManager>
 		{
 			case SoundType.BGM:
 				Debug.LogFormat("Sound mute BGM : {0}", mute);
-				isMuteBGM = mute;
-				if (isMuteBGM)
+				deviceSettings.muteBGM = mute;
+				if (deviceSettings.muteBGM)
 				{
 					SoundManager.Instance.bgmCustomVolume = 0f;
 				}
@@ -452,8 +501,8 @@ public class GameManager : Singleton<GameManager>
 				break;
 			case SoundType.SE:
 				Debug.LogFormat("Sound mute SE : {0}", mute);
-				isMuteSE = mute;
-				if (isMuteSE)
+				deviceSettings.muteSE = mute;
+				if (deviceSettings.muteSE)
 				{
 					SoundManager.Instance.seCustomVolume = 0f;
 				}
@@ -471,7 +520,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		Debug.LogFormat("Viberate : {0}", vibe);
 
-		isVibe = vibe;
+		deviceSettings.viberate = vibe;
 
 		ViberateAction?.Invoke();
 	}
@@ -480,27 +529,19 @@ public class GameManager : Singleton<GameManager>
 	{
 		isPause = pause;
 
-		if(isPause)
-		{
-			Time.timeScale = 0f;
-		}
-		else
-		{
-			Time.timeScale = 1f;
-		}
+		UIManager.Instance.ShowPopup(PopupUIType.Pause, isPause);
 
 		PauseAction?.Invoke(isPause);
-		UIManager.Instance.ShowPauseUI(isPause);
 	}
 
 	public void SetPlayableBlockType(PlayableBlockType blockType)
 	{
-		if (player != null)
+		if (curPlayableBlock != null)
 		{
-			if (player.blockType == blockType)
+			if (curPlayableBlock.blockType == blockType)
 				return;
 
-			player.Show(false);
+			curPlayableBlock.Show(false);
 		}
 
 		curBlockType = blockType;
@@ -529,15 +570,18 @@ public class GameManager : Singleton<GameManager>
 			case PlayableBlockType.Female:
 				playableTag = "Female";
 				break;
+			case PlayableBlockType.CoinCircle:
+				playableTag = "CoinCircle";
+				break;
 		}
 
-		newBlock = PoolManager.Instance.Spawn(playableTag, Vector3.zero, Quaternion.identity, playerParent);
+		newBlock = PoolManager.Instance.Spawn(playableTag, Vector3.zero, Quaternion.identity, playableBlockParent);
 
-		player = newBlock.GetComponent<PlayableBlock>();
-		player.InitPlayer();
+		curPlayableBlock = newBlock.GetComponent<PlayableBlock>();
+		curPlayableBlock.InitPlayer();
 
 		if (gameState == GameState.EnterShop)
-			player.Show(false);
+			curPlayableBlock.Show(false);
 
 		SetPlayableBlockAction?.Invoke(curBlockType);
 	}

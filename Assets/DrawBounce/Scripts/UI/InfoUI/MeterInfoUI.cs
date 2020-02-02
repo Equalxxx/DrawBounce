@@ -17,7 +17,7 @@ public class MeterInfoUI : MonoBehaviour
 
     public void RefreshUI()
     {
-		PlayableBlock player = GameManager.Instance.player;
+		PlayableBlock player = GameManager.Instance.curPlayableBlock;
         if (player == null)
             return;
 

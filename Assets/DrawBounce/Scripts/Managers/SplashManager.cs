@@ -7,6 +7,7 @@ public class SplashManager : MonoBehaviour
 {
     public float duration = 2f;
     public string nextSceneName;
+	public float signInTimeOut = 3f;
 
     IEnumerator Start()
     {
@@ -16,8 +17,15 @@ public class SplashManager : MonoBehaviour
 
 		GooglePlayManager.Instance.SignIn();
 
+		float t = 0f;
 		while (!GooglePlayManager.IsSignInProcess)
 		{
+			t += Time.deltaTime / signInTimeOut;
+			if (t >= 1f)
+			{
+				Debug.LogWarning("SignIn Time Out");
+				break;
+			}
 			yield return null;
 		}
 
