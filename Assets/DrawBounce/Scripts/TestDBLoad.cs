@@ -5,82 +5,42 @@ using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using Firebase.Unity.Editor;
-using MysticLights;
+using System.Reflection;
 
-public class FirebaseDBManager : Singleton<FirebaseDBManager>
+public class TestDBLoad : MonoBehaviour
 {
 	private DatabaseReference dbReference;
+	public GameInfo gameInfo;
 
-	void Awake()
+	// Start is called before the first frame update
+	void Start()
     {
-		if(Instance != this)
-		{
-			Destroy(gameObject);
-			return;
-		}
-
-		DontDestroyOnLoad(gameObject);
-
 		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://draw-bounce-61800636.firebaseio.com/");
 		dbReference = FirebaseDatabase.DefaultInstance.RootReference;
 	}
 
-	public void SendFirebaseDB(string targetHead, string path, string json)
+	private void Update()
 	{
-		dbReference.Child(targetHead)
-			.Child(GooglePlayManager.Instance.GetUserId())
-			.Child(path)
-			.SetRawJsonValueAsync(json);
+		if (Input.GetKeyDown(KeyCode.Space))
+			ReceiveFirebaseDB("gamedata", "", LoadCompleteCallback);
 	}
 
-	public void CheckFirebaseDB(string targetHead, string path, Action<bool> callback)
+	void LoadCompleteCallback(object loadData)
 	{
-		bool result = false;
-		string userId = GooglePlayManager.Instance.GetUserId();
+		Dictionary<string, object> dataDic = loadData as Dictionary<string, object>;
 
-		FirebaseDatabase.DefaultInstance
-			.GetReference(targetHead)
-			.GetValueAsync().ContinueWith(task =>
-			{
-				if (task.IsFaulted)
-				{
-					Debug.LogErrorFormat("DB GetValueAsync encountered an error: {0}", task.Exception);
-				}
-				else if (task.IsCanceled)
-				{
-					Debug.LogError("DB GetValueAsync was canceled");
-				}
-				else if (task.IsCompleted)
-				{
-					DataSnapshot snapshot = task.Result;
-
-					if (snapshot.HasChild(userId))
-					{
-						if (snapshot.Child(userId).HasChild(path))
-						{
-							Debug.LogFormat("Has Data : {0}", path);
-							result = true;
-						}
-						else
-						{
-							Debug.LogFormat("Not has Data : {0}", path);
-						}
-					}
-					else
-					{
-						Debug.LogFormat("Not has UserId : {0}", userId);
-					}
-				}
-
-				callback?.Invoke(result);
-			});
+		gameInfo.coin = int.Parse(dataDic["coin"].ToString());
+		gameInfo.lastHeight = float.Parse(dataDic["lastHeight"].ToString());
+		gameInfo.playerHP = int.Parse(dataDic["playerHP"].ToString());
+		gameInfo.playerMaxHP = int.Parse(dataDic["playerMaxHP"].ToString());
+		gameInfo.startHeight = float.Parse(dataDic["startHeight"].ToString());
 	}
 
 	public void ReceiveFirebaseDB(string targetHead, string path, Action<object> callback)
 	{
 		Debug.Log("Receive DB");
 
-		string userId = GooglePlayManager.Instance.GetUserId();
+		string userId = "r7ymUpxJjGcntPkkpD0uPrfz9ud2";
 		object data = null;
 
 		Debug.Log(FirebaseDatabase.DefaultInstance
@@ -109,9 +69,6 @@ public class FirebaseDBManager : Singleton<FirebaseDBManager>
 					if (snapshot.HasChild(userId))
 					{
 						Debug.LogFormat("Has UserId : {0}", userId);
-
-						Debug.Log(snapshot.Child(userId).Child("coin").Value);
-						Debug.Log(snapshot.Child(userId).Child("lastHeight").Value);
 
 						if (string.IsNullOrEmpty(path))
 						{

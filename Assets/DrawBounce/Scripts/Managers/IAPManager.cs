@@ -138,47 +138,48 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 	{
 		if (!IsInitialized)
 			return;
-
-		bool result = false;
+		
 		string userId = GooglePlayManager.Instance.GetUserId();
 		Debug.LogFormat("Validate : {0}, {1}", productId, userId);
 
-		FirebaseDatabase.DefaultInstance
-			.GetReference("receipt")
-			.GetValueAsync().ContinueWith(task =>
-		{
-			if(task.IsFaulted)
-			{
-				Debug.LogErrorFormat("DB GetValueAsync encountered an error: {0}", task.Exception);
-			}
-			else if(task.IsCanceled)
-			{
-				Debug.LogError("DB GetValueAsync was canceled");
-			}
-			else if(task.IsCompleted)
-			{
-				DataSnapshot snapshot = task.Result;
-				
-				if (snapshot.HasChild(GooglePlayManager.Instance.GetUserId()))
-				{
-					if(snapshot.Child(GooglePlayManager.Instance.GetUserId()).HasChild(productId))
-					{
-						Debug.LogFormat("Has Product : {0}", productId);
-						result = true;
-					}
-					else
-					{
-						Debug.LogFormat("Not has Product : {0}", productId);
-					}
-				}
-				else
-				{
-					Debug.LogFormat("Not has UserId : {0}", userId);
-				}
-			}
+		FirebaseDBManager.Instance.CheckFirebaseDB("receipt", productId, callback);
 
-			callback?.Invoke(result);
-		});
+		//FirebaseDatabase.DefaultInstance
+		//	.GetReference("receipt")
+		//	.GetValueAsync().ContinueWith(task =>
+		//{
+		//	if(task.IsFaulted)
+		//	{
+		//		Debug.LogErrorFormat("DB GetValueAsync encountered an error: {0}", task.Exception);
+		//	}
+		//	else if(task.IsCanceled)
+		//	{
+		//		Debug.LogError("DB GetValueAsync was canceled");
+		//	}
+		//	else if(task.IsCompleted)
+		//	{
+		//		DataSnapshot snapshot = task.Result;
+				
+		//		if (snapshot.HasChild(GooglePlayManager.Instance.GetUserId()))
+		//		{
+		//			if(snapshot.Child(GooglePlayManager.Instance.GetUserId()).HasChild(productId))
+		//			{
+		//				Debug.LogFormat("Has Product : {0}", productId);
+		//				result = true;
+		//			}
+		//			else
+		//			{
+		//				Debug.LogFormat("Not has Product : {0}", productId);
+		//			}
+		//		}
+		//		else
+		//		{
+		//			Debug.LogFormat("Not has UserId : {0}", userId);
+		//		}
+		//	}
+
+		//	callback?.Invoke(result);
+		//});
 	}
 
 	public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
@@ -200,14 +201,15 @@ public class IAPManager : Singleton<IAPManager>, IStoreListener
 				// 영수증을 서버에 저장한다.
 
 				string json = JsonUtility.ToJson(CreateReceipt(productReceipt, e.purchasedProduct.metadata.localizedPrice.ToString()));
-				string date = productReceipt.purchaseDate.ToString("yyyyMMddHHmmss");
 				string transactionid = productReceipt.transactionID.Replace('.', '-');
+				string path = string.Format("{0}/{1}", productReceipt.productID, transactionid);
+				FirebaseDBManager.Instance.SendFirebaseDB("receipt", path, json);
 
-				dbReference.Child("receipt")
-					.Child(GooglePlayManager.Instance.GetUserId())
-					.Child(productReceipt.productID)
-					.Child(transactionid)
-					.SetRawJsonValueAsync(json);
+				//dbReference.Child("receipt")
+				//	.Child(GooglePlayManager.Instance.GetUserId())
+				//	.Child(productReceipt.productID)
+				//	.Child(transactionid)
+				//	.SetRawJsonValueAsync(json);
 
 				// OS 별로 특정 세부 사항이 있다
 				//var google = productReceipt as GooglePlayReceipt;

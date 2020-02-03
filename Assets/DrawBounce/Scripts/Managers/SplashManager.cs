@@ -7,7 +7,7 @@ public class SplashManager : MonoBehaviour
 {
     public float duration = 2f;
     public string nextSceneName;
-	public float signInTimeOut = 3f;
+	public float signInTimeOut = 10f;
 
     IEnumerator Start()
     {
@@ -26,6 +26,7 @@ public class SplashManager : MonoBehaviour
 				Debug.LogWarning("SignIn Time Out");
 				break;
 			}
+
 			yield return null;
 		}
 

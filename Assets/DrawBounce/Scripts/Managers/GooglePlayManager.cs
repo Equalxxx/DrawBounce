@@ -33,7 +33,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 		DontDestroyOnLoad(this.gameObject);
 
 		PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-			.EnableSavedGames()
+			//.EnableSavedGames()
 			.RequestIdToken()
 			.RequestEmail()
 			.Build();
@@ -261,142 +261,142 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 
 	#region Save & Load
 
-	public bool isProcessing
-	{
-		get;
-		private set;
-	}
+	//public bool isProcessing
+	//{
+	//	get;
+	//	private set;
+	//}
 
-	public string loadedData
-	{
-		get;
-		private set;
-	}
+	//public string loadedData
+	//{
+	//	get;
+	//	private set;
+	//}
 
-	private void ProcessCloudData(byte[] cloudData)
-	{
-		if (cloudData == null)
-		{
-			Debug.Log("No Data saved to the cloud");
-			return;
-		}
+	//private void ProcessCloudData(byte[] cloudData)
+	//{
+	//	if (cloudData == null)
+	//	{
+	//		Debug.Log("No Data saved to the cloud");
+	//		return;
+	//	}
 
-		string progress = BytesToString(cloudData);
-		loadedData = progress;
-	}
+	//	string progress = BytesToString(cloudData);
+	//	loadedData = progress;
+	//}
 
-	public void LoadFromCloud(Action<string> afterLoadAction)
-	{
-		if (IsAuthenticated && !isProcessing)
-		{
-			StartCoroutine(LoadFromCloudRoutin(afterLoadAction));
-		}
-		else
-		{
-			Debug.LogWarningFormat("LoadFromCloud failed. IsAuthenticated : {0}", IsAuthenticated);
-		}
-	}
+	//public void LoadFromCloud(Action<string> afterLoadAction)
+	//{
+	//	if (IsAuthenticated && !isProcessing)
+	//	{
+	//		StartCoroutine(LoadFromCloudRoutin(afterLoadAction));
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarningFormat("LoadFromCloud failed. IsAuthenticated : {0}", IsAuthenticated);
+	//	}
+	//}
 
-	private IEnumerator LoadFromCloudRoutin(Action<string> loadAction)
-	{
-		isProcessing = true;
-		Debug.Log("Loading game progress from the cloud.");
+	//private IEnumerator LoadFromCloudRoutin(Action<string> loadAction)
+	//{
+	//	isProcessing = true;
+	//	Debug.Log("Loading game progress from the cloud.");
 
-		((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(
-			saveFile,
-			DataSource.ReadCacheOrNetwork,
-			ConflictResolutionStrategy.UseLongestPlaytime,
-			OnFileOpenToLoad);
+	//	((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(
+	//		saveFile,
+	//		DataSource.ReadCacheOrNetwork,
+	//		ConflictResolutionStrategy.UseLongestPlaytime,
+	//		OnFileOpenToLoad);
 
-		while (isProcessing)
-		{
-			yield return null;
-		}
+	//	while (isProcessing)
+	//	{
+	//		yield return null;
+	//	}
 
-		loadAction.Invoke(loadedData);
-	}
+	//	loadAction.Invoke(loadedData);
+	//}
 
-	public void SaveToCloud(string dataToSave)
-	{
-		if (IsAuthenticated)
-		{
-			loadedData = dataToSave;
-			isProcessing = true;
-			((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, OnFileOpenToSave);
-		}
-		else
-		{
-			Debug.LogWarningFormat("SaveToCloud failed. IsAuthenticated : {0}", IsAuthenticated);
-		}
-	}
+	//public void SaveToCloud(string dataToSave)
+	//{
+	//	if (IsAuthenticated)
+	//	{
+	//		loadedData = dataToSave;
+	//		isProcessing = true;
+	//		((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(saveFile, DataSource.ReadCacheOrNetwork, ConflictResolutionStrategy.UseLongestPlaytime, OnFileOpenToSave);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarningFormat("SaveToCloud failed. IsAuthenticated : {0}", IsAuthenticated);
+	//	}
+	//}
 
-	private void OnFileOpenToSave(SavedGameRequestStatus status, ISavedGameMetadata metaData)
-	{
-		if (status == SavedGameRequestStatus.Success)
-		{
-			byte[] data = StringToBytes(loadedData);
+	//private void OnFileOpenToSave(SavedGameRequestStatus status, ISavedGameMetadata metaData)
+	//{
+	//	if (status == SavedGameRequestStatus.Success)
+	//	{
+	//		byte[] data = StringToBytes(loadedData);
 
-			SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
+	//		SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
 
-			SavedGameMetadataUpdate updatedMetadata = builder.Build();
+	//		SavedGameMetadataUpdate updatedMetadata = builder.Build();
 
-			((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(metaData, updatedMetadata, data, OnGameSave);
-		}
-		else
-		{
-			Debug.LogWarning("Error opening Saved Game" + status);
-		}
-	}
+	//		((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(metaData, updatedMetadata, data, OnGameSave);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Error opening Saved Game" + status);
+	//	}
+	//}
 
-	private void OnFileOpenToLoad(SavedGameRequestStatus status, ISavedGameMetadata metaData)
-	{
-		if (status == SavedGameRequestStatus.Success)
-		{
-			((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(metaData, OnGameLoad);
-		}
-		else
-		{
-			Debug.LogWarning("Error opening Saved Game" + status);
-		}
-	}
+	//private void OnFileOpenToLoad(SavedGameRequestStatus status, ISavedGameMetadata metaData)
+	//{
+	//	if (status == SavedGameRequestStatus.Success)
+	//	{
+	//		((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(metaData, OnGameLoad);
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Error opening Saved Game" + status);
+	//	}
+	//}
 
-	private void OnGameLoad(SavedGameRequestStatus status, byte[] bytes)
-	{
-		if (status != SavedGameRequestStatus.Success)
-		{
-			Debug.LogWarning("Error Saving" + status);
-		}
-		else
-		{
-			ProcessCloudData(bytes);
-		}
+	//private void OnGameLoad(SavedGameRequestStatus status, byte[] bytes)
+	//{
+	//	if (status != SavedGameRequestStatus.Success)
+	//	{
+	//		Debug.LogWarning("Error Saving" + status);
+	//	}
+	//	else
+	//	{
+	//		ProcessCloudData(bytes);
+	//	}
 
-		isProcessing = false;
-	}
+	//	isProcessing = false;
+	//}
 
-	private void OnGameSave(SavedGameRequestStatus status, ISavedGameMetadata metaData)
-	{
-		if (status == SavedGameRequestStatus.Success)
-		{
-			Debug.Log("Success Save To Cloud");
-		}
-		else
-		{
-			Debug.LogWarning("Error Saving" + status);
-		}
+	//private void OnGameSave(SavedGameRequestStatus status, ISavedGameMetadata metaData)
+	//{
+	//	if (status == SavedGameRequestStatus.Success)
+	//	{
+	//		Debug.Log("Success Save To Cloud");
+	//	}
+	//	else
+	//	{
+	//		Debug.LogWarning("Error Saving" + status);
+	//	}
 
-		isProcessing = false;
-	}
+	//	isProcessing = false;
+	//}
 
-	private byte[] StringToBytes(string stringToConvert)
-	{
-		return Encoding.UTF8.GetBytes(stringToConvert);
-	}
+	//private byte[] StringToBytes(string stringToConvert)
+	//{
+	//	return Encoding.UTF8.GetBytes(stringToConvert);
+	//}
 
-	private string BytesToString(byte[] bytes)
-	{
-		return Encoding.UTF8.GetString(bytes);
-	}
+	//private string BytesToString(byte[] bytes)
+	//{
+	//	return Encoding.UTF8.GetString(bytes);
+	//}
 
 	#endregion
 }

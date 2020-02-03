@@ -61,28 +61,30 @@ public class GameSettings : MonoBehaviour
 		SaveFileManager.Save<GameInfo>(gameInfo, fileName);
 		
 		string stringData = JsonUtility.ToJson(gameInfo);
-		GooglePlayManager.Instance.SaveToCloud(stringData);
-		StartCoroutine(SaveToCloudSync());
+		//GooglePlayManager.Instance.SaveToCloud(stringData);
+		FirebaseDBManager.Instance.SendFirebaseDB("gamedata", "", stringData);
+		//StartCoroutine(SaveToCloudSync());
+		isProcessing = false;
 
 		Debug.LogFormat("Save GameInfo to server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 	}
 
-	IEnumerator SaveToCloudSync()
-	{
-		Debug.Log("Save Processing start");
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
+	//IEnumerator SaveToCloudSync()
+	//{
+	//	Debug.Log("Save Processing start");
+	//	UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
 
-		while (GooglePlayManager.Instance.isProcessing)
-		{
-			yield return null;
-		}
+	//	while (GooglePlayManager.Instance.isProcessing)
+	//	{
+	//		yield return null;
+	//	}
 
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+	//	UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
 
-		isProcessing = false;
+	//	isProcessing = false;
 
-		Debug.Log("Save Processing done");
-	}
+	//	Debug.Log("Save Processing done");
+	//}
 
 	public void LoadGameInfo()
 	{
@@ -128,14 +130,15 @@ public class GameSettings : MonoBehaviour
 
 		if (GameManager.IsConnected)
 		{
-			GooglePlayManager.Instance.LoadFromCloud(LoadCompleteCallback);
+			//GooglePlayManager.Instance.LoadFromCloud(LoadCompleteCallback);
+			FirebaseDBManager.Instance.ReceiveFirebaseDB("gamedata", "", LoadCompleteCallback);
 		}
 		else
 		{
 			LoadInfoForLocal();
 
 			isProcessing = false;
-			UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+
 			GameSettingAction?.Invoke();
 		}
 	}
@@ -158,23 +161,28 @@ public class GameSettings : MonoBehaviour
 		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
 	}
 
-	void LoadCompleteCallback(string loadData)
+	void LoadCompleteCallback(object loadData)
 	{
-		if(loadData != "")
-		{
-			GameInfo gameInfo = JsonUtility.FromJson<GameInfo>(loadData);
-			CheckDefaultGameInfo(gameInfo);
+		Debug.Log("Load Data Callback");
 
-			GameManager.Instance.gameInfo = gameInfo;
+		if (loadData != null)
+		{
+			GameInfo gameInfo = GameManager.Instance.gameInfo;
+			Dictionary<string, object> dataDic = loadData as Dictionary<string, object>;
+
+			gameInfo.coin = int.Parse(dataDic["coin"].ToString());
+			gameInfo.lastHeight = float.Parse(dataDic["lastHeight"].ToString());
+			gameInfo.playerHP = int.Parse(dataDic["playerHP"].ToString());
+			gameInfo.playerMaxHP = int.Parse(dataDic["playerMaxHP"].ToString());
+			gameInfo.startHeight = float.Parse(dataDic["startHeight"].ToString());
+
+			CheckDefaultGameInfo(gameInfo);
 
 			Debug.LogFormat("Load GameInfo for server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 
-			UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
 		}
-		else
-		{
-			LoadInfoForLocal();
-		}
+
+		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
 
 		isProcessing = false;
 		GameSettingAction?.Invoke();

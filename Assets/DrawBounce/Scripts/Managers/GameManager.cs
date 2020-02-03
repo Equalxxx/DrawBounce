@@ -122,6 +122,8 @@ public class GameManager : Singleton<GameManager>
 
 		StartCoroutine(GameLoop());
 
+		Debug.Log("Init Game Done");
+
 		yield return new WaitForSeconds(1f);
 
 		if (deviceSettings.tutorial)
@@ -583,6 +585,7 @@ public class GameManager : Singleton<GameManager>
 		if (gameState == GameState.EnterShop)
 			curPlayableBlock.Show(false);
 
+		GameInitAction?.Invoke();
 		SetPlayableBlockAction?.Invoke(curBlockType);
 	}
 

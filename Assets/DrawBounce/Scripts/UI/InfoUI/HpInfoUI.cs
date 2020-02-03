@@ -30,6 +30,8 @@ public class HpInfoUI : MonoBehaviour
     public void RefreshUI()
     {
         int hp = GameManager.Instance.curPlayableBlock.HP;
+		if (GameManager.Instance.curPlayableBlock.blockType == PlayableBlockType.CoinCircle)
+			hp = 1;
 
 		hpText.text = string.Format("x {0}",hp);
 	}
