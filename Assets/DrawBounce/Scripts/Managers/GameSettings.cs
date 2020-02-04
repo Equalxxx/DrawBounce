@@ -20,7 +20,6 @@ public class DeviceSettings
 public enum SoundType { BGM, SE }
 public class GameSettings : MonoBehaviour
 {
-
 	private const string deviceSettingFileName = "rpdlatjfwjdvkdlf";
 	private const string gameDataFileName = "gd";
 	public const string extensionName = ".dla";
@@ -51,6 +50,7 @@ public class GameSettings : MonoBehaviour
 		if (!GameManager.IsConnected || GameManager.IsPracticeMode)
 		{
 			isProcessing = false;
+			Debug.Log("Save Failed : No Connection");
 			return;
 		}
 
@@ -61,30 +61,31 @@ public class GameSettings : MonoBehaviour
 		SaveFileManager.Save<GameInfo>(gameInfo, fileName);
 		
 		string stringData = JsonUtility.ToJson(gameInfo);
-		//GooglePlayManager.Instance.SaveToCloud(stringData);
-		FirebaseDBManager.Instance.SendFirebaseDB("gamedata", "", stringData);
-		//StartCoroutine(SaveToCloudSync());
-		isProcessing = false;
+		GooglePlayManager.Instance.SaveToCloud(stringData);
+		StartCoroutine(SaveToCloudSync());
+
+		//FirebaseDBManager.Instance.SendFirebaseDB("gamedata", "", stringData);
+		//isProcessing = false;
 
 		Debug.LogFormat("Save GameInfo to server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 	}
 
-	//IEnumerator SaveToCloudSync()
-	//{
-	//	Debug.Log("Save Processing start");
-	//	UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
+	IEnumerator SaveToCloudSync()
+	{
+		Debug.Log("Save Processing start");
+		UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
 
-	//	while (GooglePlayManager.Instance.isProcessing)
-	//	{
-	//		yield return null;
-	//	}
+		while (GooglePlayManager.Instance.isProcessing)
+		{
+			yield return null;
+		}
 
-	//	UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
 
-	//	isProcessing = false;
+		isProcessing = false;
 
-	//	Debug.Log("Save Processing done");
-	//}
+		Debug.Log("Save Processing done");
+	}
 
 	public void LoadGameInfo()
 	{
@@ -108,16 +109,13 @@ public class GameSettings : MonoBehaviour
 			deviceSettings.blockType = PlayableBlockType.Circle;
 		}
 
-		GameManager.Instance.deviceSettings = deviceSettings;
-		
-		GameManager.Instance.SetSoundMute(SoundType.BGM, deviceSettings.muteBGM);
-		
-		GameManager.Instance.SetSoundMute(SoundType.SE, deviceSettings.muteSE);
-		
-		GameManager.Instance.SetViberate(deviceSettings.viberate);
-
-		GameManager.Instance.curBlockType = deviceSettings.blockType;
-		GameManager.Instance.SetPlayableBlockType(deviceSettings.blockType);
+		GameManager gameManager = GameManager.Instance;
+		gameManager.deviceSettings = deviceSettings;
+		gameManager.SetSoundMute(SoundType.BGM, deviceSettings.muteBGM);
+		gameManager.SetSoundMute(SoundType.SE, deviceSettings.muteSE);
+		gameManager.SetViberate(deviceSettings.viberate);
+		gameManager.curBlockType = deviceSettings.blockType;
+		gameManager.SetPlayableBlockType(deviceSettings.blockType);
 
 		Debug.Log("Load Device Options");
 	}
@@ -130,8 +128,8 @@ public class GameSettings : MonoBehaviour
 
 		if (GameManager.IsConnected)
 		{
-			//GooglePlayManager.Instance.LoadFromCloud(LoadCompleteCallback);
-			FirebaseDBManager.Instance.ReceiveFirebaseDB("gamedata", "", LoadCompleteCallback);
+			GooglePlayManager.Instance.LoadFromCloud(LoadCompleteGoogleCallback);
+			//FirebaseDBManager.Instance.ReceiveFirebaseDB("gamedata", "", LoadCompleteCallback);
 		}
 		else
 		{
@@ -159,6 +157,28 @@ public class GameSettings : MonoBehaviour
 		Debug.LogWarningFormat("Load GameInfo for local : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 
 		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+	}
+
+	void LoadCompleteGoogleCallback(string loadData)
+	{
+		Debug.Log("Load Data Callback");
+
+		if (!string.IsNullOrEmpty(loadData))
+		{
+			GameInfo gameInfo = new GameInfo();
+			gameInfo = JsonUtility.FromJson<GameInfo>(loadData);
+
+			CheckDefaultGameInfo(gameInfo);
+
+			Debug.LogFormat("Load GameInfo for server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
+
+			GameManager.Instance.gameInfo = gameInfo;
+		}
+
+		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+
+		isProcessing = false;
+		GameSettingAction?.Invoke();
 	}
 
 	void LoadCompleteCallback(object loadData)
@@ -206,20 +226,20 @@ public class GameSettings : MonoBehaviour
 			gameInfo.lastHeight = 0f;
 	}
 
-	T ParseEnum<T>(string value, T defaultValue) where T : struct
-	{
-		try
-		{
-			T enumValue;
-			if (!Enum.TryParse(value, true, out enumValue))
-			{
-				return defaultValue;
-			}
-			return enumValue;
-		}
-		catch (Exception)
-		{
-			return defaultValue;
-		}
-	}
+	//T ParseEnum<T>(string value, T defaultValue) where T : struct
+	//{
+	//	try
+	//	{
+	//		T enumValue;
+	//		if (!Enum.TryParse(value, true, out enumValue))
+	//		{
+	//			return defaultValue;
+	//		}
+	//		return enumValue;
+	//	}
+	//	catch (Exception)
+	//	{
+	//		return defaultValue;
+	//	}
+	//}
 }

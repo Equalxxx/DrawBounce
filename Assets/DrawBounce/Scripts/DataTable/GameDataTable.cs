@@ -67,12 +67,20 @@ public class GameDataTable : ScriptableObject
 
 	public TargetHeightInfo GetTargetHeightInfo(int level)
 	{
-		return targetHeightList.Find(x => x.level == level);
+		TargetHeightInfo heightInfo = targetHeightList.Find(x => x.level == level);
+		if (heightInfo == null)
+			heightInfo = targetHeightList[targetHeightList.Count - 1];
+
+		return heightInfo;
 	}
 
 	public TargetHeightInfo GetTargetHeightInfo(float height)
 	{
-		return targetHeightList.Find(x => x.targetHeight >= height);
+		TargetHeightInfo heightInfo = targetHeightList.Find(x => x.targetHeight >= height);
+		if (heightInfo == null)
+			heightInfo = targetHeightList[targetHeightList.Count - 1];
+
+		return heightInfo;
 	}
 
 	public ShopInfo GetShopInfo(ShopItemType itemType)

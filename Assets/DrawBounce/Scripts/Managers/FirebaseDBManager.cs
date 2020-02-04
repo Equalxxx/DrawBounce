@@ -25,18 +25,18 @@ public class FirebaseDBManager : Singleton<FirebaseDBManager>
 		dbReference = FirebaseDatabase.DefaultInstance.RootReference;
 	}
 
-	public void SendFirebaseDB(string targetHead, string path, string json)
+	public void SendFirebaseDB(string targetHead, string userId, string path, string json)
 	{
 		dbReference.Child(targetHead)
-			.Child(GooglePlayManager.Instance.GetUserId())
+			.Child(userId)
 			.Child(path)
 			.SetRawJsonValueAsync(json);
 	}
 
-	public void CheckFirebaseDB(string targetHead, string path, Action<bool> callback)
+	public void CheckFirebaseDB(string targetHead, string userId, string path, Action<bool> callback)
 	{
 		bool result = false;
-		string userId = GooglePlayManager.Instance.GetUserId();
+		//string userId = GooglePlayManager.Instance.GetUserId();
 
 		FirebaseDatabase.DefaultInstance
 			.GetReference(targetHead)

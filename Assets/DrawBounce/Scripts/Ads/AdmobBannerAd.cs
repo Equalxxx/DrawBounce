@@ -20,9 +20,9 @@ public class AdmobBannerAd : MonoBehaviour
 
 	BannerView CreateAndLoadBannerAd()
 	{
-		//AdSize adSize = AdSize.GetPortraitAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
-		//BannerView banner = new BannerView(test_unitId, adSize, AdPosition.Top);
-		BannerView banner = new BannerView(test_unitId, AdSize.SmartBanner, AdPosition.Top);
+		AdSize adSize = AdSize.GetPortraitAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
+		BannerView banner = new BannerView(test_unitId, adSize, AdPosition.Top);
+		//BannerView banner = new BannerView(test_unitId, AdSize.SmartBanner, AdPosition.Top);
 
 		// Called when an ad request has successfully loaded.
 		banner.OnAdLoaded += HandleOnAdLoaded_banner;

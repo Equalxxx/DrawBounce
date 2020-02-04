@@ -45,6 +45,6 @@ public class RewardUI : MonoBehaviour
 	{
 		int amount = height / addHeight;
 
-		return (int)(amount * addHeight * (GameManager.Instance.curPlayableBlock.addHeightCoinPer/100f));
+		return (int)(amount * addHeight * (GameManager.Instance.curPlayableBlock.addHeightCoinPer/100f) * ((float)GameManager.Instance.curTargetHeight.level/2f));
 	}
 }
