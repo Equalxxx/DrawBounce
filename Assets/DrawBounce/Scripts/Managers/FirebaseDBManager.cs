@@ -11,7 +11,7 @@ public class FirebaseDBManager : Singleton<FirebaseDBManager>
 {
 	private DatabaseReference dbReference;
 
-	void Awake()
+	void Start()
     {
 		if(Instance != this)
 		{

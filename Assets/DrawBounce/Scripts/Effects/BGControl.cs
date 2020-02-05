@@ -17,44 +17,49 @@ public class BGControl : MonoBehaviour
 
 	public float duration = 1f;
 
-	public float delay = 3f;
-	public int colorIdx;
-	public int testIdx;
+	public int bgIndex;
+
+	private float t;
+	private Color startInnerColor;
+	private Color endInnerColor;
+	private Color startOuterColor;
+	private Color endOuterColor;
+
+	private bool isChanged;
 
 #if UNITY_EDITOR
 	private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			ChangeBGColor();
+			bgIndex++;
+			if (bgIndex >= bgColorSetList.Count)
+				bgIndex = 0;
+
+			ChangeBGColor(bgIndex);
 		}
 	}
 #endif
 
-	public void ChangeBGColor(bool first = false)
+	public void ChangeBGColor(int bgIdx)
 	{
-		if (first)
-		{
-			colorIdx = 0;
-		}
-		else
-		{
-			colorIdx++;
-			if (colorIdx >= bgColorSetList.Count)
-				colorIdx = 0;
-		}
+		bgIndex = bgIdx;
+		t = 0f;
+
+		startInnerColor = sprInnerBG.color;
+		endInnerColor = bgColorSetList[bgIndex].innerColor;
+		startOuterColor = bgCamera.backgroundColor;
+		endOuterColor = bgColorSetList[bgIndex].outerColor;
 
 		StartCoroutine(ChangeBG());
 	}
 
 	IEnumerator ChangeBG()
 	{
-		Color startInnerColor = sprInnerBG.color;
-		Color endInnerColor = bgColorSetList[colorIdx].innerColor;
-		Color startOuterColor = bgCamera.backgroundColor;
-		Color endOuterColor = bgColorSetList[colorIdx].outerColor;
+		if (isChanged)
+			yield break;
 
-		float t = 0f;
+		isChanged = true;
 
 		while (true)
 		{
@@ -70,6 +75,8 @@ public class BGControl : MonoBehaviour
 			yield return null;
 		}
 
-		Debug.LogFormat("Change BG Color : {0}", colorIdx);
+		isChanged = false;
+
+		Debug.LogFormat("Change BG Color : {0}", bgIndex);
 	}
 }

@@ -15,6 +15,7 @@ public class DeviceSettings
 	public bool viberate;
 	public bool tutorial;
 	public PlayableBlockType blockType;
+	public int bgIndex;
 }
 
 public enum SoundType { BGM, SE }

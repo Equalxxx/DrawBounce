@@ -43,7 +43,7 @@ public class RewardButton : BasicUIButton
 			{
 				if (!GameManager.IsNoAds)
 				{
-					AdmobRewardAd.IsShowAd = true;
+					AdmobManager.IsShowAd = true;
 					AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
 					StartCoroutine(WaitForAd());
 				}
@@ -67,18 +67,18 @@ public class RewardButton : BasicUIButton
 
 	IEnumerator WaitForAd()
 	{
-		while(AdmobRewardAd.IsShowAd)
+		while(AdmobManager.IsShowAd)
 		{
 			yield return null;
 		}
 
 		Debug.Log("Show ad is done");
 
-		if (AdmobRewardAd.IsRewarded)
+		if (AdmobManager.IsRewarded)
 		{
 			AddCoinProcess();
 
-			AdmobRewardAd.IsRewarded = false;
+			AdmobManager.IsRewarded = false;
 
 			GameManager.Instance.SaveGame();
 		}

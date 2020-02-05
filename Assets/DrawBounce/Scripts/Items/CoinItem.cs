@@ -11,6 +11,7 @@ public class CoinItem : BasicItem
 	private Transform targetTransform;
 	private float followSpeed = 7f;
 	private int addHeight = 100;
+	public float posZ = -6f;
 
 	public override void InitItem()
 	{
@@ -24,6 +25,10 @@ public class CoinItem : BasicItem
 
 		myTransform.position = originPosition;
 
+		Vector3 pos = myTransform.position;
+		pos.z = posZ;
+		myTransform.position = pos;
+
 		follow = false;
 
 		Show(true);
@@ -32,6 +37,9 @@ public class CoinItem : BasicItem
 	private void Update()
 	{
 		if (!follow)
+			return;
+
+		if (GameManager.Instance.gameState != GameState.GamePlay)
 			return;
 
 		myTransform.position = Vector3.Lerp(myTransform.position, targetTransform.position, Time.deltaTime * followSpeed);

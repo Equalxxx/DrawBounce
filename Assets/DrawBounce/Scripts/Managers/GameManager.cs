@@ -50,6 +50,7 @@ public class GameManager : Singleton<GameManager>
 	public static Action ViberateAction;
 
 	public static Action<PlayableBlockType> SetPlayableBlockAction;
+	public static Action<int> SetBGAction;
 
 	[Header("GameManager Settings")]
 	public GameSettings gameSettings;
@@ -234,7 +235,7 @@ public class GameManager : Singleton<GameManager>
 		curTargetHeight = gameDataTable.GetTargetHeightInfo(1);
 
 		curPlayableBlock.InitPlayer();
-		bgControl.ChangeBGColor(true);
+
 		GameInitAction?.Invoke();
 		lastStartHeight = 0;
 
@@ -383,7 +384,6 @@ public class GameManager : Singleton<GameManager>
 				return;
 
 			curTargetHeight = gameDataTable.GetTargetHeightInfo(nextLevel);
-			bgControl.ChangeBGColor();
 		}
 	}
 
@@ -587,6 +587,13 @@ public class GameManager : Singleton<GameManager>
 
 		GameInitAction?.Invoke();
 		SetPlayableBlockAction?.Invoke(curBlockType);
+	}
+
+	public void SetBGColor(int bgIndex)
+	{
+		deviceSettings.bgIndex = bgIndex;
+		bgControl.ChangeBGColor(bgIndex);
+		SetBGAction?.Invoke(bgIndex);
 	}
 
 	public void SetGameState(GameState state)

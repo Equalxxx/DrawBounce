@@ -22,7 +22,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 	private FirebaseAuth auth;
 	private FirebaseUser user;
 
-	private void Awake()
+	private void Start()
 	{
 		if (Instance != this)
 		{
