@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MysticLights;
+using MLFramework;
 
 public class TutorialPopupUI : ProtoPopupUI
 {
@@ -28,8 +28,11 @@ public class TutorialPopupUI : ProtoPopupUI
 
 	public override void InitPopupUI()
 	{
-		Time.timeScale = 0f;
+		popupUIType = PopupUIType.Tutorial;
+		
 		pageIndex = 0;
+
+		GameManager.Instance.curPlayableBlock.Show(false);
 	}
 
 	public override void RefreshUI()
@@ -53,6 +56,6 @@ public class TutorialPopupUI : ProtoPopupUI
 
 	public override void ClosePopupUI()
 	{
-		Time.timeScale = 1f;
+		GameManager.Instance.curPlayableBlock.Show(true);
 	}
 }

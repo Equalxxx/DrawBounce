@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MysticLights;
+using MLFramework;
 
 public class DrawBlockControl : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class DrawBlockControl : MonoBehaviour
 
     private void Update()
     {
-		if (GameManager.Instance.isPause)
+		if (GameManager.IsPause)
 			return;
         if (GameManager.Instance.gameState != GameState.GamePlay)
             return;

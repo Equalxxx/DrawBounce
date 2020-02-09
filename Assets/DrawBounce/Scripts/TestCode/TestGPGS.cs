@@ -15,10 +15,10 @@ public class TestGPGS : BasicUIButton
 				GooglePlayManager.Instance.SignIn();
 				break;
 			case 1:
-				gameSettings.SaveInfoToServer();
+				gameSettings.SaveGameData();
 				break;
 			case 2:
-				gameSettings.LoadGameInfo();
+				gameSettings.LoadGameData();
 				break;
 		}
 	}

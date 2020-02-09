@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MysticLights;
+using MLFramework;
 
 public class DefaultDialogueSystem : BaseDialogueSystem
 {

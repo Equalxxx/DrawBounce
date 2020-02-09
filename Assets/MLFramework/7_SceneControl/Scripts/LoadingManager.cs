@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MysticLights
+namespace MLFramework
 {
     public class LoadingManager : MonoBehaviour
     {

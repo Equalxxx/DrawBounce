@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MysticLights
+namespace MLFramework
 {
     public class PopupUIManager : Singleton_Prefab<PopupUIManager>
     {
@@ -17,6 +17,8 @@ namespace MysticLights
         //PopupUI Data
         private string tablePath = "datatables";
         private PopupUITable popupUITable;
+
+		public GameObject loadingUI;
 
         private void Awake()
         {
@@ -54,6 +56,12 @@ namespace MysticLights
             ShowModal(false);
         }
 
+		public void ShowLoadingUI(bool show)
+		{
+			if (loadingUI.activeSelf != show)
+				loadingUI.SetActive(show);
+		}
+
         ProtoPopupUI GetPopupUI(string tag)
         {
             ProtoPopupUI popupUI = popupUIList.Find(x => string.Equals(x.name, tag));
@@ -89,7 +97,9 @@ namespace MysticLights
                 popupUIList.Add(popupUI);
             }
 
-            return popupUI;
+			popupUI.transform.SetAsLastSibling();
+
+			return popupUI;
         }
 
         public void ShowModal(bool show)

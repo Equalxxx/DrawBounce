@@ -14,11 +14,12 @@ public class PointerCollider : MonoBehaviour, IPoolObject
 		GameManager.PauseAction -= GamePause;
 	}
 
-	void GamePause(bool pause)
+	void GamePause()
 	{
-		if (pause)
+		if (GameManager.IsPause)
 			Show(false);
 	}
+
 	void Show(bool show)
 	{
 		if (gameObject.activeSelf != show)

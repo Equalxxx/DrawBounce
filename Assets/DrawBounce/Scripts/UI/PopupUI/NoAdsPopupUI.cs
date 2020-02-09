@@ -6,7 +6,9 @@ public class NoAdsPopupUI : ProtoPopupUI
 {
 	public override void InitPopupUI()
 	{
-		Time.timeScale = 0f;
+		popupUIType = PopupUIType.NoAds;
+
+		GameManager.Instance.curPlayableBlock.Show(false);
 	}
 
 	public override void RefreshUI()
@@ -16,7 +18,6 @@ public class NoAdsPopupUI : ProtoPopupUI
 
 	public override void ClosePopupUI()
 	{
-		Time.timeScale = 1f;
-		GameManager.Instance.CheckNoAds();
+		GameManager.Instance.curPlayableBlock.Show(true);
 	}
 }

@@ -28,10 +28,10 @@ public static class GPGSIds
         public const string achievement_2000 = "CgkIzpPYo7kUEAIQBw"; // <GPGSID>
         public const string achievement_700 = "CgkIzpPYo7kUEAIQBA"; // <GPGSID>
         public const string achievement_100 = "CgkIzpPYo7kUEAIQAQ"; // <GPGSID>
-        public const string leaderboard = "CgkIzpPYo7kUEAIQCA"; // <GPGSID>
         public const string achievement_300 = "CgkIzpPYo7kUEAIQAg"; // <GPGSID>
         public const string achievement_1000 = "CgkIzpPYo7kUEAIQBg"; // <GPGSID>
         public const string achievement_900 = "CgkIzpPYo7kUEAIQBQ"; // <GPGSID>
+        public const string leaderboard_ranking = "CgkIzpPYo7kUEAIQCQ"; // <GPGSID>
 
 }
 

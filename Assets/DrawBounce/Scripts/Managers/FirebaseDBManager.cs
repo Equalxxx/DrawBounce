@@ -5,7 +5,7 @@ using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using Firebase.Unity.Editor;
-using MysticLights;
+using MLFramework;
 
 public class FirebaseDBManager : Singleton<FirebaseDBManager>
 {

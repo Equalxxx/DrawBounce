@@ -5,13 +5,13 @@ using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using MysticLights;
+using MLFramework;
 
 [System.Serializable]
 public class DeviceSettings
 {
-	public bool muteBGM;
-	public bool muteSE;
+	public bool useBGM;
+	public bool useSE;
 	public bool viberate;
 	public bool tutorial;
 	public PlayableBlockType blockType;
@@ -46,65 +46,80 @@ public class GameSettings : MonoBehaviour
 		Debug.Log("Save Device Settings");
 	}
 
-	public void SaveInfoToServer()
+	public void SaveGameData(bool toCloud = false)
 	{
-		if (!GameManager.IsConnected || GameManager.IsPracticeMode)
-		{
-			isProcessing = false;
-			Debug.Log("Save Failed : No Connection");
-			return;
-		}
+		GameInfo gameInfo = GameManager.Instance.gameInfo;
 
 		isProcessing = true;
 
-		GameInfo gameInfo = GameManager.Instance.gameInfo;
-		string fileName = string.Format("rpdlafhzjftpdlqmvkdlf{0}", extensionName);
-		SaveFileManager.Save<GameInfo>(gameInfo, fileName);
-		
-		string stringData = JsonUtility.ToJson(gameInfo);
-		GooglePlayManager.Instance.SaveToCloud(stringData);
-		StartCoroutine(SaveToCloudSync());
+		if (toCloud)
+		{
+			string stringData = JsonUtility.ToJson(gameInfo);
+			GooglePlayManager.Instance.SaveToCloud(stringData);
+			StartCoroutine(SaveToCloudSync());
+		}
+		else
+		{
+			if(GooglePlayManager.IsAuthenticated)
+			{
+				string fileName = string.Format("{0}{1}", Social.localUser.id, extensionName);
+				SaveFileManager.Save<GameInfo>(gameInfo, fileName);
+			}
+
+			isProcessing = false;
+		}
 
 		//FirebaseDBManager.Instance.SendFirebaseDB("gamedata", "", stringData);
 		//isProcessing = false;
 
-		Debug.LogFormat("Save GameInfo to server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
+		Debug.LogFormat("Save GameInfo : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 	}
 
 	IEnumerator SaveToCloudSync()
 	{
 		Debug.Log("Save Processing start");
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
+		UIManager.Instance.ShowLoadingUI(true);
 
 		while (GooglePlayManager.Instance.isProcessing)
 		{
 			yield return null;
 		}
 
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+		UIManager.Instance.ShowLoadingUI(false);
 
 		isProcessing = false;
 
 		Debug.Log("Save Processing done");
 	}
 
-	public void LoadGameInfo()
+	public void LoadGameData(bool toCloud = false)
 	{
-		LoadDeviceOptions();
-		StartCoroutine(LoadInfoForServer());
+		isProcessing = true;
+
+		if (toCloud)
+		{
+			UIManager.Instance.ShowLoadingUI(true);
+
+			GooglePlayManager.Instance.LoadFromCloud(LoadCompleteCallback);
+		}
+		else
+		{
+			LoadInfoForLocal();
+		}
 
 		Debug.Log("Load GameSetting");
 	}
 
-	void LoadDeviceOptions()
+	public void LoadDeviceOptions()
 	{
 		string fileName = string.Format("{0}{1}", deviceSettingFileName, extensionName);
+
 		DeviceSettings deviceSettings = SaveFileManager.Load<DeviceSettings>(fileName);
 		if(deviceSettings == null)
 		{
 			deviceSettings = new DeviceSettings();
-			deviceSettings.muteBGM = false;
-			deviceSettings.muteSE = false;
+			deviceSettings.useBGM = true;
+			deviceSettings.useSE = true;
 			deviceSettings.viberate = true;
 			deviceSettings.tutorial = true;
 			deviceSettings.blockType = PlayableBlockType.Circle;
@@ -112,62 +127,54 @@ public class GameSettings : MonoBehaviour
 
 		GameManager gameManager = GameManager.Instance;
 		gameManager.deviceSettings = deviceSettings;
-		gameManager.SetSoundMute(SoundType.BGM, deviceSettings.muteBGM);
-		gameManager.SetSoundMute(SoundType.SE, deviceSettings.muteSE);
-		gameManager.SetViberate(deviceSettings.viberate);
+		gameManager.SetSoundSetting(SoundType.BGM, deviceSettings.useBGM);
+		gameManager.SetSoundSetting(SoundType.SE, deviceSettings.useSE);
 		gameManager.curBlockType = deviceSettings.blockType;
 		gameManager.SetPlayableBlockType(deviceSettings.blockType);
+		gameManager.SetBGColor(deviceSettings.bgIndex);
 
 		Debug.Log("Load Device Options");
 	}
 
-	IEnumerator LoadInfoForServer()
-	{
-		isProcessing = true;
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
-		yield return new WaitForSecondsRealtime(0.5f);
-
-		if (GameManager.IsConnected)
-		{
-			GooglePlayManager.Instance.LoadFromCloud(LoadCompleteGoogleCallback);
-			//FirebaseDBManager.Instance.ReceiveFirebaseDB("gamedata", "", LoadCompleteCallback);
-		}
-		else
-		{
-			LoadInfoForLocal();
-
-			isProcessing = false;
-
-			GameSettingAction?.Invoke();
-		}
-	}
-
 	void LoadInfoForLocal()
 	{
-		string fileName = string.Format("rpdlafhzjftpdlqmvkdlf{0}", extensionName);
-		GameInfo gameInfo = SaveFileManager.Load<GameInfo>(fileName);
-		if(gameInfo == null)
+		GameInfo gameInfo = null;
+
+		if (GooglePlayManager.IsAuthenticated)
 		{
-			gameInfo = new GameInfo();
+			string fileName = string.Format("{0}{1}", Social.localUser.id, extensionName);
+			gameInfo = SaveFileManager.Load<GameInfo>(fileName);
 		}
+
+		if (gameInfo == null)
+			gameInfo = new GameInfo();
 
 		CheckDefaultGameInfo(gameInfo);
 
 		GameManager.Instance.gameInfo = gameInfo;
 
-		Debug.LogWarningFormat("Load GameInfo for local : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
+		Debug.LogFormat("Load GameInfo for local : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+		UIManager.Instance.ShowLoadingUI(false);
+
+		isProcessing = false;
+
+		LoadDeviceOptions();
+
+		GameSettingAction?.Invoke();
 	}
 
-	void LoadCompleteGoogleCallback(string loadData)
+	void LoadCompleteCallback(string loadData)
 	{
 		Debug.Log("Load Data Callback");
 
 		if (!string.IsNullOrEmpty(loadData))
 		{
-			GameInfo gameInfo = new GameInfo();
+			GameInfo gameInfo = null;
 			gameInfo = JsonUtility.FromJson<GameInfo>(loadData);
+
+			if (gameInfo == null)
+				gameInfo = new GameInfo();
 
 			CheckDefaultGameInfo(gameInfo);
 
@@ -176,38 +183,42 @@ public class GameSettings : MonoBehaviour
 			GameManager.Instance.gameInfo = gameInfo;
 		}
 
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+		UIManager.Instance.ShowLoadingUI(false);
+
+		LoadDeviceOptions();
+		SaveGameData();
 
 		isProcessing = false;
+
 		GameSettingAction?.Invoke();
 	}
 
-	void LoadCompleteCallback(object loadData)
-	{
-		Debug.Log("Load Data Callback");
+	//void LoadCompleteFirebaseCallback(object loadData)
+	//{
+	//	Debug.Log("Load Data Callback");
 
-		if (loadData != null)
-		{
-			GameInfo gameInfo = GameManager.Instance.gameInfo;
-			Dictionary<string, object> dataDic = loadData as Dictionary<string, object>;
+	//	if (loadData != null)
+	//	{
+	//		GameInfo gameInfo = GameManager.Instance.gameInfo;
+	//		Dictionary<string, object> dataDic = loadData as Dictionary<string, object>;
 
-			gameInfo.coin = int.Parse(dataDic["coin"].ToString());
-			gameInfo.lastHeight = float.Parse(dataDic["lastHeight"].ToString());
-			gameInfo.playerHP = int.Parse(dataDic["playerHP"].ToString());
-			gameInfo.playerMaxHP = int.Parse(dataDic["playerMaxHP"].ToString());
-			gameInfo.startHeight = float.Parse(dataDic["startHeight"].ToString());
+	//		gameInfo.coin = int.Parse(dataDic["coin"].ToString());
+	//		gameInfo.lastHeight = float.Parse(dataDic["lastHeight"].ToString());
+	//		gameInfo.playerHP = int.Parse(dataDic["playerHP"].ToString());
+	//		gameInfo.playerMaxHP = int.Parse(dataDic["playerMaxHP"].ToString());
+	//		gameInfo.startHeight = float.Parse(dataDic["startHeight"].ToString());
 
-			CheckDefaultGameInfo(gameInfo);
+	//		CheckDefaultGameInfo(gameInfo);
 
-			Debug.LogFormat("Load GameInfo for server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
+	//		Debug.LogFormat("Load GameInfo for server : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 
-		}
+	//	}
 
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
+	//	UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
 
-		isProcessing = false;
-		GameSettingAction?.Invoke();
-	}
+	//	isProcessing = false;
+	//	GameSettingAction?.Invoke();
+	//}
 
 	void CheckDefaultGameInfo(GameInfo gameInfo)
 	{
@@ -226,21 +237,4 @@ public class GameSettings : MonoBehaviour
 		if (gameInfo.lastHeight < 0f)
 			gameInfo.lastHeight = 0f;
 	}
-
-	//T ParseEnum<T>(string value, T defaultValue) where T : struct
-	//{
-	//	try
-	//	{
-	//		T enumValue;
-	//		if (!Enum.TryParse(value, true, out enumValue))
-	//		{
-	//			return defaultValue;
-	//		}
-	//		return enumValue;
-	//	}
-	//	catch (Exception)
-	//	{
-	//		return defaultValue;
-	//	}
-	//}
 }

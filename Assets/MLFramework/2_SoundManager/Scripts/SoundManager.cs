@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MysticLights
+namespace MLFramework
 {
     public class SoundManager : Singleton<SoundManager>
     {
@@ -12,9 +12,9 @@ namespace MysticLights
 		public static bool IsMuteBGM;
 		public static bool IsMuteSE;
 
-		private AudioSource seAudio;		//사운드 이펙트 AudioSource
-        private AudioSource bgmAudio0;		//주플레이 AudioSource
-        private AudioSource bgmAudio1;		//빠지는 플레이 AudioSource
+		private AudioSource seAudio;     //사운드 이펙트 AudioSource
+		private AudioSource bgmAudio0;      //주플레이 AudioSource
+		private AudioSource bgmAudio1;		//빠지는 플레이 AudioSource
 
         public float masterVolume = 1f;		//마스터 볼륨
         public float crossFadeTime = 5f;	//fade 시간
@@ -47,11 +47,11 @@ namespace MysticLights
 
             soundTable = ResourceManager.LoadAsset<SoundTable>(tablePath, "SoundTable", resLinkType);
 
-            seAudio = this.gameObject.AddComponent<AudioSource>();
-            bgmAudio0 = this.gameObject.AddComponent<AudioSource>();
-            bgmAudio1 = this.gameObject.AddComponent<AudioSource>();
+			seAudio = this.gameObject.AddComponent<AudioSource>();
+			bgmAudio0 = this.gameObject.AddComponent<AudioSource>();
+			bgmAudio1 = this.gameObject.AddComponent<AudioSource>();
 
-            bgmAudio0.loop = true;
+			bgmAudio0.loop = true;
             bgmAudio1.loop = true;
 
             seAudio.volume = 0f;

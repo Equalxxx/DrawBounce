@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MysticLights;
+using MLFramework;
 
 public class TestResource : MonoBehaviour {
 

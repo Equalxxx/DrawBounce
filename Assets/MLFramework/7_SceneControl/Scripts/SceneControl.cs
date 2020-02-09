@@ -1,6 +1,6 @@
 ﻿using UnityEngine.SceneManagement;
 
-namespace MysticLights
+namespace MLFramework
 {
     public static class SceneControl {
     

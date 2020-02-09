@@ -7,7 +7,7 @@ public class RewardUI : MonoBehaviour
 	public int limitHeight = 50;
 	public int addHeight = 100;
 	public int addCoinValue;
-	private RewardButton rewardButton;
+	public RewardButton rewardButton;
 
 	public void InitUI()
 	{
@@ -15,9 +15,6 @@ public class RewardUI : MonoBehaviour
 			return;
 
 		Debug.Log("Reward Init");
-
-		if (rewardButton == null)
-			rewardButton = GetComponentInChildren<RewardButton>();
 
 		int height = (int)GameManager.Instance.curPlayableBlock.GetLastHeight();
 

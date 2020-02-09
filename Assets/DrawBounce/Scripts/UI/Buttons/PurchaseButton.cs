@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using TMPro;
-using MysticLights;
+using MLFramework;
 
 public class PurchaseButton : BasicUIButton
 {
@@ -33,6 +33,9 @@ public class PurchaseButton : BasicUIButton
 
 	protected override void InitButton()
 	{
+		if (GameManager.IsOfflineMode)
+			return;
+
 		if (product == null)
 		{
 			product = IAPManager.Instance.GetProductData(targetProductId);
@@ -71,15 +74,7 @@ public class PurchaseButton : BasicUIButton
 
 		if (GameManager.IsConnected)
 		{
-			if (!GameManager.IsPracticeMode)
-			{
-				IAPManager.Instance.Purchase(targetProductId);
-			}
-			else
-			{
-				UIManager.Instance.showMessageUI.Show(12);
-				SoundManager.Instance.PlaySound2D("Buy_Item_Notwork");
-			}
+			IAPManager.Instance.Purchase(targetProductId);
 		}
 		else
 		{
@@ -102,10 +97,13 @@ public class PurchaseButton : BasicUIButton
 						AddCoinEffect coinEffect = PoolManager.Instance.Spawn("AddCoinEffect", Camera.main.transform.position, Quaternion.identity).GetComponent<AddCoinEffect>();
 						SoundManager.Instance.PlaySound2D("AddCoin");
 						coinEffect.RefreshEffect(addValue);
-						GameManager.Instance.gameSettings.SaveInfoToServer();
+						GameManager.Instance.gameSettings.SaveGameData();
 						break;
 					case PurchaseProductType.NoAds:
 						UIManager.Instance.ShowPopup(PopupUIType.NoAds, false);
+						GameManager.Instance.CheckNoAds();
+						if(GameManager.Instance.gameState != GameState.GameTitle)
+							GameManager.Instance.SetGameState(GameState.GameTitle);
 						break;
 				}
 			}

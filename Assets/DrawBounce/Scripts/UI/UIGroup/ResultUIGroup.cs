@@ -30,7 +30,7 @@ public class ResultUIGroup : UIGroup
 		int height = (int)GameManager.Instance.curPlayableBlock.GetLastHeight();
 		int startHeight = (int)GameManager.Instance.lastStartHeight;
 
-		if (height - startHeight >= limitHeight)
+		if (height - startHeight >= limitHeight && !GameManager.IsOfflineMode)
 		{
 			rewardUI.Show(true);
 			rewardUI.InitUI();

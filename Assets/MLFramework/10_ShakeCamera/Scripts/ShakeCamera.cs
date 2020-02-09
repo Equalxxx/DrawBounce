@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace MysticLights
+namespace MLFramework
 {
     public class ShakeCamera : Singleton<ShakeCamera>
     {

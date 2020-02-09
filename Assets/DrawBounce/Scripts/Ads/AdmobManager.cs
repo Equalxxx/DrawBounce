@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
-using MysticLights;
+using MLFramework;
 
 public enum AdmobAdType { Interstitial, RewardVideo, Banner }
 public class AdmobManager : Singleton<AdmobManager>
 {
 	//Banner Id
-	private readonly string bannerUnitId = "ca-app-pub-2141587155447938/6875380797";
+	private readonly string bannerUnitId = "ca-app-pub-2141587155447938/9006675959";
 	private readonly string test_bannerUnitId = "ca-app-pub-3940256099942544/6300978111";
 	//Interstitial
 	private readonly string interstitialUnitId = "ca-app-pub-2141587155447938/6875380797";
@@ -21,10 +21,11 @@ public class AdmobManager : Singleton<AdmobManager>
 	private BannerView bannerAd;
 	private InterstitialAd interstitialAd;
 	private RewardedAd rewardedAd;
+
 	public static bool IsRewarded;
 	public static bool IsShowAd;
 
-	private void Start()
+	private void Awake()
 	{
 		if (Instance != null && Instance != this)
 		{

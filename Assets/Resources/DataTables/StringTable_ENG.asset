@@ -15,54 +15,70 @@ MonoBehaviour:
   stringDataList:
   - index: 0
     stringData: PRESS START
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 1
     stringData: PRESS RESTART
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 2
     stringData: Do you want to quit?
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 5
     stringData: Coin
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 6
     stringData: Height
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 10
     stringData: Network not avaliable
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 11
     stringData: Exceeded the maximum coin limit
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 12
-    stringData: Not available in practice mode
-    fontName: LiberationSans SDF
+    stringData: Not available in Offline mode
+    fontName: 
+  - index: 15
+    stringData: Save game data to Google cloud.
+    fontName: 
+  - index: 16
+    stringData: Do you want to save?
+    fontName: 
+  - index: 17
+    stringData: Import game data from Google Cloud.
+    fontName: 
+  - index: 18
+    stringData: Do you want to load?
+    fontName: 
   - index: 20
     stringData: Touch & drag the screen with your finger to flick the falling blocks
       up
-    fontName: LiberationSans SDF
+    fontName: 
   - index: 21
-    stringData: Avoid the white blocks on the screen and go further
-    fontName: LiberationSans SDF
+    stringData: Avoid the white blocks on the screen.
+    fontName: 
   - index: 22
-    stringData: Be sure to collect the coins that come out after the game. Coins
-      are used to purchase HP, starting height, etc.
-    fontName: LiberationSans SDF
+    stringData: If you go up 50M or more from the starting point, you can get coins
+      that match your level.
+    fontName: 
   - index: 23
-    stringData: If you have a hard time playing the game, click on the button at
-      the bottom of the first screen to buy health and starting height.
-    fontName: LiberationSans SDF
+    stringData: Use coins to click on the stamina and jump buttons.
+    fontName: 
   - index: 24
-    stringData: Try different blocks in the store Blocks differ in the amount of
-      coins you can earn
-    fontName: LiberationSans SDF
+    stringData: Try different blocks in the store. The amount of coins available
+      for each block is different.
+    fontName: 
   - index: 25
-    stringData: If there is no internet connection, you will enter practice mode.
-      This mode does not activate the autosave function.
-    fontName: LiberationSans SDF
+    stringData: Offline mode will not earn rewards after game completion.
+    fontName: 
+  - index: 30
+    stringData: Remove Ad
+    fontName: 
+  - index: 31
+    stringData: In-game ads are removed and new block selections are available.
+    fontName: 
   - index: 40
-    stringData: Practice Mode
-    fontName: LiberationSans SDF
+    stringData: Offline Mode
+    fontName: 
   - index: 41
-    stringData: In practice mode, the game information applied is limited.
-    fontName: LiberationSans SDF
+    stringData: Offline mode will not earn rewards after game completion
+    fontName: 

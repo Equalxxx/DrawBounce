@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MysticLights;
+using MLFramework;
 
 public class ChangeBGButton : BasicUIButton
 {
@@ -48,9 +48,12 @@ public class ChangeBGButton : BasicUIButton
 
 	protected override void PressedButton()
 	{
+		if (GameManager.Instance.bgControl.bgIndex == bgIndex)
+			return;
+
 		GameManager.Instance.SetBGColor(bgIndex);
 		GameManager.Instance.gameSettings.SaveDeviceOptions();
-		SoundManager.Instance.PlaySound2D("Click", 0.5f);
+		SoundManager.Instance.PlaySound2D("Click");
 	}
 
 	void RefreshUI(int bgIdx)

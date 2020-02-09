@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using MysticLights;
+using MLFramework;
 
 public class RewardButton : BasicUIButton
 {
@@ -39,7 +39,7 @@ public class RewardButton : BasicUIButton
 		if(GameManager.Instance.IsAddCoin(addCoinValue))
 		{
 			Debug.Log("Start reward ad success");
-			if (GameManager.IsConnected && !GameManager.IsPracticeMode)
+			if (GameManager.IsConnected)
 			{
 				if (!GameManager.IsNoAds)
 				{

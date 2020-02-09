@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
 
-namespace MysticLights
+namespace MLFramework
 {
     public class PoolManager : Singleton<PoolManager>
     {

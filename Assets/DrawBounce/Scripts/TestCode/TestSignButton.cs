@@ -11,7 +11,6 @@ public class TestSignButton : BasicUIButton
 		if(signIn)
 		{
 			GooglePlayManager.Instance.SignIn();
-			GameManager.Instance.gameSettings.LoadGameInfo();
 		}
 		else
 		{

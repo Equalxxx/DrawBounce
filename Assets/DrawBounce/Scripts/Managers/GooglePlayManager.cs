@@ -8,7 +8,7 @@ using Firebase.Auth;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
-using MysticLights;
+using MLFramework;
 
 public class GooglePlayManager : Singleton<GooglePlayManager>
 {
@@ -22,7 +22,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 	private FirebaseAuth auth;
 	private FirebaseUser user;
 
-	private void Start()
+	private void Awake()
 	{
 		if (Instance != this)
 		{
@@ -215,7 +215,7 @@ public class GooglePlayManager : Singleton<GooglePlayManager>
 	public void ReportScore(int score)
 	{
 #if UNITY_ANDROID
-		PlayGamesPlatform.Instance.ReportScore(score, GPGSIds.leaderboard, (bool success) =>
+		PlayGamesPlatform.Instance.ReportScore(score, GPGSIds.leaderboard_ranking, (bool success) =>
 		{
 			if (success)
 			{

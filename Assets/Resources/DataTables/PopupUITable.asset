@@ -21,7 +21,7 @@ MonoBehaviour:
     tag: PausePopupUI
   - index: 2
     path: PopupUI
-    tag: WaitingPopupUI
+    tag: OptionPopupUI
   - index: 3
     path: PopupUI
     tag: NoAdsPopupUI
@@ -30,4 +30,10 @@ MonoBehaviour:
     tag: TutorialPopupUI
   - index: 5
     path: PopupUI
-    tag: PracticePopupUI
+    tag: SaveDataPopupUI
+  - index: 6
+    path: PopupUI
+    tag: LoadDataPopupUI
+  - index: 7
+    path: PopupUI
+    tag: OfflinePopupUI

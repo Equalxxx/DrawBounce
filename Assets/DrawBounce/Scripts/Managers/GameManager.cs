@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MysticLights;
+using MLFramework;
 
 public enum GameState { GameTitle, GamePlay, GameOver, EnterShop }
 
@@ -33,10 +33,30 @@ public class GameManager : Singleton<GameManager>
 	public int lastStartHeight;
 
 	public PlayableBlockType curBlockType;
-	
-	public bool isPause;
+
+	public static bool IsPause;
 	public static bool IsNoAds;
-	public static bool IsPracticeMode;
+	public static bool IsOfflineMode;
+	public static bool IsConnected
+	{
+		get
+		{
+			if (!GooglePlayManager.IsAuthenticated || Application.internetReachability == NetworkReachability.NotReachable)
+			{
+				if(!IsOfflineMode)
+				{
+					IsOfflineMode = true;
+					UIManager.Instance.ShowOfflineMode(true);
+				}
+
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
 
 	// Game State Actions
 	public static Action GameInitAction;
@@ -44,10 +64,7 @@ public class GameManager : Singleton<GameManager>
 	public static Action GameOverAction;
 
 	public static Action<float> SetStartHeightAction;
-	public static Action<bool> PauseAction;
-
-	public static Action SoundMuteAction;
-	public static Action ViberateAction;
+	public static Action PauseAction;
 
 	public static Action<PlayableBlockType> SetPlayableBlockAction;
 	public static Action<int> SetBGAction;
@@ -64,18 +81,16 @@ public class GameManager : Singleton<GameManager>
 	public GameDataTable gameDataTable;
 	public MapDataTable mapDataTable;
 
-	public float signInTimeOut = 3f;
-
 	private void Start()
     {
-		StartCoroutine(InitGame());
+		InitGame();
 
         FadeScreen.Instance.StartFade(false);
 
 		SoundManager.Instance.PlayMusic("BGM_1", true);
 	}
 
-	IEnumerator InitGame()
+	void InitGame()
 	{
 #if !UNITY_EDITOR
 		if(Application.systemLanguage == SystemLanguage.Korean)
@@ -92,75 +107,17 @@ public class GameManager : Singleton<GameManager>
 			LocalizeManager.Instance.SetLanguage(LocalizeManager.LocalizeLanguageType.ENG);
 		}
 #endif
-		UIManager.Instance.ShowPopup(PopupUIType.Waiting, true);
-
-		float t = 0f;
-
-		while (!GooglePlayManager.IsSignInProcess)
-		{
-			t += Time.unscaledDeltaTime / signInTimeOut;
-			if (t >= 1f)
-			{
-				IsPracticeMode = true;
-				UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
-				yield return null;
-				UIManager.Instance.ShowPopup(PopupUIType.Practice, true);
-				Debug.Log("Start Practice mode!");
-				break;
-			}
-
-			yield return null;
-		}
-
-		if(!IsPracticeMode)
-			UIManager.Instance.ShowPopup(PopupUIType.Waiting, false);
 
 		CheckNoAds();
 
-		gameSettings.LoadGameInfo();
+		//gameSettings.LoadDeviceOptions();
+		gameSettings.LoadGameData();
 
 		gameState = GameState.GameTitle;
 
 		StartCoroutine(GameLoop());
 
-		Debug.Log("Init Game Done");
-
-		yield return new WaitForSeconds(1f);
-
-		if (deviceSettings.tutorial)
-		{
-			Debug.Log("Show Tutorial");
-			UIManager.Instance.ShowPopup(PopupUIType.Tutorial, true);
-			deviceSettings.tutorial = false;
-			gameSettings.SaveDeviceOptions();
-		}
-	}
-
-	public static bool IsConnected
-	{
-		get
-		{
-			Debug.LogFormat("Auth : {0}", GooglePlayManager.IsAuthenticated);
-			Debug.LogFormat("internet : {0}", Application.internetReachability);
-
-			if (IsPracticeMode)
-				return false;
-
-			if (!GooglePlayManager.IsAuthenticated || Application.internetReachability == NetworkReachability.NotReachable)
-			{
-				IsPracticeMode = true;
-				UIManager.Instance.ShowPracticeUI(true);
-				UIManager.Instance.ShowPopup(PopupUIType.Practice, true);
-				return false;
-			}
-			else
-			{
-				if (!IsPracticeMode)
-					UIManager.Instance.ShowPracticeUI(false);
-
-				return true;
-			}
-		}
+		Invoke("CheckTutorial", 1f);
 	}
 
 	public void CheckNoAds()
@@ -171,7 +128,18 @@ public class GameManager : Singleton<GameManager>
 			SetNoAds(true);
 	}
 
-	public void SetNoAds(bool noAds)
+	void CheckTutorial()
+	{
+		if (deviceSettings.tutorial)
+		{
+			Debug.Log("Show Tutorial");
+			UIManager.Instance.ShowPopup(PopupUIType.Tutorial, true);
+			deviceSettings.tutorial = false;
+			gameSettings.SaveDeviceOptions();
+		}
+	}
+
+	void SetNoAds(bool noAds)
 	{
 		IsNoAds = noAds;
 
@@ -184,9 +152,6 @@ public class GameManager : Singleton<GameManager>
 		else
 		{
 			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
-
-			if (curPlayableBlock.blockType == PlayableBlockType.CoinCircle)
-				SetPlayableBlockType(PlayableBlockType.Circle);
 		}
 
 		UIManager.Instance.ShowNoAdsButton(!IsNoAds);
@@ -289,10 +254,13 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("Game over!");
 
-        UIManager.Instance.ShowUIGroup(UIGroupType.Result);
+		if(IsConnected)
+		{
+			GooglePlayManager.Instance.ReportScore((int)gameInfo.lastHeight);
+			UnlockAchievement((int)gameInfo.lastHeight);
+		}
 
-		GooglePlayManager.Instance.ReportScore((int)gameInfo.lastHeight);
-		UnlockAchievement((int)gameInfo.lastHeight);
+        UIManager.Instance.ShowUIGroup(UIGroupType.Result);
 
 		GameOverAction?.Invoke();
 
@@ -325,7 +293,7 @@ public class GameManager : Singleton<GameManager>
 
 	IEnumerator WaittingSaving()
 	{
-		gameSettings.SaveInfoToServer();
+		gameSettings.SaveGameData();
 
 		while (gameSettings.isProcessing)
 		{
@@ -337,42 +305,34 @@ public class GameManager : Singleton<GameManager>
 
 	void UnlockAchievement(int height)
 	{
-		string achievementId = "";
-
 		if (height >= 2000)
 		{
-			achievementId = GPGSIds.achievement_2000;
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_2000);
 		}
-		else if (height >= 1000)
+		if (height >= 1000)
 		{
-			achievementId = GPGSIds.achievement_1000;
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_1000);
 		}
-		else if (height >= 900)
+		if (height >= 900)
 		{
-			achievementId = GPGSIds.achievement_900;
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_900);
 		}
-		else if (height >= 700)
+		if (height >= 700)
 		{
-			achievementId = GPGSIds.achievement_700;
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_700);
 		}
-		else if (height >= 500)
+		if (height >= 500)
 		{
-			achievementId = GPGSIds.achievement_500;
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_500);
 		}
-		else if (height >= 300)
+		if (height >= 300)
 		{
-			achievementId = GPGSIds.achievement_300;
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_300);
 		}
-		else if (height >= 100)
+		if (height >= 100)
 		{
-			achievementId = GPGSIds.achievement_100;
+			GooglePlayManager.Instance.UnlockAchievement(GPGSIds.achievement_100);
 		}
-		else
-		{
-			return;
-		}
-
-		GooglePlayManager.Instance.UnlockAchievement(achievementId);
 	}
 
 	void SetLevel(float height)
@@ -485,14 +445,14 @@ public class GameManager : Singleton<GameManager>
 		Debug.LogFormat("Add start height : {0}", addHeight);
 	}
 
-	public void SetSoundMute(SoundType soundType, bool mute)
+	public void SetSoundSetting(SoundType soundType, bool useSound)
 	{
 		switch(soundType)
 		{
 			case SoundType.BGM:
-				Debug.LogFormat("Sound mute BGM : {0}", mute);
-				deviceSettings.muteBGM = mute;
-				if (deviceSettings.muteBGM)
+				Debug.LogFormat("Sound use BGM : {0}", useSound);
+				deviceSettings.useBGM = useSound;
+				if (!deviceSettings.useBGM)
 				{
 					SoundManager.Instance.bgmCustomVolume = 0f;
 				}
@@ -502,9 +462,9 @@ public class GameManager : Singleton<GameManager>
 				}
 				break;
 			case SoundType.SE:
-				Debug.LogFormat("Sound mute SE : {0}", mute);
-				deviceSettings.muteSE = mute;
-				if (deviceSettings.muteSE)
+				Debug.LogFormat("Sound use SE : {0}", useSound);
+				deviceSettings.useSE = useSound;
+				if (!deviceSettings.useSE)
 				{
 					SoundManager.Instance.seCustomVolume = 0f;
 				}
@@ -514,26 +474,15 @@ public class GameManager : Singleton<GameManager>
 				}
 				break;
 		}
-
-		SoundMuteAction?.Invoke();
-	}
-
-	public void SetViberate(bool vibe)
-	{
-		Debug.LogFormat("Viberate : {0}", vibe);
-
-		deviceSettings.viberate = vibe;
-
-		ViberateAction?.Invoke();
 	}
 
 	public void SetPause(bool pause)
 	{
-		isPause = pause;
+		IsPause = pause;
 
-		UIManager.Instance.ShowPopup(PopupUIType.Pause, isPause);
+		UIManager.Instance.ShowPopup(PopupUIType.Pause, IsPause);
 
-		PauseAction?.Invoke(isPause);
+		PauseAction?.Invoke();
 	}
 
 	public void SetPlayableBlockType(PlayableBlockType blockType)
@@ -547,35 +496,47 @@ public class GameManager : Singleton<GameManager>
 		}
 
 		curBlockType = blockType;
+
 		GameObject newBlock = null;
 		string playableTag = "";
+
 		switch (curBlockType)
 		{
 			case PlayableBlockType.Circle:
 				playableTag = "Circle";
 				break;
 			case PlayableBlockType.Rectangle:
-				playableTag = "Rectangle";
+				if (gameInfo.lastHeight >= 100f)
+					playableTag = "Rectangle";
 				break;
 			case PlayableBlockType.Triangle:
-				playableTag = "Triangle";
+				if (gameInfo.lastHeight >= 100f)
+					playableTag = "Triangle";
 				break;
 			case PlayableBlockType.Star:
-				playableTag = "Star";
+				if (gameInfo.lastHeight >= 100f)
+					playableTag = "Star";
 				break;
 			case PlayableBlockType.Heart:
-				playableTag = "Heart";
+				if (gameInfo.lastHeight >= 100f)
+					playableTag = "Heart";
 				break;
 			case PlayableBlockType.Male:
-				playableTag = "Male";
+				if (gameInfo.lastHeight >= 100f)
+					playableTag = "Male";
 				break;
 			case PlayableBlockType.Female:
-				playableTag = "Female";
+				if (gameInfo.lastHeight >= 100f)
+					playableTag = "Female";
 				break;
 			case PlayableBlockType.CoinCircle:
-				playableTag = "CoinCircle";
+				if(IsNoAds)
+					playableTag = "CoinCircle";
 				break;
 		}
+
+		if (string.IsNullOrEmpty(playableTag))
+			playableTag = "Circle";
 
 		newBlock = PoolManager.Instance.Spawn(playableTag, Vector3.zero, Quaternion.identity, playableBlockParent);
 
@@ -591,8 +552,35 @@ public class GameManager : Singleton<GameManager>
 
 	public void SetBGColor(int bgIndex)
 	{
+		bool changeBG = false;
+
+		if(bgIndex == 5 && gameInfo.lastHeight >= 1000f)
+		{
+			changeBG = true;
+		}
+		else if(bgIndex == 4 && gameInfo.lastHeight >= 1000f)
+		{
+			changeBG = true;
+		}
+		else if (bgIndex == 3 && gameInfo.lastHeight >= 500f)
+		{
+			changeBG = true;
+		}
+		else if (bgIndex == 2 && gameInfo.lastHeight >= 500f)
+		{
+			changeBG = true;
+		}
+		else if (bgIndex == 1 && gameInfo.lastHeight >= 300f)
+		{
+			changeBG = true;
+		}
+
+		if (!changeBG)
+			bgIndex = 0;
+
 		deviceSettings.bgIndex = bgIndex;
 		bgControl.ChangeBGColor(bgIndex);
+
 		SetBGAction?.Invoke(bgIndex);
 	}
 

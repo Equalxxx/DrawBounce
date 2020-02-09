@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MysticLights
+namespace MLFramework
 {
     public static class ResourceManager
     {

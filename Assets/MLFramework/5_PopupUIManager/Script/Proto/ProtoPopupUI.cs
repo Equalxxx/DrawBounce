@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum PopupUIType { Quit, Pause, Tutorial, Waiting, NoAds, Practice }
+public enum PopupUIType { Quit, Pause, Tutorial, NoAds, Option, SaveData, LoadData, Offline }
 
 public abstract class ProtoPopupUI : MonoBehaviour {
 

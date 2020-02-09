@@ -8,7 +8,7 @@ public class ShowMessageUI : MonoBehaviour
 	public DOTweenAnimation anim;
 	public bool isPlaying;
 	public float closeDelay = 2f;
-	public LocalizeTextMeshPro localizeText;
+	public LocalizeText localizeText;
 
 	public void Show(int stringIdx)
 	{

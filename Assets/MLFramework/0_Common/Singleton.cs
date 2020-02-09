@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MysticLights
+namespace MLFramework
 {
     public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {

@@ -6,6 +6,6 @@ public class ClosePopupButton : BasicUIButton
 {
 	protected override void PressedButton()
 	{
-		MysticLights.PopupUIManager.Instance.ClosePopupUI();
+		MLFramework.PopupUIManager.Instance.ClosePopupUI();
 	}
 }

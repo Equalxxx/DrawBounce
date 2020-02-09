@@ -6,6 +6,8 @@ public class PausePopupUI : ProtoPopupUI
 {
 	public override void InitPopupUI()
 	{
+		popupUIType = PopupUIType.Pause;
+
 		Time.timeScale = 0f;
 	}
 

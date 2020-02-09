@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-namespace MysticLights
+namespace MLFramework
 {
     public class LocalizeManager : Singleton<LocalizeManager>
     {
@@ -154,7 +154,6 @@ namespace MysticLights
             if (font == null)
             {
                 font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-                Debug.LogError("Not found Font : " + fontName);
             }
 
             return font;
@@ -171,10 +170,10 @@ namespace MysticLights
 
 			TMP_FontAsset font = ResourceManager.LoadAsset<TMP_FontAsset>(Instance.fontPath, fontName, Instance.resLinkType);
 
-			if (font == null)
-			{
-				Debug.LogError("Not found Font : " + fontName);
-			}
+			//if (font == null)
+			//{
+			//	Debug.LogError("Not found Font : " + fontName);
+			//}
 
 			return font;
 		}

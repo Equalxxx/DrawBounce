@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MysticLights;
+using MLFramework;
 
 public class ChangeBlockButton : BasicUIButton
 {
@@ -63,9 +63,12 @@ public class ChangeBlockButton : BasicUIButton
 
 	protected override void PressedButton()
 	{
+		if (GameManager.Instance.curPlayableBlock.blockType == blockType)
+			return;
+
 		GameManager.Instance.SetPlayableBlockType(blockType);
 		GameManager.Instance.gameSettings.SaveDeviceOptions();
-		SoundManager.Instance.PlaySound2D("Click", 0.5f);
+		SoundManager.Instance.PlaySound2D("Click");
 	}
 
 	void RefreshUI(PlayableBlockType pbType)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PracticePopupUI : ProtoPopupUI
+public class OfflinePopupUI : ProtoPopupUI
 {
 	public override void InitPopupUI()
 	{

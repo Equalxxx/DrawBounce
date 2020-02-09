@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MysticLights;
+using MLFramework;
 
 public class DrawBlock : MonoBehaviour, IPoolObject
 {
@@ -51,9 +51,9 @@ public class DrawBlock : MonoBehaviour, IPoolObject
         }
     }
 
-	void GamePause(bool pause)
+	void GamePause()
 	{
-		if (pause)
+		if (GameManager.IsPause)
 		{
 			gameObject.SetActive(false);
 			positionList.Clear();

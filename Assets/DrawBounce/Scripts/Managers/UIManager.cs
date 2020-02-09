@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MysticLights;
+using MLFramework;
 
 public enum WaitingPopupType { Saving, Loading }
 
@@ -11,20 +11,28 @@ public class UIManager : Singleton<UIManager>
     public UIGroup[] uiGroups;
     public UIGroup currentUIGroup;
 	public RectTransform uiTransform;
+	public RectTransform popupTransform;
 	public RectTransform canvasTrans;
 	public float fadeDuration = 1f;
 	
 	public ShowMessageUI showMessageUI;
-	public GameObject practiceUI;
 	public GameObject noAdsButton;
-
+	public GameObject offlineMode;
 	public CoinInfoUI coinInfoUI;
+
+	private void Awake()
+	{
+		ShowOfflineMode(false);
+	}
 
 	private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			ShowPopup(PopupUIType.Quit, true);
+			if (PopupUIManager.Instance.curPopupUI == null)
+				ShowPopup(PopupUIType.Quit, true);
+			else
+				PopupUIManager.Instance.ClosePopupUI();
 		}
 	}
 
@@ -66,28 +74,30 @@ public class UIManager : Singleton<UIManager>
 				case PopupUIType.Tutorial:
 					PopupUIManager.Instance.ShowPopupUI("TutorialPopupUI");
 					break;
-				case PopupUIType.Waiting:
-					PopupUIManager.Instance.ShowPopupUI("WaitingPopupUI");
-					break;
 				case PopupUIType.NoAds:
 					PopupUIManager.Instance.ShowPopupUI("NoAdsPopupUI");
 					break;
-				case PopupUIType.Practice:
-					PopupUIManager.Instance.ShowPopupUI("PracticePopupUI");
+				case PopupUIType.Option:
+					PopupUIManager.Instance.ShowPopupUI("OptionPopupUI");
+					break;
+				case PopupUIType.SaveData:
+					PopupUIManager.Instance.ShowPopupUI("SaveDataPopupUI");
+					break;
+				case PopupUIType.LoadData:
+					PopupUIManager.Instance.ShowPopupUI("LoadDataPopupUI");
 					break;
 			}
 		}
 		else
 		{
-			if(PopupUIManager.Instance.curPopupUI.popupUIType == popupType)
+			if(PopupUIManager.Instance.curPopupUI && PopupUIManager.Instance.curPopupUI.popupUIType == popupType)
 				PopupUIManager.Instance.ClosePopupUI();
 		}
 	}
 
-	public void ShowPracticeUI(bool show)
+	public void ShowLoadingUI(bool show)
 	{
-		if (practiceUI.activeSelf != show)
-			practiceUI.SetActive(show);
+		PopupUIManager.Instance.ShowLoadingUI(show);
 	}
 
 	public void SetUIRects()
@@ -95,10 +105,12 @@ public class UIManager : Singleton<UIManager>
 		if (!GameManager.IsNoAds && GameManager.IsConnected)
 		{
 			uiTransform.offsetMax = new Vector2(0f, -(adHeight()));
+			popupTransform.offsetMax = new Vector2(0f, -(adHeight()));
 		}
 		else
 		{
 			uiTransform.offsetMax = Vector2.zero;
+			popupTransform.offsetMax = Vector2.zero;
 		}
 	}
 
@@ -106,6 +118,15 @@ public class UIManager : Singleton<UIManager>
 	{
 		if(noAdsButton.activeSelf != show)
 			noAdsButton.SetActive(show);
+	}
+
+	public void ShowOfflineMode(bool show)
+	{
+		if (offlineMode.activeSelf != show)
+			offlineMode.SetActive(show);
+
+		if (show)
+			PopupUIManager.Instance.ShowPopupUI("OfflinePopupUI");
 	}
 
 	public float adHeight()
