@@ -20,14 +20,14 @@ MonoBehaviour:
     path: Sound/SE
     tag: Bounce_2
   - index: 2
-    path: Sound/SE
-    tag: Bounce_3
+    path: Sound/BGM
+    tag: BGM_1
   - index: 3
-    path: Sound/SE
-    tag: Bounce_4
+    path: Sound/BGM
+    tag: bgm1
   - index: 4
-    path: Sound/SE
-    tag: Bounce_5
+    path: Sound/BGM
+    tag: bgm2
   - index: 5
     path: Sound/SE
     tag: Explosion_Hit
@@ -35,23 +35,23 @@ MonoBehaviour:
     path: Sound/SE
     tag: Explosion_Over
   - index: 7
-    path: Sound/BGM
-    tag: BGM_1
-  - index: 8
     path: Sound/SE
     tag: Buy_Item
-  - index: 9
+  - index: 8
     path: Sound/SE
     tag: Buy_Item_End
-  - index: 10
+  - index: 9
     path: Sound/SE
     tag: Buy_Item_Notwork
-  - index: 11
+  - index: 10
     path: Sound/SE
     tag: AddCoin
-  - index: 12
+  - index: 11
     path: Sound/SE
     tag: Boost
-  - index: 13
+  - index: 12
     path: Sound/SE
     tag: Click
+  - index: 13
+    path: Sound/SE
+    tag: Collect star 1

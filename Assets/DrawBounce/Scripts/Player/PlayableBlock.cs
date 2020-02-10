@@ -241,7 +241,7 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
 
 	void PlayRandomBounceSound()
 	{
-		int idx = UnityEngine.Random.Range(1, 6);
+		int idx = UnityEngine.Random.Range(1, 3);
 		string soundTag = string.Format("Bounce_{0}", idx);
 		SoundManager.Instance.PlaySound2D(soundTag);
 	}
