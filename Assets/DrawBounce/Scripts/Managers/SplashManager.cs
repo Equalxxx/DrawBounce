@@ -30,6 +30,8 @@ public class SplashManager : MonoBehaviour
 			yield return null;
 		}
 
+		yield return new WaitForSeconds(1f);
+
         yield return FadeScreen.Instance.Fade(true);
 
         SceneControl.LoadNextScene(nextSceneName);

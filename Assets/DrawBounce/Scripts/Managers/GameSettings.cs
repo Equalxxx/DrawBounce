@@ -14,6 +14,7 @@ public class DeviceSettings
 	public bool useSE;
 	public bool viberate;
 	public bool tutorial;
+	public bool review;
 	public PlayableBlockType blockType;
 	public int bgIndex;
 }
@@ -22,7 +23,7 @@ public enum SoundType { BGM, SE }
 public class GameSettings : MonoBehaviour
 {
 	private const string deviceSettingFileName = "rpdlatjfwjdvkdlf";
-	private const string gameDataFileName = "gd";
+	private const string gameDataFileName = "gdgdqpqpqpajsld";
 	public const string extensionName = ".dla";
 	public static Action GameSettingAction;
 
@@ -62,7 +63,7 @@ public class GameSettings : MonoBehaviour
 		{
 			if(GooglePlayManager.IsAuthenticated)
 			{
-				string fileName = string.Format("{0}{1}", Social.localUser.id, extensionName);
+				string fileName = string.Format("{0}{1}", gameDataFileName, extensionName);
 				SaveFileManager.Save<GameInfo>(gameInfo, fileName);
 			}
 
@@ -72,7 +73,7 @@ public class GameSettings : MonoBehaviour
 		//FirebaseDBManager.Instance.SendFirebaseDB("gamedata", "", stringData);
 		//isProcessing = false;
 
-		Debug.LogFormat("Save GameInfo : {0}, {1}, {2}, {3}", gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
+		Debug.LogFormat("Save GameInfo : {0}, {1}, {2}, {3}, {4}", gameInfo.userId, gameInfo.coin, gameInfo.lastHeight, gameInfo.playerHP, gameInfo.startHeight);
 	}
 
 	IEnumerator SaveToCloudSync()
@@ -122,6 +123,7 @@ public class GameSettings : MonoBehaviour
 			deviceSettings.useSE = true;
 			deviceSettings.viberate = true;
 			deviceSettings.tutorial = true;
+			deviceSettings.review = true;
 			deviceSettings.blockType = PlayableBlockType.Circle;
 		}
 
@@ -142,11 +144,11 @@ public class GameSettings : MonoBehaviour
 
 		if (GooglePlayManager.IsAuthenticated)
 		{
-			string fileName = string.Format("{0}{1}", Social.localUser.id, extensionName);
+			string fileName = string.Format("{0}{1}", gameDataFileName, extensionName);
 			gameInfo = SaveFileManager.Load<GameInfo>(fileName);
 		}
 
-		if (gameInfo == null)
+		if (gameInfo == null || !string.Equals(gameInfo.userId, Social.localUser.id))
 			gameInfo = new GameInfo();
 
 		CheckDefaultGameInfo(gameInfo);
@@ -173,7 +175,7 @@ public class GameSettings : MonoBehaviour
 			GameInfo gameInfo = null;
 			gameInfo = JsonUtility.FromJson<GameInfo>(loadData);
 
-			if (gameInfo == null)
+			if (gameInfo == null || !string.Equals(gameInfo.userId, Social.localUser.id))
 				gameInfo = new GameInfo();
 
 			CheckDefaultGameInfo(gameInfo);
@@ -222,6 +224,9 @@ public class GameSettings : MonoBehaviour
 
 	void CheckDefaultGameInfo(GameInfo gameInfo)
 	{
+		if (string.IsNullOrEmpty(gameInfo.userId))
+			gameInfo.userId = Social.localUser.id;
+
 		if (gameInfo.coin < 0)
 			gameInfo.coin = 0;
 

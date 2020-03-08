@@ -82,3 +82,10 @@ MonoBehaviour:
   - index: 41
     stringData: Offline mode will not earn rewards after game completion
     fontName: 
+  - index: 45
+    stringData: Thank you for playing the game
+    fontName: 
+  - index: 46
+    stringData: Press the OK button to\nwrite a review.\n\nThe reviews you write
+      help me a lot.
+    fontName: 

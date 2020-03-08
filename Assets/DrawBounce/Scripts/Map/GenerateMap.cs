@@ -35,17 +35,22 @@ public class GenerateMap : MonoBehaviour
 
 	private void Start()
 	{
-		//PrepareAssets();
+		PrepareAssets();
 	}
 
 	void PrepareAssets()
 	{
-		foreach (KeyValuePair<int, List<MapData>> keyPair in GameManager.Instance.mapDataTable.mapDataDic)
+		//foreach (KeyValuePair<int, List<MapData>> keyPair in GameManager.Instance.mapDataTable.mapDataDic)
+		//{
+		//	for (int i = 0; i < keyPair.Value.Count; i++)
+		//	{
+		//		PoolManager.Instance.PrepareAssets(keyPair.Value[i].tag);
+		//	}
+		//}
+
+		for (int i = 0; i < GameManager.Instance.mapDataTable.mapDataList.Count; i++)
 		{
-			for (int i = 0; i < keyPair.Value.Count; i++)
-			{
-				PoolManager.Instance.PrepareAssets(keyPair.Value[i].tag);
-			}
+			PoolManager.Instance.PrepareAssets(GameManager.Instance.mapDataTable.mapDataList[i].tag, transform);
 		}
 	}
 

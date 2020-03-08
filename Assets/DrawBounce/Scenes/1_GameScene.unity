@@ -11011,92 +11011,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -50, y: -50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &426022010
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 426022012}
-  - component: {fileID: 426022011}
-  m_Layer: 0
-  m_Name: LunarConsole
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &426022011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 426022010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 086be258345234a029dca36e7ef25dc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_settings:
-    exceptionWarning:
-      displayMode: 3
-    logOverlay:
-      enabled: 0
-      maxVisibleLines: 3
-      timeout: 1
-      colors:
-        exception:
-          foreground:
-            serializedVersion: 2
-            rgba: 4282795754
-          background:
-            serializedVersion: 2
-            rgba: 4280163870
-        error:
-          foreground:
-            serializedVersion: 2
-            rgba: 4282795754
-          background:
-            serializedVersion: 2
-            rgba: 4280163870
-        warning:
-          foreground:
-            serializedVersion: 2
-            rgba: 4282436555
-          background:
-            serializedVersion: 2
-            rgba: 4280163870
-        debug:
-          foreground:
-            serializedVersion: 2
-            rgba: 4294958491
-          background:
-            serializedVersion: 2
-            rgba: 4280163870
-    capacity: 4096
-    trim: 512
-    gesture: 1
-    removeRichTextTags: 0
-    sortActions: 1
-    sortVariables: 1
-    emails: []
---- !u!4 &426022012
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 426022010}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &473629899
 GameObject:
   m_ObjectHideFlags: 0
@@ -12674,7 +12588,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 100
+    maxNumParticles: 50
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -16830,7 +16744,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &568068956
 GameObject:
@@ -18137,10 +18051,10 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PRESS RESTART
+  m_Text: PRESS RESTART (1)
 --- !u!222 &616906505
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18557,7 +18471,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629338702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.9907749, y: 0, z: -20}
+  m_LocalPosition: {x: -3.3125, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -24219,7 +24133,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724249779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.9907749, y: 0, z: -20}
+  m_LocalPosition: {x: 3.3125, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 509191572}
@@ -26652,7 +26566,7 @@ MonoBehaviour:
   recordText: {fileID: 201274669}
   maxMeterText: {fileID: 990491921}
   rewardUI: {fileID: 526452466}
-  limitHeight: 50
+  limitHeight: 0
 --- !u!1 &956600144
 GameObject:
   m_ObjectHideFlags: 0
@@ -27822,8 +27736,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 150}
+  m_AnchoredPosition: {x: 0, y: -155}
+  m_SizeDelta: {x: 0, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1044539602
 MonoBehaviour:
@@ -29756,11 +29670,11 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uAC8C\uC784 \uB0B4 \uAD11\uACE0\uAC00 \uC81C\uAC70\uB418\uACE0 \uC0C8\uB85C\uC6B4
-    \uBE14\uB7ED \uC120\uD0DD\uC774 \uAC00\uB2A5\uD569\uB2C8\uB2E4."
+    \uBE14\uB7ED \uC120\uD0DD\uC774 \uAC00\uB2A5\uD569\uB2C8\uB2E4. (31)"
 --- !u!222 &1124458622
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -31280,6 +31194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: 0
   gameInfo:
+    userId: 
     coin: 0
     playerHP: 1
     playerMaxHP: 5
@@ -31302,6 +31217,7 @@ MonoBehaviour:
     useSE: 0
     viberate: 0
     tutorial: 0
+    review: 0
     blockType: 0
     bgIndex: 0
   curPlayableBlock: {fileID: 0}
@@ -31785,8 +31701,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -220}
-  m_SizeDelta: {x: 0, y: 300}
+  m_AnchoredPosition: {x: 0, y: -94.6}
+  m_SizeDelta: {x: 0, y: 510}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1286904383
 MonoBehaviour:
@@ -36438,10 +36354,10 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uAD11\uACE0\uC81C\uAC70"
+  m_Text: "\uAD11\uACE0\uC81C\uAC70 (30)"
 --- !u!222 &1676640010
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -39156,7 +39072,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 100
+    maxNumParticles: 50
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -45789,7 +45705,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 100
+    maxNumParticles: 50
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -51036,7 +50952,7 @@ PrefabInstance:
     - target: {fileID: 3656125046887594694, guid: 0f1e668d2bea065458e61b5c50d76def,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3656125046887594694, guid: 0f1e668d2bea065458e61b5c50d76def,
         type: 3}
@@ -51057,6 +50973,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Services
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656125046887594750, guid: 0f1e668d2bea065458e61b5c50d76def,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f1e668d2bea065458e61b5c50d76def, type: 3}

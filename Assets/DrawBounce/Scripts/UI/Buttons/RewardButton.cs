@@ -41,10 +41,10 @@ public class RewardButton : BasicUIButton
 			Debug.Log("Start reward ad success");
 			if (GameManager.IsConnected)
 			{
-				if (!GameManager.IsNoAds)
+				if (!GameManager.IsNoAds && AdsManager.IsReady) //AdmobManager.IsRewardLoaded)
 				{
-					AdmobManager.IsShowAd = true;
-					AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
+					//AdmobManager.Instance.ShowAd(AdmobAdType.RewardVideo);
+					AdsManager.Instance.ShowRewarded();
 					StartCoroutine(WaitForAd());
 				}
 				else
@@ -62,26 +62,38 @@ public class RewardButton : BasicUIButton
 		else
 		{
 			Debug.Log("Start reward ad failed");
+			rewardUI.Show(false);
 		}
 	}
 
 	IEnumerator WaitForAd()
 	{
-		while(AdmobManager.IsShowAd)
+		while(!AdsManager.IsRewarded)
 		{
 			yield return null;
 		}
 
 		Debug.Log("Show ad is done");
 
-		if (AdmobManager.IsRewarded)
-		{
-			AddCoinProcess();
+		AddCoinProcess();
 
-			AdmobManager.IsRewarded = false;
+		GameManager.Instance.SaveGame();
 
-			GameManager.Instance.SaveGame();
-		}
+		//while(AdmobManager.IsShowAd)
+		//{
+		//	yield return null;
+		//}
+
+		//Debug.Log("Show ad is done");
+
+		//if (AdmobManager.IsRewarded)
+		//{
+		//	AddCoinProcess();
+
+		//	AdmobManager.IsRewarded = false;
+
+		//	GameManager.Instance.SaveGame();
+		//}
 	}
 
 	void AddCoinProcess()

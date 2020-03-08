@@ -16,8 +16,8 @@ public class MapArea : MonoBehaviour
 
 	void Start()
     {
-#if !UNITY_EDITOR
+//#if !UNITY_EDITOR
 		gameObject.SetActive(false);
-#endif
+//#endif
 	}
 }

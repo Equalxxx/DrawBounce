@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 199142077663762910}
   - component: {fileID: 4961523226109660395}
   m_Layer: 0
-  m_Name: Hit_Star
+  m_Name: Hit_Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,7 @@ ParticleSystem:
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 1
-  cullingMode: 3
+  cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0

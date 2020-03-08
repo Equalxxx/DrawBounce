@@ -9,13 +9,13 @@ public enum AdmobAdType { Interstitial, RewardVideo, Banner }
 public class AdmobManager : Singleton<AdmobManager>
 {
 	//Banner Id
-	private readonly string bannerUnitId = "ca-app-pub-2141587155447938/9006675959";
+	private readonly string bannerUnitId = "ca-app-pub-4210446264974092/1488369890";
 	private readonly string test_bannerUnitId = "ca-app-pub-3940256099942544/6300978111";
 	//Interstitial
-	private readonly string interstitialUnitId = "ca-app-pub-2141587155447938/6875380797";
+	private readonly string interstitialUnitId = "ca-app-pub-4210446264974092/6549124888";
 	private readonly string test_interstitialUnitId = "ca-app-pub-3940256099942544/8691691433";
 	//Reward
-	private readonly string rewardUnitId = "ca-app-pub-2141587155447938/6851523586";
+	private readonly string rewardUnitId = "ca-app-pub-4210446264974092/2609879879";
 	private readonly string test_rewardUnitId = "ca-app-pub-3940256099942544/5224354917";
 
 	private BannerView bannerAd;
@@ -24,6 +24,9 @@ public class AdmobManager : Singleton<AdmobManager>
 
 	public static bool IsRewarded;
 	public static bool IsShowAd;
+	
+	public static bool IsInterstitialLoaded;
+	public static bool IsRewardLoaded;
 
 	private void Awake()
 	{
@@ -34,7 +37,27 @@ public class AdmobManager : Singleton<AdmobManager>
 		}
 
 		DontDestroyOnLoad(gameObject);
+	}
 
+	private void Start()
+	{
+		MobileAds.Initialize(
+			(initStatus) =>
+			{
+				InitAd();
+
+				var statusMap = initStatus.getAdapterStatusMap();
+
+				foreach(var status in statusMap)
+				{
+					Debug.Log($"{status.Key} : {status.Value}");
+				}
+			}
+			);
+	}
+
+	void InitAd()
+	{
 		bannerAd = CreateAndLoadBannerAd();
 		bannerAd.Hide();
 
@@ -47,7 +70,7 @@ public class AdmobManager : Singleton<AdmobManager>
 
 	BannerView CreateAndLoadBannerAd()
 	{
-		string adUnitId = test_bannerUnitId;
+		string adUnitId = bannerUnitId;
 
 		AdSize adSize = AdSize.GetPortraitAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
 		BannerView banner = new BannerView(adUnitId, adSize, AdPosition.Top);
@@ -104,7 +127,7 @@ public class AdmobManager : Singleton<AdmobManager>
 
 	InterstitialAd CreateAndLoadInterstitialAd()
 	{
-		string adUnitId = test_interstitialUnitId;
+		string adUnitId = interstitialUnitId;
 
 		InterstitialAd ad = new InterstitialAd(adUnitId);
 		
@@ -123,12 +146,13 @@ public class AdmobManager : Singleton<AdmobManager>
 	public void HandleOnAdLoaded(object sender, EventArgs args)
 	{
 		Debug.Log("HandleAdLoaded event received");
+		IsInterstitialLoaded = true;
 	}
 
 	public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
 	{
-		Debug.Log("HandleFailedToReceiveAd event received with message: "
-							+ args.Message);
+		Debug.Log("HandleFailedToReceiveAd event received with message: " + args.Message);
+		IsInterstitialLoaded = false;
 	}
 
 	public void HandleOnAdOpened(object sender, EventArgs args)
@@ -152,11 +176,12 @@ public class AdmobManager : Singleton<AdmobManager>
 
 	RewardedAd CreateAndLoadRewardedAd()
 	{
-		string adUnitId = test_rewardUnitId;
+		string adUnitId = rewardUnitId;
 
 		RewardedAd ad = new RewardedAd(adUnitId);
 
 		ad.OnAdLoaded += HandleRewardedAdLoaded;
+		ad.OnAdFailedToLoad += HandleRewardedAdFailed;
 		ad.OnUserEarnedReward += HandleUserEarnedReward;
 		ad.OnAdClosed += HandleRewardedAdClosed;
 		
@@ -169,6 +194,13 @@ public class AdmobManager : Singleton<AdmobManager>
 	void HandleRewardedAdLoaded(object sender, EventArgs args)
 	{
 		Debug.Log("HandleRewardedAdLoaded event received");
+		IsRewardLoaded = true;
+	}
+
+	void HandleRewardedAdFailed(object sender, AdErrorEventArgs args)
+	{
+		Debug.Log("HandleFailedToReceiveAd_reward event received with message: " + args.Message);
+		IsRewardLoaded = false;
 	}
 
 	void HandleRewardedAdClosed(object sender, EventArgs args)

@@ -16,11 +16,11 @@ MonoBehaviour:
   - index: 0
     path: PoolObject/Effects
     tag: Hit_Spark
-    preloadCount: 3
+    preloadCount: 5
   - index: 1
     path: PoolObject/Effects
     tag: Hit_Block
-    preloadCount: 3
+    preloadCount: 5
   - index: 2
     path: PoolObject/Effects
     tag: Explosion_End
@@ -28,15 +28,15 @@ MonoBehaviour:
   - index: 3
     path: PoolObject/Effects
     tag: AddCoinEffect
-    preloadCount: 1
+    preloadCount: 5
   - index: 4
     path: PoolObject/Pointer
     tag: PointerEffect
-    preloadCount: 3
+    preloadCount: 5
   - index: 5
     path: PoolObject/Pointer
     tag: EdgeCollider
-    preloadCount: 3
+    preloadCount: 5
   - index: 6
     path: PlayableBlock
     tag: Circle
@@ -72,188 +72,188 @@ MonoBehaviour:
   - index: 14
     path: Maps/Map_1
     tag: Map_1_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 15
     path: Maps/Map_1
     tag: Map_1_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 16
     path: Maps/Map_1
     tag: Map_1_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 17
     path: Maps/Map_1
     tag: Map_1_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 18
     path: Maps/Map_2
     tag: Map_2_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 19
     path: Maps/Map_2
     tag: Map_2_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 20
     path: Maps/Map_2
     tag: Map_2_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 21
     path: Maps/Map_2
     tag: Map_2_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 22
     path: Maps/Map_2
     tag: Map_2_5
-    preloadCount: 2
+    preloadCount: 3
   - index: 23
     path: Maps/Map_2
     tag: Map_2_6
-    preloadCount: 2
+    preloadCount: 3
   - index: 24
     path: Maps/Map_3
     tag: Map_3_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 25
     path: Maps/Map_3
     tag: Map_3_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 26
     path: Maps/Map_3
     tag: Map_3_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 27
     path: Maps/Map_3
     tag: Map_3_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 28
     path: Maps/Map_4
     tag: Map_4_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 29
     path: Maps/Map_4
     tag: Map_4_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 30
     path: Maps/Map_4
     tag: Map_4_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 31
     path: Maps/Map_4
     tag: Map_4_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 32
     path: Maps/Map_5
     tag: Map_5_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 33
     path: Maps/Map_5
     tag: Map_5_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 34
     path: Maps/Map_5
     tag: Map_5_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 35
     path: Maps/Map_6
     tag: Map_6_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 36
     path: Maps/Map_6
     tag: Map_6_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 37
     path: Maps/Map_6
     tag: Map_6_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 38
     path: Maps/Map_6
     tag: Map_6_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 39
     path: Maps/Map_7
     tag: Map_7_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 40
     path: Maps/Map_7
     tag: Map_7_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 41
     path: Maps/Map_7
     tag: Map_7_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 42
     path: Maps/Map_7
     tag: Map_7_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 43
     path: Maps/Map_7
     tag: Map_7_5
-    preloadCount: 2
+    preloadCount: 3
   - index: 44
     path: Maps/Map_7
     tag: Map_7_6
-    preloadCount: 2
+    preloadCount: 3
   - index: 45
     path: Maps/Map_8
     tag: Map_8_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 46
     path: Maps/Map_8
     tag: Map_8_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 47
     path: Maps/Map_8
     tag: Map_8_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 48
     path: Maps/Map_8
     tag: Map_8_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 49
     path: Maps/Map_8
     tag: Map_8_5
-    preloadCount: 2
+    preloadCount: 3
   - index: 50
     path: Maps/Map_8
     tag: Map_8_6
-    preloadCount: 2
+    preloadCount: 3
   - index: 51
     path: Maps/Map_9
     tag: Map_9_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 52
     path: Maps/Map_9
     tag: Map_9_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 53
     path: Maps/Map_9
     tag: Map_9_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 54
     path: Maps/Map_9
     tag: Map_9_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 55
     path: Maps/Map_10
     tag: Map_10_1
-    preloadCount: 2
+    preloadCount: 3
   - index: 56
     path: Maps/Map_10
     tag: Map_10_2
-    preloadCount: 2
+    preloadCount: 3
   - index: 57
     path: Maps/Map_10
     tag: Map_10_3
-    preloadCount: 2
+    preloadCount: 3
   - index: 58
     path: Maps/Map_10
     tag: Map_10_4
-    preloadCount: 2
+    preloadCount: 3
   - index: 59
     path: Maps/Map_10
     tag: Map_10_5
-    preloadCount: 2
+    preloadCount: 3
   - index: 60
     path: Maps/Map_10
     tag: Map_10_6
-    preloadCount: 2
+    preloadCount: 3

@@ -30,6 +30,13 @@ public class ResultUIGroup : UIGroup
 		int height = (int)GameManager.Instance.curPlayableBlock.GetLastHeight();
 		int startHeight = (int)GameManager.Instance.lastStartHeight;
 
+		if(GameManager.Instance.gameInfo.lastHeight > 100f && GameManager.Instance.deviceSettings.review)
+		{
+			UIManager.Instance.ShowPopup(PopupUIType.Review, true);
+			GameManager.Instance.deviceSettings.review = false;
+			GameManager.Instance.gameSettings.SaveDeviceOptions();
+		}
+
 		if (height - startHeight >= limitHeight && !GameManager.IsOfflineMode)
 		{
 			rewardUI.Show(true);
@@ -38,8 +45,8 @@ public class ResultUIGroup : UIGroup
 		else
 		{
 			rewardUI.Show(false);
-			if(!GameManager.IsNoAds)
-				AdmobManager.Instance.ShowAd(AdmobAdType.Interstitial);
+			//if(!GameManager.IsNoAds)
+			//	AdmobManager.Instance.ShowAd(AdmobAdType.Interstitial);
 		}
 	}
 

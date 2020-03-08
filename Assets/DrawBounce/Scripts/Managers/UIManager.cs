@@ -86,6 +86,9 @@ public class UIManager : Singleton<UIManager>
 				case PopupUIType.LoadData:
 					PopupUIManager.Instance.ShowPopupUI("LoadDataPopupUI");
 					break;
+				case PopupUIType.Review:
+					PopupUIManager.Instance.ShowPopupUI("ReviewPopupUI");
+					break;
 			}
 		}
 		else
@@ -102,16 +105,16 @@ public class UIManager : Singleton<UIManager>
 
 	public void SetUIRects()
 	{
-		if (!GameManager.IsNoAds && GameManager.IsConnected)
-		{
-			uiTransform.offsetMax = new Vector2(0f, -(adHeight()));
-			popupTransform.offsetMax = new Vector2(0f, -(adHeight()));
-		}
-		else
-		{
+		//if (!GameManager.IsNoAds && GameManager.IsConnected)
+		//{
+		//	uiTransform.offsetMax = new Vector2(0f, -(adHeight()));
+		//	popupTransform.offsetMax = new Vector2(0f, -(adHeight()));
+		//}
+		//else
+		//{
 			uiTransform.offsetMax = Vector2.zero;
 			popupTransform.offsetMax = Vector2.zero;
-		}
+		//}
 	}
 
 	public void ShowNoAdsButton(bool show)

@@ -161,7 +161,7 @@ public class PlayableBlock : MonoBehaviour, IPoolObject
             myRigidbody2D.velocity = velo;
 
             myRigidbody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-            PoolManager.Instance.Spawn(hitSmallTag, transform.position, Quaternion.identity);
+            PoolManager.Instance.Spawn(hitSmallTag, myTransform.position, Quaternion.identity);
         }
         else if(collision.collider.CompareTag("Side"))
         {

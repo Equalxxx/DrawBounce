@@ -37,3 +37,6 @@ MonoBehaviour:
   - index: 7
     path: PopupUI
     tag: OfflinePopupUI
+  - index: 8
+    path: PopupUI
+    tag: ReviewPopupUI

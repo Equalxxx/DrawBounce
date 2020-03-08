@@ -9,6 +9,7 @@ public enum GameState { GameTitle, GamePlay, GameOver, EnterShop }
 [System.Serializable]
 public class GameInfo
 {
+	public string userId;
 	public int coin;
 	public int playerHP;
 	public int playerMaxHP;
@@ -99,8 +100,7 @@ public class GameManager : Singleton<GameManager>
 		}
 		else if(Application.systemLanguage == SystemLanguage.Japanese)
 		{
-			LocalizeManager.Instance.SetLanguage(LocalizeManager.
-		LocalizeLanguageType.JP);
+			LocalizeManager.Instance.SetLanguage(LocalizeManager.LocalizeLanguageType.JP);
 		}
 		else
 		{
@@ -145,14 +145,14 @@ public class GameManager : Singleton<GameManager>
 
 		Debug.LogFormat("NoAds : {0}", IsNoAds);
 
-		if (IsNoAds)
-		{
-			AdmobManager.Instance.HideBannerAd();
-		}
-		else
-		{
-			AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
-		}
+		//if (IsNoAds)
+		//{
+		//	AdmobManager.Instance.HideBannerAd();
+		//}
+		//else
+		//{
+		//	AdmobManager.Instance.ShowAd(AdmobAdType.Banner);
+		//}
 
 		UIManager.Instance.ShowNoAdsButton(!IsNoAds);
 
